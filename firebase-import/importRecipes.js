@@ -11,79 +11,44 @@ const db = admin.firestore();
 
 const recipes = [
   {
-    "id": 1,
     "title": "Pancakes",
-    "description": "Des pancakes moelleux pour le petit-déjeuner.",
     "ingredients": ["farine", "lait", "œufs", "sucre"],
     "steps": ["Mélanger les ingrédients secs.", "Ajouter les ingrédients humides.", "Cuire les pancakes."],
     "type": "Petit-déjeuner",
     "time": 20,
     "image": "https://placehold.co/600x400?text=Pancakes",
-    "prepTime": 10,
-    "cookTime": 10,
-    "difficulty": "Facile",
-    "categories": ["Petit-déjeuner", "Dessert"],
-    "allergens": ["Gluten", "Lait"]
   },
   {
-    "id": 2,
     "title": "Salade César",
-    "description": "Une salade classique avec du poulet grillé.",
     "ingredients": ["laitue", "poulet", "parmesan", "croutons"],
     "steps": ["Laver et couper la laitue.", "Ajouter le poulet grillé.", "Mélanger avec la vinaigrette."],
     "type": "Déjeuner",
     "time": 30,
     "image": "https://placehold.co/600x400?text=Salade+César",
-    "prepTime": 15,
-    "cookTime": 15,
-    "difficulty": "Moyen",
-    "categories": ["Salade", "Déjeuner"],
-    "allergens": ["Gluten", "Lait"]
   },
   {
-    "id": 3,
     "title": "Spaghetti Bolognaise",
-    "description": "Un classique italien avec une sauce riche.",
     "ingredients": ["spaghetti", "viande hachée", "tomates", "oignons", "ail"],
     "steps": ["Cuire les spaghetti.", "Préparer la sauce bolognaise.", "Mélanger les spaghetti avec la sauce."],
     "type": "Dîner",
     "time": 45,
     "image": "https://placehold.co/600x400?text=Spaghetti+Bolognaise",
-    "prepTime": 20,
-    "cookTime": 25,
-    "difficulty": "Moyen",
-    "categories": ["Pâtes", "Dîner"],
-    "allergens": ["Gluten"]
   },
   {
-    "id": 4,
     "title": "Cheesecake",
-    "description": "Un dessert crémeux et délicieux.",
     "ingredients": ["crème fraîche", "sucre", "œufs", "biscuits écrasés", "beurre"],
     "steps": ["Préparer la base avec des biscuits écrasés.", "Mélanger les ingrédients pour la garniture.", "Cuire au four."],
     "type": "Dessert",
     "time": 60,
     "image": "https://placehold.co/600x400?text=Cheesecake",
-    "prepTime": 20,
-    "cookTime": 40,
-    "difficulty": "Difficile",
-    "categories": ["Dessert", "Gâteau"],
-    "allergens": ["Lait", "Gluten"]
   },
   {
-    "id": 5,
     "title": "Soupe de Tomate",
-    "description": "Une soupe chaude et réconfortante.",
     "ingredients": ["tomates", "oignons", "ail", "bouillon de légumes", "crème"],
     "steps": ["Faire revenir les oignons et l'ail.", "Ajouter les tomates et le bouillon.", "Mixer et ajouter la crème."],
     "type": "Soupe",
     "time": 35,
     "image": "https://placehold.co/600x400?text=Soupe+de+Tomate",
-    "prepTime": 10,
-    "cookTime": 25,
-    "difficulty": "Facile",
-    "categories": ["Soupe", "Déjeuner"],
-    "allergens": ["Lait"]
   }
 ];
 

@@ -58,7 +58,7 @@ const HomePage = () => {
       <FilterBar onFilterChange={handleFilterChange} />
       <div className="recipe-list">
         {filteredRecipes.map((recipe) => (
-          <RecipeCard key={recipe.id} recipe={recipe} onClick={handleRecipeClick} />
+          <RecipeCard key={recipe.firestoreId} recipe={recipe} onClick={handleRecipeClick} />
         ))}
       </div>
       {selectedRecipe && <RecipeDetail ref={recipeDetailRef} recipe={selectedRecipe} onClose={closeDetail} />}

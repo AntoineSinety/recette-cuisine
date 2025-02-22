@@ -1,26 +1,21 @@
 // src/components/RecipeForm.jsx
 import React, { useState, useEffect } from 'react';
-import Select from 'react-select';
-import { useIngredients } from '../hooks/useIngredients';
+import CreatableSelect  from 'react-select/creatable';
+import { useIngredientsAndCategories } from '../hooks/useIngredientsAndCategories';
+import MediaUploader from './MediaUploader';
 
 const RecipeForm = ({ recipe = {}, onSubmit }) => {
   const initialFormState = {
     title: '',
-    description: '',
     ingredients: [],
     steps: '',
-    type: '',
+    category: '',
     time: '',
-    image: '',
-    prepTime: '',
-    cookTime: '',
-    difficulty: '',
-    categories: '',
-    allergens: '',
+    image: null,
   };
 
   const [formData, setFormData] = useState({ ...initialFormState, ...recipe });
-  const ingredientsList = useIngredients();
+  const { ingredients, addIngredient, categories, addCategory } = useIngredientsAndCategories();
 
   useEffect(() => {
     if (recipe && Object.keys(recipe).length > 0) {
@@ -40,9 +35,35 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
   };
 
   const handleIngredientsChange = (selectedOptions) => {
+    const newIngredients = selectedOptions.map(option => option.value);
     setFormData((prevFormData) => ({
       ...prevFormData,
-      ingredients: selectedOptions.map(option => option.value),
+      ingredients: newIngredients,
+    }));
+
+    newIngredients.forEach(ingredient => {
+      if (!ingredients.includes(ingredient)) {
+        addIngredient(ingredient);
+      }
+    });
+  };
+
+  const handleCategoryChange = (selectedOption) => {
+    const newCategory = selectedOption.value;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      category: newCategory,
+    }));
+
+    if (!categories.includes(newCategory)) {
+      addCategory(newCategory);
+    }
+  };
+
+  const handleMediaChange = (media) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      image: media,
     }));
   };
 
@@ -59,18 +80,11 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
       </div>
 
       <div className="form-group">
-        <label>Description</label>
-        <textarea name="description" value={formData.description} onChange={handleChange} required></textarea>
-      </div>
-
-      <div className="form-group">
         <label>Ingrédients</label>
-        <Select
+        <CreatableSelect 
           isMulti
           name="ingredients"
-          options={ingredientsList.map(ingredient => ({ value: ingredient, label: ingredient }))}
-          value={formData.ingredients.map(ingredient => ({ value: ingredient, label: ingredient }))}
-          onChange={handleIngredientsChange}
+          options={ingredients.map(ingredient => ({ value: ingredient, label: ingredient }))}
           className="ingredients-select"
         />
       </div>
@@ -81,8 +95,12 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
       </div>
 
       <div className="form-group">
-        <label>Type</label>
-        <input type="text" name="type" value={formData.type} onChange={handleChange} required />
+        <label>Catégorie</label>
+        <CreatableSelect 
+          name="category"
+          options={categories.map(category => ({ value: category, label: category }))}
+          className="category-select"
+        />
       </div>
 
       <div className="form-group">
@@ -91,33 +109,8 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
       </div>
 
       <div className="form-group">
-        <label>Image (URL)</label>
-        <input type="text" name="image" value={formData.image} onChange={handleChange} />
-      </div>
-
-      <div className="form-group">
-        <label>Temps de Préparation (min)</label>
-        <input type="number" name="prepTime" value={formData.prepTime} onChange={handleChange} />
-      </div>
-
-      <div className="form-group">
-        <label>Temps de Cuisson (min)</label>
-        <input type="number" name="cookTime" value={formData.cookTime} onChange={handleChange} />
-      </div>
-
-      <div className="form-group">
-        <label>Difficulté</label>
-        <input type="text" name="difficulty" value={formData.difficulty} onChange={handleChange} />
-      </div>
-
-      <div className="form-group">
-        <label>Catégories (séparées par des virgules)</label>
-        <input type="text" name="categories" value={formData.categories} onChange={handleChange} />
-      </div>
-
-      <div className="form-group">
-        <label>Allergènes (séparés par des virgules)</label>
-        <input type="text" name="allergens" value={formData.allergens} onChange={handleChange} />
+        <label>Image</label>
+        <MediaUploader onMediaChange={handleMediaChange} />
       </div>
 
       <button type="submit" className="submit-btn">Soumettre</button>
