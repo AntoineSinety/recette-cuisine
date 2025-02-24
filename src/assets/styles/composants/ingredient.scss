@@ -1,0 +1,49 @@
+.ingredient-preview {
+    
+
+    .preview-card {
+        display: flex;
+        gap: 10px;
+        flex-direction: column;
+        background-color: var(--bleu);
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        width: 100px;
+        justify-content: center;
+        align-items: center;
+    }
+  
+    .preview-image {
+        display: block;
+        width: 50px; height: 50px;
+        object-fit: contain;
+        max-width: 100%;
+        border-radius: 4px;
+    }
+
+
+    span {
+        font-size: 0.9rem;
+    }
+
+    .preview-actions {
+        margin-top: 10px;
+    }
+    
+    .action-button {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #4CAF50;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    
+        &:hover {
+        background-color: #45a049;
+        }
+    }
+}
+
+
