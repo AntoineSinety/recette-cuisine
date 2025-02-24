@@ -14,6 +14,41 @@
     }
 }
 
+.action-button {
+    appearance: none;
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    position: relative;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: var(--clair2);
+
+    &.edit {
+        padding: 5px;
+        &:after {
+            content: "";
+            mask-image: url("./src/assets/svg/sprite.svg#edit");
+            display: block;
+            width: 16px; height: 16px;
+            background-color: var(--blanc);
+        }
+    }
+    &.delete {
+        padding: 5px;
+        &:after {
+            content: "";
+            mask-image: url("./src/assets/svg/sprite.svg#delete");
+            display: block;
+            width: 16px; height: 16px;
+            background-color: var(--blanc);
+        }
+    }
+
+    &:hover {
+        background-color: var(--bleu-ciel);
+    }
+}
 
 .field-input {
     appearance: none;

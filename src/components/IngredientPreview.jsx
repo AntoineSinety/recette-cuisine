@@ -3,7 +3,7 @@ import React from 'react';
 
 const IngredientPreview = ({ ingredient, onEdit, onDelete }) => {
   return (
-    <div className="ingredient-preview">
+    <div className="ingredient-preview" onClick={() => onEdit(ingredient)}>
       <div className="preview-card">
         {ingredient.imageUrl ? (
           <img src={ingredient.imageUrl} alt={ingredient.name} className="preview-image" />
@@ -14,8 +14,8 @@ const IngredientPreview = ({ ingredient, onEdit, onDelete }) => {
         <span><b>{ingredient.name}</b> ({ingredient.unit})</span>
         {onEdit && onDelete && (
           <div className="preview-actions">
-            <button className="action-button" onClick={() => onEdit(ingredient)}>Modifier</button>
-            <button className="action-button" onClick={() => onDelete(ingredient.id)}>Supprimer</button>
+            <button className="action-button edit" onClick={() => onEdit(ingredient)}></button>
+            <button className="action-button delete" onClick={() => onDelete(ingredient.id)}></button>
           </div>
         )}
       </div>
