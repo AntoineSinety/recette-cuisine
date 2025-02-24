@@ -1,21 +1,19 @@
 // src/components/RecipeForm.jsx
 import React, { useState, useEffect } from 'react';
-import CreatableSelect  from 'react-select/creatable';
-import { useIngredientsAndCategories } from '../hooks/useIngredientsAndCategories';
-import MediaUploader from './MediaUploader';
+import Select from 'react-select';
+import { useIngredients } from '../hooks/useIngredients';
 
 const RecipeForm = ({ recipe = {}, onSubmit }) => {
   const initialFormState = {
     title: '',
     ingredients: [],
     steps: '',
-    category: '',
     time: '',
     image: null,
   };
 
   const [formData, setFormData] = useState({ ...initialFormState, ...recipe });
-  const { ingredients, addIngredient, categories, addCategory } = useIngredientsAndCategories();
+  const { ingredients } = useIngredients();
 
   useEffect(() => {
     if (recipe && Object.keys(recipe).length > 0) {
@@ -35,35 +33,23 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
   };
 
   const handleIngredientsChange = (selectedOptions) => {
-    const newIngredients = selectedOptions.map(option => option.value);
+    const newIngredients = selectedOptions.map(option => ({
+      ingredient: option.value,
+      quantity: '',
+      unit: option.unit,
+    }));
     setFormData((prevFormData) => ({
       ...prevFormData,
       ingredients: newIngredients,
     }));
-
-    newIngredients.forEach(ingredient => {
-      if (!ingredients.includes(ingredient)) {
-        addIngredient(ingredient);
-      }
-    });
   };
 
-  const handleCategoryChange = (selectedOption) => {
-    const newCategory = selectedOption.value;
+  const handleQuantityChange = (index, value) => {
+    const newIngredients = [...formData.ingredients];
+    newIngredients[index].quantity = value;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      category: newCategory,
-    }));
-
-    if (!categories.includes(newCategory)) {
-      addCategory(newCategory);
-    }
-  };
-
-  const handleMediaChange = (media) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      image: media,
+      ingredients: newIngredients,
     }));
   };
 
@@ -81,12 +67,24 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
 
       <div className="form-group">
         <label>Ingrédients</label>
-        <CreatableSelect 
+        <Select
           isMulti
           name="ingredients"
-          options={ingredients.map(ingredient => ({ value: ingredient, label: ingredient }))}
+          options={ingredients.map(ingredient => ({ value: ingredient.name, label: ingredient.name, unit: ingredient.unit }))}
+          onChange={handleIngredientsChange}
           className="ingredients-select"
         />
+        {formData.ingredients.map((ingredient, index) => (
+          <div key={index} className="ingredient-item">
+            <span>{ingredient.ingredient} ({ingredient.unit})</span>
+            <input
+              type="number"
+              value={ingredient.quantity}
+              onChange={(e) => handleQuantityChange(index, e.target.value)}
+              placeholder="Quantité"
+            />
+          </div>
+        ))}
       </div>
 
       <div className="form-group">
@@ -95,22 +93,8 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
       </div>
 
       <div className="form-group">
-        <label>Catégorie</label>
-        <CreatableSelect 
-          name="category"
-          options={categories.map(category => ({ value: category, label: category }))}
-          className="category-select"
-        />
-      </div>
-
-      <div className="form-group">
         <label>Temps (en minutes)</label>
         <input type="number" name="time" value={formData.time} onChange={handleChange} required />
-      </div>
-
-      <div className="form-group">
-        <label>Image</label>
-        <MediaUploader onMediaChange={handleMediaChange} />
       </div>
 
       <button type="submit" className="submit-btn">Soumettre</button>

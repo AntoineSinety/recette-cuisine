@@ -1,6 +1,6 @@
 // src/hooks/useIngredients.js
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 
 export const useIngredients = () => {
@@ -9,18 +9,13 @@ export const useIngredients = () => {
   useEffect(() => {
     const fetchIngredients = async () => {
       try {
-        const recipesCollection = collection(db, "recipes");
-        const recipesSnapshot = await getDocs(recipesCollection);
-        const allIngredients = new Set();
-
-        recipesSnapshot.docs.forEach(doc => {
-          const recipeIngredients = doc.data().ingredients;
-          if (recipeIngredients) {
-            recipeIngredients.forEach(ingredient => allIngredients.add(ingredient));
-          }
-        });
-
-        setIngredients(Array.from(allIngredients));
+        const ingredientsCollection = collection(db, "ingredients");
+        const ingredientsSnapshot = await getDocs(ingredientsCollection);
+        const ingredientsData = ingredientsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+        setIngredients(ingredientsData);
       } catch (error) {
         console.error("Error fetching ingredients:", error);
       }
@@ -29,5 +24,36 @@ export const useIngredients = () => {
     fetchIngredients();
   }, []);
 
-  return ingredients;
+  const addIngredient = async (ingredient) => {
+    try {
+      const docRef = await addDoc(collection(db, "ingredients"), ingredient);
+      setIngredients([...ingredients, { id: docRef.id, ...ingredient }]);
+    } catch (error) {
+      console.error("Error adding ingredient:", error);
+    }
+  };
+
+  const updateIngredient = async (id, updatedIngredient) => {
+    try {
+      const ingredientRef = doc(db, "ingredients", id);
+      await updateDoc(ingredientRef, updatedIngredient);
+      setIngredients(ingredients.map(ingredient =>
+        ingredient.id === id ? { id, ...updatedIngredient } : ingredient
+      ));
+    } catch (error) {
+      console.error("Error updating ingredient:", error);
+    }
+  };
+
+  const deleteIngredient = async (id) => {
+    try {
+      const ingredientRef = doc(db, "ingredients", id);
+      await deleteDoc(ingredientRef);
+      setIngredients(ingredients.filter(ingredient => ingredient.id !== id));
+    } catch (error) {
+      console.error("Error deleting ingredient:", error);
+    }
+  };
+
+  return { ingredients, addIngredient, updateIngredient, deleteIngredient };
 };
