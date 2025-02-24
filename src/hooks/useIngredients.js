@@ -1,7 +1,8 @@
 // src/hooks/useIngredients.js
 import { useEffect, useState } from "react";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
-import { db } from "../firebase";
+import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { db, storage } from "../firebase";
 
 export const useIngredients = () => {
   const [ingredients, setIngredients] = useState([]);
@@ -55,5 +56,13 @@ export const useIngredients = () => {
     }
   };
 
-  return { ingredients, addIngredient, updateIngredient, deleteIngredient };
+  const uploadImage = async (file) => {
+    const storageRef = ref(storage, `images/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    await uploadTask;
+    const downloadURL = await getDownloadURL(storageRef);
+    return downloadURL;
+  };
+
+  return { ingredients, addIngredient, updateIngredient, deleteIngredient, uploadImage };
 };

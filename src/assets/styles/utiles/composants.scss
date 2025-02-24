@@ -1,0 +1,59 @@
+.bouton {
+    appearance: none;
+    cursor: pointer;
+    background-color: var(--vert); color: var(--blanc);
+    border-radius: 0;
+    border: none;
+    padding: 10px 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    transition: 0.4s background-color ease;
+
+    &:hover {
+        background-color: var(--vert-hover);
+    }
+}
+
+
+.field-input {
+    appearance: none;
+    cursor: pointer;
+    background-color: var(--bleu);
+    border-radius: 0;
+    border: none;
+    padding: 8px 10px;
+    color: var(--blanc);
+
+    &:focus {
+        outline: 1px solid var(--clair);
+        outline-offset: -1px;
+    }
+}
+.field-file {
+    appearance: none;
+    cursor: pointer;
+    background-color: var(--bleu);
+    border-radius: 0;
+    border: none;
+    padding: 8px 10px;
+    color: var(--blanc);
+
+    &:focus {
+        outline: 1px solid var(--clair);
+        outline-offset: -1px;
+    }
+}
+.field-select {
+    appearance: none;
+    cursor: pointer;
+    background-color: var(--bleu);
+    border-radius: 0;
+    border: none;
+    padding: 8px 10px;
+    color: var(--blanc);
+
+    &:focus {
+        outline: 1px solid var(--clair);
+        outline-offset: -1px;
+    }
+}

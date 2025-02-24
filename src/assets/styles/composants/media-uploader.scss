@@ -1,0 +1,52 @@
+/* src/components/MediaUploader.scss */
+.media-uploader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .dropzone {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #aaa;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s;
+  
+    &:hover {
+      background-color: #e9e9e9;
+    }
+  }
+  
+  .media-preview {
+    margin-top: 20px;
+  }
+  
+  .media-preview img,
+  .media-preview video {
+    max-width: 100%;
+    border-radius: 10px;
+  }
+  
+  .webcam-container {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .webcam-container video {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+  }
+  
