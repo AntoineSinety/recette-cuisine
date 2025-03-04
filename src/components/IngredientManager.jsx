@@ -76,7 +76,6 @@ const IngredientManager = () => {
 
   return (
     <div>
-      <h2>Gestion des Ingrédients</h2>
       <div className="ingredient-manager">
         <button className="bouton" onClick={openPopup}>Ajouter un Ingrédient</button>
         <div className="ingredient-list">

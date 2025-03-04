@@ -1,7 +1,7 @@
 // src/components/RecipeForm.jsx
 import React, { useState, useEffect } from 'react';
-import Select from 'react-select';
 import { useIngredients } from '../hooks/useIngredients';
+import IngredientAutocomplete from './IngredientAutocomplete';
 
 const RecipeForm = ({ recipe = {}, onSubmit }) => {
   const initialFormState = {
@@ -13,7 +13,7 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
   };
 
   const [formData, setFormData] = useState({ ...initialFormState, ...recipe });
-  const { ingredients } = useIngredients();
+  const { ingredients: allIngredients } = useIngredients();
 
   useEffect(() => {
     if (recipe && Object.keys(recipe).length > 0) {
@@ -32,15 +32,16 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
     }));
   };
 
-  const handleIngredientsChange = (selectedOptions) => {
-    const newIngredients = selectedOptions.map(option => ({
-      ingredient: option.value,
-      quantity: '',
-      unit: option.unit,
-    }));
+  const handleSelectIngredient = (ingredient) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
-      ingredients: newIngredients,
+      ingredients: [
+        ...prevFormData.ingredients,
+        {
+          ...ingredient,
+          quantity: '',
+        },
+      ],
     }));
   };
 
@@ -67,16 +68,13 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
 
       <div className="form-group">
         <label>Ingrédients</label>
-        <Select
-          isMulti
-          name="ingredients"
-          options={ingredients.map(ingredient => ({ value: ingredient.name, label: ingredient.name, unit: ingredient.unit }))}
-          onChange={handleIngredientsChange}
-          className="ingredients-select"
+        <IngredientAutocomplete
+          ingredients={allIngredients}
+          onSelectIngredient={handleSelectIngredient}
         />
         {formData.ingredients.map((ingredient, index) => (
           <div key={index} className="ingredient-item">
-            <span>{ingredient.ingredient} ({ingredient.unit})</span>
+            <span>{ingredient.name} ({ingredient.unit})</span>
             <input
               type="number"
               value={ingredient.quantity}

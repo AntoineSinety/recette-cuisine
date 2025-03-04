@@ -1,7 +1,7 @@
 
 .ingredient-manager {
     display: grid; justify-content: center; align-items: center;
-    grid-template-columns: 300px 200px;
+    grid-template-columns: 1fr;
     gap: 20px 50px;
     background-color: var(--bleu-clair);
     padding: 20px;
@@ -20,4 +20,5 @@
     background-color: var(--bleu-clair);
     padding: 20px;
     display: flex; flex-wrap: wrap; gap: 20px;
+    width: 100%;
 }

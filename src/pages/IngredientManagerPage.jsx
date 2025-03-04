@@ -4,7 +4,7 @@ import IngredientManager from '../components/IngredientManager';
 
 const IngredientManagerPage = () => {
   return (
-    <div>
+    <div className='page'>
       <h1>Gestion des Ingrédients</h1>
       <IngredientManager />
     </div>
