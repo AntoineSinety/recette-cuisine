@@ -13,7 +13,7 @@ const AddRecipePage = () => {
   };
 
   return (
-    <div>
+    <div className='page'>
       <h1>Ajouter une Recette</h1>
       <RecipeForm onSubmit={handleSubmit} />
     </div>

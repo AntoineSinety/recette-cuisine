@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { useIngredients } from '../hooks/useIngredients';
 import IngredientAutocomplete from './IngredientAutocomplete';
+import IngredientPreview from './IngredientPreview';
+import { Editor } from '@tinymce/tinymce-react';
 
 const RecipeForm = ({ recipe = {}, onSubmit }) => {
   const initialFormState = {
@@ -54,6 +56,21 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
     }));
   };
 
+  const handleRemoveIngredient = (index) => {
+    const newIngredients = formData.ingredients.filter((_, i) => i !== index);
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      ingredients: newIngredients,
+    }));
+  };
+
+  const handleStepsChange = (content) => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      steps: content,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(formData);
@@ -63,7 +80,7 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
     <form onSubmit={handleSubmit} className="recipe-form">
       <div className="form-group">
         <label>Titre</label>
-        <input type="text" name="title" value={formData.title} onChange={handleChange} required />
+        <input type="text" className="field-input" name="title" value={formData.title} onChange={handleChange} required />
       </div>
 
       <div className="form-group">
@@ -72,27 +89,46 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
           ingredients={allIngredients}
           onSelectIngredient={handleSelectIngredient}
         />
-        {formData.ingredients.map((ingredient, index) => (
-          <div key={index} className="ingredient-item">
-            <span>{ingredient.name} ({ingredient.unit})</span>
-            <input
-              type="number"
-              value={ingredient.quantity}
-              onChange={(e) => handleQuantityChange(index, e.target.value)}
-              placeholder="Quantité"
-            />
-          </div>
-        ))}
+        <div className="selected-ingredients">
+          {formData.ingredients.map((ingredient, index) => (
+            <div key={index} className="ingredient-item">
+              <IngredientPreview ingredient={ingredient} />
+              <input
+                type="number"
+                className="field-input"
+                value={ingredient.quantity}
+                onChange={(e) => handleQuantityChange(index, e.target.value)}
+                placeholder="Quantité"
+              />
+              <button type="button" onClick={() => handleRemoveIngredient(index)} className="remove-btn">
+                ✖
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="form-group">
-        <label>Étapes (séparées par des sauts de ligne)</label>
-        <textarea name="steps" value={formData.steps} onChange={handleChange} required></textarea>
+        <label>Étapes</label>
+        <Editor
+          apiKey='n7ca9rt9c55rw2ov1ypquw5nbtnldtc9x7l9n57btzo3a0c2'
+          value={formData.steps}
+          onEditorChange={handleStepsChange}
+          init={{
+            height: 300,
+            menubar: false,
+            plugins: 'lists link image code ',
+            toolbar: 'undo redo | blocks bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
+            skin: 'oxide-dark',
+            content_css: 'dark'
+          }}
+        />
       </div>
 
       <div className="form-group">
         <label>Temps (en minutes)</label>
-        <input type="number" name="time" value={formData.time} onChange={handleChange} required />
+        <input type="number" className="field-input" name="time" value={formData.time} onChange={handleChange} required />
       </div>
 
       <button type="submit" className="submit-btn">Soumettre</button>

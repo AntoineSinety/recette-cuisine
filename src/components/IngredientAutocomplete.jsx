@@ -1,5 +1,6 @@
 // src/components/IngredientAutocomplete.jsx
 import React, { useState } from 'react';
+import IngredientPreview from './IngredientPreview';
 
 const IngredientAutocomplete = ({ ingredients, onSelectIngredient }) => {
   const [inputValue, setInputValue] = useState('');
@@ -26,19 +27,20 @@ const IngredientAutocomplete = ({ ingredients, onSelectIngredient }) => {
     <div className="autocomplete-wrapper">
       <input
         type="text"
+
         value={inputValue}
         onChange={handleInputChange}
-        placeholder="Ajouter un ingrédient"
-        className="autocomplete-input"
+        placeholder="Rechercher un ingrédient"
+        className="autocomplete-input field-input"
       />
       {suggestions.length > 0 && (
-        <ul className="autocomplete-suggestions">
+        <div className="autocomplete-suggestions">
           {suggestions.map((ingredient, index) => (
-            <li key={index} onClick={() => handleSelect(ingredient)}>
-              {ingredient.name} ({ingredient.unit})
-            </li>
+            <div key={index} onClick={() => handleSelect(ingredient)}>
+              <IngredientPreview ingredient={ingredient} />
+            </div>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
