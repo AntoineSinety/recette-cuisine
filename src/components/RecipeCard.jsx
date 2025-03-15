@@ -1,10 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDeleteRecipe } from '../hooks/useDeleteRecipe';
+import { getDoc, doc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const RecipeCard = ({ recipe, onClick }) => {
   const navigate = useNavigate();
   const deleteRecipe = useDeleteRecipe();
+
+  const [ingredients, setIngredients] = useState([]);
+
+  useEffect(() => {
+    const fetchIngredients = async () => {
+      const ingredientsData = await Promise.all(
+        recipe.ingredients.map(async (ingredientRef) => {
+          const ingredientDocRef = doc(db, 'ingredients', ingredientRef.id);
+          const ingredientDoc = await getDoc(ingredientDocRef);
+          if (ingredientDoc.exists()) {
+            return { ...ingredientDoc.data(), ...ingredientRef };
+          }
+          return null;
+        })
+      );
+      setIngredients(ingredientsData.filter(ingredient => ingredient !== null));
+    };
+
+    if (recipe.ingredients) {
+      fetchIngredients();
+    }
+  }, [recipe]);
 
   const handleEdit = () => {
     navigate(`/edit/${recipe.id}`);
@@ -20,9 +44,6 @@ const RecipeCard = ({ recipe, onClick }) => {
     }
   };
 
-  // Assurez-vous que recipe.ingredients est un tableau
-  const ingredientsArray = Array.isArray(recipe.ingredients) ? recipe.ingredients : [];
-
   return (
     <div className="recipe-card" onClick={(e) => {
       if (e.target.closest('.card-buttons')) return;
@@ -33,7 +54,14 @@ const RecipeCard = ({ recipe, onClick }) => {
       )}
       <h3>{recipe.title}</h3>
       <p>{recipe.description}</p>
-      <p><strong>Ingrédients:</strong> {ingredientsArray.join(', ')}</p>
+      <p><strong>Ingrédients:</strong></p>
+      <ul>
+        {ingredients.map((ingredient, index) => (
+          <li key={index}>
+            {ingredient.name} ({ingredient.quantity} {ingredient.unit})
+          </li>
+        ))}
+      </ul>
       <p><strong>Temps:</strong> {recipe.time} min</p>
       <div className="card-buttons">
         <button onClick={handleEdit}>Modifier</button>

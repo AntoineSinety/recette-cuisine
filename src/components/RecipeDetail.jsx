@@ -1,10 +1,12 @@
-// src/components/RecipeDetail.jsx
-import React, { forwardRef, useImperativeHandle, useRef, useEffect } from 'react';
+import React, { forwardRef, useImperativeHandle, useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
+import { getDoc, doc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
   const detailRef = useRef(null);
   const overlayRef = useRef(null);
+  const [ingredients, setIngredients] = useState([]);
 
   useImperativeHandle(ref, () => ({
     open() {
@@ -45,10 +47,28 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
   };
 
   useEffect(() => {
+    const fetchIngredients = async () => {
+      const ingredientsData = await Promise.all(
+        recipe.ingredients.map(async (ingredientRef) => {
+          const ingredientDocRef = doc(db, 'ingredients', ingredientRef.id);
+          const ingredientDoc = await getDoc(ingredientDocRef);
+          if (ingredientDoc.exists()) {
+            return { ...ingredientDoc.data(), ...ingredientRef };
+          }
+          return null;
+        })
+      );
+      setIngredients(ingredientsData.filter(ingredient => ingredient !== null));
+    };
+
+    if (recipe.ingredients) {
+      fetchIngredients();
+    }
+
     return () => {
       document.body.classList.remove('no-scroll');
     };
-  }, []);
+  }, [recipe]);
 
   if (!recipe) return null;
 
@@ -61,12 +81,14 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
         <p><strong>Temps de préparation:</strong> {recipe.prepTime} min</p>
         <p><strong>Temps de cuisson:</strong> {recipe.cookTime} min</p>
         <p><strong>Difficulté:</strong> {recipe.difficulty}</p>
-        {recipe.ingredients && (
+        {ingredients.length > 0 && (
           <div>
             <h3>Ingrédients:</h3>
             <ul>
-              {recipe.ingredients.map((ing, index) => (
-                <li key={index}>{ing}</li>
+              {ingredients.map((ingredient, index) => (
+                <li key={index}>
+                  {ingredient.name} ({ingredient.quantity} {ingredient.unit})
+                </li>
               ))}
             </ul>
           </div>
@@ -74,11 +96,7 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
         {recipe.steps && (
           <div>
             <h3>Instructions:</h3>
-            <ol>
-              {recipe.steps.map((step, index) => (
-                <li key={index}>{step}</li>
-              ))}
-            </ol>
+            <div dangerouslySetInnerHTML={{ __html: recipe.steps }} />
           </div>
         )}
         {recipe.categories && <p><strong>Catégories:</strong> {recipe.categories.join(', ')}</p>}

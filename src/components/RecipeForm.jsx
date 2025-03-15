@@ -40,8 +40,10 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
       ingredients: [
         ...prevFormData.ingredients,
         {
-          ...ingredient,
+          id: ingredient.id, // Utilisez l'ID de l'ingrédient
+          name: ingredient.name,
           quantity: '',
+          unit: ingredient.unit,
         },
       ],
     }));
@@ -117,11 +119,9 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
           init={{
             height: 300,
             menubar: false,
-            plugins: 'lists link image code ',
-            toolbar: 'undo redo | blocks bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
-            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
-            skin: 'oxide-dark',
-            content_css: 'dark'
+            plugins: 'lists link image code',
+            toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | bullist numlist outdent indent | link image | code',
+            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
           }}
         />
       </div>
