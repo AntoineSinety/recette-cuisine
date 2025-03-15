@@ -31,7 +31,12 @@ const RecipeCard = ({ recipe, onClick }) => {
   }, [recipe]);
 
   const handleEdit = () => {
-    navigate(`/edit/${recipe.id}`);
+    // Assurez-vous que recipe.id est correctement défini
+    if (recipe.id) {
+      navigate(`/edit/${recipe.id}`, { state: { recipe } });
+    } else {
+      console.error('ID de recette manquant pour la navigation:', recipe);
+    }
   };
 
   const handleDelete = async () => {

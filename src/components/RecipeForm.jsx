@@ -1,11 +1,17 @@
 // src/components/RecipeForm.jsx
 import React, { useState, useEffect } from 'react';
+import { useLocation, useParams } from 'react-router-dom';
 import { useIngredients } from '../hooks/useIngredients';
 import IngredientAutocomplete from './IngredientAutocomplete';
 import IngredientPreview from './IngredientPreview';
 import { Editor } from '@tinymce/tinymce-react';
 
 const RecipeForm = ({ recipe = {}, onSubmit }) => {
+  const { id } = useParams();
+  const location = useLocation();
+  const { state } = location;
+  const initialRecipe = state ? state.recipe : recipe;
+
   const initialFormState = {
     title: '',
     ingredients: [],
@@ -14,17 +20,17 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
     image: null,
   };
 
-  const [formData, setFormData] = useState({ ...initialFormState, ...recipe });
+  const [formData, setFormData] = useState({ ...initialFormState, ...initialRecipe });
   const { ingredients: allIngredients } = useIngredients();
 
   useEffect(() => {
-    if (recipe && Object.keys(recipe).length > 0) {
+    if (initialRecipe && Object.keys(initialRecipe).length > 0) {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        ...recipe,
+        ...initialRecipe,
       }));
     }
-  }, [recipe]);
+  }, [initialRecipe]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +46,7 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
       ingredients: [
         ...prevFormData.ingredients,
         {
-          id: ingredient.id, // Utilisez l'ID de l'ingrédient
+          id: ingredient.id,
           name: ingredient.name,
           quantity: '',
           unit: ingredient.unit,

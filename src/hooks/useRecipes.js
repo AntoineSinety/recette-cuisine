@@ -8,6 +8,7 @@ const useRecipes = () => {
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "recipes"), (snapshot) => {
       const newRecipes = snapshot.docs.map((doc) => ({
+        id: doc.id,
         firestoreId: doc.id, // Utilise l'ID Firestore correct
         ...doc.data(),
       }));

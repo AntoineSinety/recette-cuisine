@@ -1,36 +1,28 @@
 // src/pages/EditRecipePage.jsx
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import RecipeForm from '../components/RecipeForm';
 import { useUpdateRecipe } from '../hooks/useUpdateRecipe';
-import { useGetRecipe } from '../hooks/useGetRecipe';
+import { useLocation } from 'react-router-dom';
 
-const EditRecipePage = ({ match, history }) => {
-  const { id } = match.params;
+const EditRecipePage = () => {
+  const location = useLocation();
+  const { state } = location;
+  const recipe = state ? state.recipe : null;
+
   const updateRecipe = useUpdateRecipe();
-  const [recipe, setRecipe] = useState(null);
 
-  const { getRecipe } = useGetRecipe();
-
-  useEffect(() => {
-    const fetchRecipe = async () => {
-      const recipeData = await getRecipe(id);
-      setRecipe(recipeData);
-    };
-
-    fetchRecipe();
-  }, [id, getRecipe]);
-
-  const handleSubmit = async (updatedRecipe) => {
-    await updateRecipe(id, updatedRecipe);
-    history.push('/');
+  const handleSubmit = (formData) => {
+    updateRecipe(formData);
   };
-
-  if (!recipe) return <div>Chargement...</div>;
 
   return (
     <div>
-      <h1>Modifier la Recette</h1>
-      <RecipeForm recipe={recipe} onSubmit={handleSubmit} />
+      <h2>Modifier la Recette</h2>
+      {recipe ? (
+        <RecipeForm recipe={recipe} onSubmit={handleSubmit} />
+      ) : (
+        <p>Recette non trouvée.</p>
+      )}
     </div>
   );
 };

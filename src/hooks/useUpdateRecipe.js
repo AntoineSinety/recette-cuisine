@@ -1,15 +1,15 @@
 // src/hooks/useUpdateRecipe.js
-import { doc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase";
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 export const useUpdateRecipe = () => {
-  const updateRecipe = async (id, recipe) => {
+  const updateRecipe = async (recipe) => {
+    const recipeDocRef = doc(db, 'recipes', recipe.id);
     try {
-      const recipeRef = doc(db, "recipes", id);
-      await updateDoc(recipeRef, recipe);
-      console.log("Recipe updated with ID: ", id);
-    } catch (e) {
-      console.error("Error updating recipe: ", e);
+      await updateDoc(recipeDocRef, recipe);
+      console.log('Recipe updated successfully');
+    } catch (error) {
+      console.error('Error updating recipe: ', error);
     }
   };
 
