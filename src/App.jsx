@@ -12,12 +12,14 @@ const App = () => {
   return (
     <Router>
       <NavBar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/add-recipe" element={<AddRecipePage />} />
-        <Route path="/edit/:id" element={<EditRecipePage />} />
-        <Route path="/manage-ingredients" element={<IngredientManagerPage />} />
-      </Routes>
+      <main>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/add-recipe" element={<AddRecipePage />} />
+          <Route path="/edit/:id" element={<EditRecipePage />} />
+          <Route path="/manage-ingredients" element={<IngredientManagerPage />} />
+        </Routes>
+      </main>
     </Router>
   );
 };

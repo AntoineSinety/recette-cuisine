@@ -1,4 +1,16 @@
-.ingredient-preview {
+.ingredient-list-item {
+    transition: box-shadow 0.2s, transform 0.2s;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    &:hover {
+        box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        background: var(--bleu-clair);
+        transform: translateY(-2px) scale(1.03);
+    }
+}
+
+.ingredient-preview ,
+.ingredient-manager{
     
 
     .preview-card {
@@ -9,14 +21,19 @@
         border-radius: 8px;
         padding: 15px;
         text-align: center;
-        width: 100px;
+        width: 160px;
         justify-content: center;
         align-items: center;
+        border: 2px solid transparent;
+        transition: border 0.2s;
+        &:hover {
+            border: 2px solid var(--bleu);
+        }
     }
   
     .preview-image {
         display: block;
-        width: 50px; height: 50px;
+        width: 150px; height: 150px;
         object-fit: contain;
         max-width: 100%;
         border-radius: 4px;
