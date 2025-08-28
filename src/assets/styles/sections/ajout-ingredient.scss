@@ -1,4 +1,3 @@
-
 .ingredient-manager {
     display: grid; justify-content: center; align-items: center;
     grid-template-columns: 1fr;
@@ -21,4 +20,13 @@
     padding: 20px;
     display: flex; flex-wrap: wrap; gap: 20px;
     width: 100%;
+}
+.mediatheque {
+    .popup-content {
+        min-height: 340px;
+        max-width: 540px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
 }

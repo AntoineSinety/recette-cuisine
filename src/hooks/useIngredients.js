@@ -1,7 +1,7 @@
 // src/hooks/useIngredients.js
 import { useEffect, useState } from "react";
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytesResumable, getStorage, uploadBytes } from "firebase/storage";
 import { db, storage } from "../firebase";
 
 export const useIngredients = () => {
@@ -56,12 +56,25 @@ export const useIngredients = () => {
     }
   };
 
-  const uploadImage = async (file) => {
-    const storageRef = ref(storage, `images/${file.name}`);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    await uploadTask;
-    const downloadURL = await getDownloadURL(storageRef);
-    return downloadURL;
+  const uploadImage = async (fileOrBase64, folder = 'ingredients', isBase64 = false) => {
+    const storage = getStorage();
+    let fileRef;
+    let snapshot;
+    if (isBase64) {
+      // Pour les images webcam (base64)
+      const response = await fetch(fileOrBase64);
+      const blob = await response.blob();
+      const filename = `ingredient_${Date.now()}.jpg`;
+      fileRef = ref(storage, `${folder}/${filename}`);
+      snapshot = await uploadBytes(fileRef, blob);
+    } else {
+      // Pour les fichiers classiques
+      const filename = `ingredient_${Date.now()}_${fileOrBase64.name}`;
+      fileRef = ref(storage, `${folder}/${filename}`);
+      snapshot = await uploadBytes(fileRef, fileOrBase64);
+    }
+    const url = await getDownloadURL(fileRef);
+    return url;
   };
 
   return { ingredients, addIngredient, updateIngredient, deleteIngredient, uploadImage };

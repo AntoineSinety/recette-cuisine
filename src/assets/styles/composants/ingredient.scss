@@ -101,4 +101,72 @@
     }
 }
 
+.mediatheque {
+    .media-uploader {
+        margin-bottom: 12px;
+        .dropzone {
+            border: 2px dashed var(--bleu);
+            background: #f8f8f8;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            &:hover {
+                background: #e6f7ff;
+            }
+        }
+        .media-preview {
+            margin-top: 8px;
+            img {
+                width: 60px;
+                height: 60px;
+                object-fit: contain;
+                border-radius: 4px;
+                border: 1px solid #ccc;
+            }
+        }
+        .webcam-container {
+            margin-top: 8px;
+            text-align: center;
+            button {
+                margin: 0 4px;
+            }
+        }
+    }
+    .images-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 8px;
+        .image-thumb {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            transition: border 0.2s;
+            &:hover {
+                border: 2px solid var(--bleu);
+            }
+        }
+        .no-image {
+            color: #888;
+            font-size: 12px;
+            text-align: center;
+        }
+    }
+    .mediatheque-instructions {
+        font-size: 15px;
+        color: #333;
+        margin-bottom: 8px;
+        b {
+            color: var(--bleu);
+        }
+    }
+}
+
 

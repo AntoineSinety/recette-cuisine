@@ -30,41 +30,60 @@ const MediaUploader = ({ onMediaChange }) => {
   }, [webcamRef, onMediaChange]);
 
   return (
-    <div className="media-uploader">
-      <div {...getRootProps({ className: 'dropzone' })}>
+    <div className="media-uploader" style={{ width: '100%' }}>
+      <div
+        {...getRootProps({ className: 'dropzone' })}
+        style={{
+          border: '2px dashed #0074D9',
+          borderRadius: 8,
+          padding: 16,
+          background: isDragActive ? '#2e2e2eff' : '#282828ff',
+          textAlign: 'center',
+          marginBottom: 8,
+          cursor: 'pointer'
+        }}
+      >
         <input {...getInputProps()} />
-        {isDragActive ? <p>Déposez le fichier ici</p> : <p>Glissez-déposez un fichier ici, ou cliquez pour sélectionner un fichier</p>}
+        {isDragActive
+          ? <p style={{ color: '#0074D9' }}>Déposez le fichier ici...</p>
+          : <p>Glissez-déposez une image ici<br />ou cliquez pour sélectionner un fichier</p>}
+      </div>
+      <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginBottom: 8 }}>
+        <button type="button" className="bouton" onClick={() => fileInputRef.current.click()}>
+          Choisir un fichier
+        </button>
+        <button type="button" className="bouton" onClick={() => setCameraOpen(true)}>
+          Prendre une photo
+        </button>
       </div>
       <input
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
         style={{ display: 'none' }}
+        accept="image/*"
       />
-      <button type="button" onClick={() => fileInputRef.current.click()}>
-        Choisir un fichier
-      </button>
-      <button type="button" onClick={() => setCameraOpen(true)}>
-        Ouvrir la caméra
-      </button>
       {media && (
-        <div className="media-preview">
+        <div className="media-preview" style={{ marginTop: 8 }}>
           {typeof media === 'string' ? (
-            <img src={media} alt="Preview" />
+            <img src={media} alt="Preview" style={{ width: 60, height: 60, objectFit: 'contain', borderRadius: 4 }} />
           ) : (
-            <video src={URL.createObjectURL(media)} controls />
+            <img src={URL.createObjectURL(media)} alt="Preview" style={{ width: 60, height: 60, objectFit: 'contain', borderRadius: 4 }} />
           )}
         </div>
       )}
       {cameraOpen && (
-        <div className="webcam-container">
+        <div className="webcam-container" style={{ marginTop: 8 }}>
           <Webcam
             audio={false}
             ref={webcamRef}
             screenshotFormat="image/jpeg"
+            style={{ width: 180, borderRadius: 8 }}
           />
-          <button onClick={capturePhoto}>Prendre une photo</button>
-          <button onClick={() => setCameraOpen(false)}>Fermer la caméra</button>
+          <div style={{ display: 'flex', gap: 8, justifyContent: 'center', marginTop: 8 }}>
+            <button className="bouton" onClick={capturePhoto}>Prendre une photo</button>
+            <button className="bouton" onClick={() => setCameraOpen(false)}>Fermer la caméra</button>
+          </div>
         </div>
       )}
     </div>
