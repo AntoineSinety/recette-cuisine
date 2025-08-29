@@ -1,5 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 html {
-    font-family: "PT Sans", serif;
+    font-family: "Inter", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Inter", sans-serif;
+    font-weight: 700;
+    margin: 0;
+    color: var(--blanc);
+}
+
+h1 {
+    font-size: 2.2em;
+    font-weight: 700;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+h4 {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+h5 {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+h6 {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+p {
+    margin: 0 0 1rem 0;
+    line-height: 1.6;
+    color: var(--blanc);
 }

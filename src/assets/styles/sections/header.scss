@@ -1,33 +1,52 @@
 
-/* src/components/NavBar.scss */
 .navbar {
-    background-color: #1e1e1e;
-    padding: 0 20px;
-    display: grid; grid-template-columns: 120px 1fr;
-    align-items: center;gap: 20px;
-  }
+    background-color: var(--bleu-clair);
+    padding: 0 30px;
+    display: grid; 
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    gap: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
   
-  .navbar ul {
+.navbar ul {
     list-style: none;
     display: flex;
-    gap: 20px;
-  }
-  
-  .navbar li {
+    gap: 0;
     margin: 0;
-  }
+    padding: 0;
+}
   
-  .navbar a {
-    color: #e0e0e0;
+.navbar li {
+    margin: 0;
+}
+  
+.navbar a {
+    color: var(--blanc);
     text-decoration: none;
-    font-weight: bold;
-    padding: 10px 15px;
-    border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
-  }
+    font-weight: 600;
+    font-size: 1.1em;
+    padding: 16px 24px;
+    border-radius: 0;
+    transition: 0.3s all ease;
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-left: 3px solid transparent;
+}
   
-  .navbar a:hover {
-    background-color: #4CAF50;
-    color: white;
-  }
+.navbar a:hover {
+    background-color: var(--vert);
+    color: var(--blanc);
+    border-left-color: var(--bleu-ciel);
+    transform: translateY(-1px);
+}
+
+.navbar a.active {
+    background-color: var(--dark);
+    border-left-color: var(--vert);
+}
   

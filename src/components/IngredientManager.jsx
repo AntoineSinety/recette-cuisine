@@ -203,6 +203,9 @@ const IngredientManager = () => {
                 <option value="ml">Millilitres</option>
                 <option value="l">Litres</option>
                 <option value="cl">Centilitres</option>
+                <option value="u">Unités</option>
+                <option value="cc">CC</option>
+                <option value="cs">CS</option>
               </select>
             </div>
             <div className="popup-actions">

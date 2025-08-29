@@ -13,11 +13,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 18px 24px;
+  border-radius: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--clair2);
   transform: translateX(100%);
   opacity: 0;
   transition: all 0.3s ease;
@@ -28,18 +27,18 @@
   }
   
   &--success {
-    background: linear-gradient(135deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9));
-    border-color: rgba(46, 204, 113, 0.3);
+    background: var(--vert);
+    border-color: var(--bleu-ciel);
   }
   
   &--error {
-    background: linear-gradient(135deg, rgba(231, 76, 60, 0.9), rgba(192, 57, 43, 0.9));
-    border-color: rgba(231, 76, 60, 0.3);
+    background: var(--vert-hover);
+    border-color: #d32f2f;
   }
   
   &--loading {
-    background: linear-gradient(135deg, rgba(52, 152, 219, 0.9), rgba(41, 128, 185, 0.9));
-    border-color: rgba(52, 152, 219, 0.3);
+    background: var(--bleu-ciel);
+    border-color: var(--bleu);
     
     .toast__icon {
       animation: spin 1s linear infinite;
@@ -47,8 +46,8 @@
   }
   
   &--info {
-    background: linear-gradient(135deg, rgba(155, 89, 182, 0.9), rgba(142, 68, 173, 0.9));
-    border-color: rgba(155, 89, 182, 0.3);
+    background: var(--dark);
+    border-color: var(--clair);
   }
 
   &__content {
@@ -64,31 +63,32 @@
   }
 
   &__message {
-    color: white;
-    font-size: 0.95em;
-    font-weight: 500;
+    color: var(--blanc);
+    font-size: 1em;
+    font-weight: 600;
     line-height: 1.4;
+    letter-spacing: 0.3px;
   }
 
   &__close {
     background: none;
     border: none;
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--clair);
     font-size: 1.5em;
     cursor: pointer;
     padding: 0;
     margin-left: 12px;
-    width: 24px;
-    height: 24px;
+    width: 26px;
+    height: 26px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    transition: all 0.2s ease;
+    border-radius: 0;
+    transition: all 0.3s ease;
     
     &:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
+      background: var(--clair2);
+      color: var(--blanc);
       transform: scale(1.1);
     }
   }

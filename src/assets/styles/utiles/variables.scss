@@ -1,7 +1,7 @@
 :root {
     --bleu: #2D3848;
     --bleu-clair: #3A4556;
-    --dark : #293342;
+    --dark: #293342;
     --vert: #3D9E70;
     --vert-hover: #22553d;
     --blanc: #fff;
@@ -10,4 +10,22 @@
 
     --clair: rgba(255,255,255, 0.6);
     --clair2: rgba(255,255,255, 0.2);
+    
+    // Variables supplémentaires pour la cohérence
+    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-medium: 0 4px 15px rgba(0, 0, 0, 0.2);
+    --shadow-heavy: 0 8px 25px rgba(0, 0, 0, 0.3);
+    
+    --border-width: 1px;
+    --border-width-thick: 2px;
+    
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+    
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
 }

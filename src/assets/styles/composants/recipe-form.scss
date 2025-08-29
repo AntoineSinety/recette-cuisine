@@ -5,12 +5,11 @@
 }
 
 .recipe-form {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 20px;
-  padding: 32px;
-  backdrop-filter: blur(15px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  background: var(--bleu-clair);
+  border-radius: 0;
+  padding: 40px;
+  border: 1px solid var(--clair2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 
   &__header {
     display: grid;
@@ -53,35 +52,41 @@
   &__input,
   &__select {
     width: 100%;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 12px;
-    color: white;
-    padding: 14px 16px;
+    background: var(--dark);
+    border: 1px solid var(--clair2);
+    border-radius: 0;
+    color: var(--blanc);
+    padding: 16px 20px;
     font-size: 1em;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    box-sizing: border-box;
 
     &::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--clair);
     }
 
     &:focus {
       outline: none;
-      border-color: rgba(255, 215, 0, 0.6);
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+      border-color: var(--bleu-ciel);
+      background: var(--bleu);
+      box-shadow: 0 0 0 2px rgba(42, 163, 204, 0.2);
+    }
+
+    &:hover:not(:focus) {
+      border-color: var(--clair);
     }
 
     &--title {
-      font-size: 1.2em;
-      font-weight: 600;
-      padding: 16px;
+      font-size: 1.3em;
+      font-weight: 700;
+      padding: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     &--time {
       text-align: center;
-      font-weight: bold;
+      font-weight: 600;
     }
   }
 
@@ -90,7 +95,7 @@
     
     option {
       background: var(--bleu);
-      color: white;
+      color: var(--blanc);
     }
   }
 
@@ -111,8 +116,9 @@
   }
 
   &__image-upload {
-    border-radius: 16px;
+    border-radius: 0;
     overflow: hidden;
+    border: 1px solid var(--clair2);
   }
 
   &__ingredients-add {
@@ -137,16 +143,23 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 16px;
+    padding: 50px 20px;
+    background: var(--dark);
+    border: 2px dashed var(--clair2);
+    border-radius: 0;
     text-align: center;
+    transition: 0.3s all ease;
+    
+    &:hover {
+      border-color: var(--bleu-ciel);
+      background: var(--bleu);
+    }
     
     p {
-      color: rgba(255, 255, 255, 0.7);
-      margin: 12px 0 0 0;
+      color: var(--clair);
+      margin: 16px 0 0 0;
       font-style: italic;
+      font-size: 1.1em;
     }
   }
 
@@ -157,18 +170,18 @@
   }
 
   &__editor {
-    border-radius: 12px;
+    border-radius: 0;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid var(--clair2);
     
     .tox-tinymce {
       border: none !important;
-      border-radius: 12px !important;
+      border-radius: 0 !important;
     }
     
     .tox-editor-header {
-      background: rgba(255, 255, 255, 0.1) !important;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+      background: var(--dark) !important;
+      border-bottom: 1px solid var(--clair2) !important;
     }
     
     .tox-toolbar {
@@ -176,7 +189,7 @@
     }
     
     .tox-edit-area {
-      background: rgba(255, 255, 255, 0.05) !important;
+      background: var(--bleu) !important;
     }
   }
 
@@ -186,30 +199,33 @@
   }
 
   &__submit-btn {
-    background: linear-gradient(135deg, #ffd700, #ffa500);
-    color: #333;
+    background: var(--vert);
+    color: var(--blanc);
     border: none;
-    border-radius: 50px;
-    padding: 16px 48px;
+    border-radius: 0;
+    padding: 18px 60px;
     font-size: 1.1em;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
-    min-width: 200px;
+    min-width: 220px;
     text-transform: uppercase;
     letter-spacing: 1px;
+    border: 2px solid transparent;
     
     &:hover:not(:disabled) {
+      background: var(--vert-hover);
       transform: translateY(-2px);
-      box-shadow: 0 12px 24px rgba(255, 215, 0, 0.4);
-      background: linear-gradient(135deg, #ffed4a, #f39c12);
+      border-color: var(--bleu-ciel);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
     }
     
     &:disabled {
-      opacity: 0.8;
+      opacity: 0.7;
       cursor: not-allowed;
+      background: var(--clair2);
     }
 
     &--loading {

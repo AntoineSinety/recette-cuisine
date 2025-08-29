@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(firebase firestore:get:*)"
+      "Bash(firebase firestore:get:*)",
+      "Bash(npm start)"
     ],
     "deny": [],
     "ask": []
