@@ -1,0 +1,142 @@
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transform: translateX(100%);
+  opacity: 0;
+  transition: all 0.3s ease;
+  
+  &:not(.toast--animating) {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  
+  &--success {
+    background: linear-gradient(135deg, rgba(46, 204, 113, 0.9), rgba(39, 174, 96, 0.9));
+    border-color: rgba(46, 204, 113, 0.3);
+  }
+  
+  &--error {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.9), rgba(192, 57, 43, 0.9));
+    border-color: rgba(231, 76, 60, 0.3);
+  }
+  
+  &--loading {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.9), rgba(41, 128, 185, 0.9));
+    border-color: rgba(52, 152, 219, 0.3);
+    
+    .toast__icon {
+      animation: spin 1s linear infinite;
+    }
+  }
+  
+  &--info {
+    background: linear-gradient(135deg, rgba(155, 89, 182, 0.9), rgba(142, 68, 173, 0.9));
+    border-color: rgba(155, 89, 182, 0.3);
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+  }
+
+  &__icon {
+    font-size: 1.2em;
+    flex-shrink: 0;
+  }
+
+  &__message {
+    color: white;
+    font-size: 0.95em;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 0;
+    margin-left: 12px;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      transform: scale(1.1);
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Animation pour les boutons de soumission
+.submit-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  
+  &--loading {
+    pointer-events: none;
+    
+    .submit-btn__text {
+      opacity: 0;
+    }
+    
+    .submit-btn__spinner {
+      opacity: 1;
+    }
+  }
+  
+  &__text {
+    transition: opacity 0.3s ease;
+  }
+  
+  &__spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    
+    &::after {
+      content: '';
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top: 2px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+}

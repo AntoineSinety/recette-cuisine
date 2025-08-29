@@ -1,0 +1,291 @@
+.recipe-form-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.recipe-form {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  padding: 32px;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+
+  &__header {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+
+  &__section {
+    margin-bottom: 24px;
+
+    &--full {
+      grid-column: 1 / -1;
+    }
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  &__label-text {
+    color: white;
+    font-size: 1.1em;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  &__label-required {
+    color: #e74c3c;
+    font-weight: bold;
+  }
+
+  &__input,
+  &__select {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    padding: 14px 16px;
+    font-size: 1em;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    &:focus {
+      outline: none;
+      border-color: rgba(255, 215, 0, 0.6);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+    }
+
+    &--title {
+      font-size: 1.2em;
+      font-weight: 600;
+      padding: 16px;
+    }
+
+    &--time {
+      text-align: center;
+      font-weight: bold;
+    }
+  }
+
+  &__select {
+    cursor: pointer;
+    
+    option {
+      background: var(--bleu);
+      color: white;
+    }
+  }
+
+  &__time-input {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    
+    input {
+      flex: 1;
+    }
+  }
+
+  &__time-unit {
+    color: #e0e0e0;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  &__image-upload {
+    border-radius: 16px;
+    overflow: hidden;
+  }
+
+  &__ingredients-add {
+    margin-bottom: 20px;
+  }
+
+  &__ingredients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 16px;
+    min-height: 120px;
+    
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+  }
+
+  &__empty-ingredients {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    text-align: center;
+    
+    p {
+      color: rgba(255, 255, 255, 0.7);
+      margin: 12px 0 0 0;
+      font-style: italic;
+    }
+  }
+
+  &__empty-icon {
+    font-size: 3em;
+    opacity: 0.5;
+    margin-bottom: 8px;
+  }
+
+  &__editor {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    .tox-tinymce {
+      border: none !important;
+      border-radius: 12px !important;
+    }
+    
+    .tox-editor-header {
+      background: rgba(255, 255, 255, 0.1) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+    
+    .tox-toolbar {
+      background: transparent !important;
+    }
+    
+    .tox-edit-area {
+      background: rgba(255, 255, 255, 0.05) !important;
+    }
+  }
+
+  &__submit {
+    margin-top: 40px;
+    text-align: center;
+  }
+
+  &__submit-btn {
+    background: linear-gradient(135deg, #ffd700, #ffa500);
+    color: #333;
+    border: none;
+    border-radius: 50px;
+    padding: 16px 48px;
+    font-size: 1.1em;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 200px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(255, 215, 0, 0.4);
+      background: linear-gradient(135deg, #ffed4a, #f39c12);
+    }
+    
+    &:disabled {
+      opacity: 0.8;
+      cursor: not-allowed;
+    }
+
+    &--loading {
+      pointer-events: none;
+      
+      .recipe-form__submit-text {
+        opacity: 0;
+      }
+      
+      .recipe-form__submit-spinner {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__submit-text {
+    transition: opacity 0.3s ease;
+  }
+
+  &__submit-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    
+    &::after {
+      content: '';
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(51, 51, 51, 0.3);
+      border-top: 3px solid #333;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .recipe-form-container {
+    padding: 16px;
+  }
+  
+  .recipe-form {
+    padding: 24px 20px;
+    
+    &__header {
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+  }
+}
+
+// Animation pour les sections qui apparaissent
+.recipe-form__section {
+  animation: sectionFadeIn 0.6s ease-out;
+  animation-fill-mode: both;
+  
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+  &:nth-child(4) { animation-delay: 0.4s; }
+  &:nth-child(5) { animation-delay: 0.5s; }
+}
+
+@keyframes sectionFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

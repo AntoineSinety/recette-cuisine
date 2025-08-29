@@ -57,17 +57,23 @@ const RecipeCard = ({ recipe, onClick }) => {
       {recipe.image && (
         <img src={recipe.image} alt={recipe.title} className="recipe-image" />
       )}
-      <h3>{recipe.title}</h3>
-      <p>{recipe.description}</p>
-      <p><strong>Ingrédients:</strong></p>
-      <ul>
-        {ingredients.map((ingredient, index) => (
-          <li key={index}>
-            {ingredient.name} ({ingredient.quantity} {ingredient.unit})
-          </li>
-        ))}
-      </ul>
-      <p><strong>Temps:</strong> {recipe.time} min</p>
+      <div className="card-content">
+        <h3 className="recipe-title">{recipe.title}</h3>
+        {recipe.category && (
+          <div className="recipe-category">{recipe.category}</div>
+        )}
+        <div className="recipe-ingredients">
+          {ingredients.map((ingredient, index) => (
+            <span key={index} className="ingredient-item">
+              {ingredient.name}
+            </span>
+          ))}
+        </div>
+        <div className="recipe-time">
+          <span className="time-icon">⏱</span>
+          {recipe.time} min
+        </div>
+      </div>
       <div className="card-buttons">
         <button onClick={handleEdit}>Modifier</button>
         <button onClick={handleDelete}>Supprimer</button>

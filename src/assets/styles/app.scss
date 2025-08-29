@@ -7,6 +7,11 @@
 
 @use 'composants/ingredient';
 @use 'composants/card-recette';
+@use 'composants/image-upload';
+@use 'composants/toast';
+@use 'composants/ingredient-card';
+@use 'composants/recipe-form';
+@use 'composants/ingredient-autocomplete';
 
 @use 'sections/header';
 @use 'sections/filter-bar';
