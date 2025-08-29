@@ -2,7 +2,9 @@
 /* src/components/NavBar.scss */
 .navbar {
     background-color: #1e1e1e;
-    padding: 10px 20px;
+    padding: 0 20px;
+    display: grid; grid-template-columns: 120px 1fr;
+    align-items: center;gap: 20px;
   }
   
   .navbar ul {
