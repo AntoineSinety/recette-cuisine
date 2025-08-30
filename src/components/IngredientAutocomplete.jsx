@@ -89,8 +89,8 @@ const IngredientAutocomplete = ({ ingredients, onSelectIngredient }) => {
   }, [highlightedIndex]);
 
   return (
-    <div className="ingredient-autocomplete">
-      <div className="ingredient-autocomplete__input-wrapper">
+    <div className="autocomplete">
+      <div className="autocomplete__wrapper">
         <input
           ref={inputRef}
           type="text"
@@ -100,7 +100,7 @@ const IngredientAutocomplete = ({ ingredients, onSelectIngredient }) => {
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder="🔍 Rechercher un ingrédient..."
-          className="ingredient-autocomplete__input"
+          className="autocomplete__input"
         />
         {inputValue && (
           <button
@@ -111,7 +111,7 @@ const IngredientAutocomplete = ({ ingredients, onSelectIngredient }) => {
               setIsOpen(false);
               inputRef.current?.focus();
             }}
-            className="ingredient-autocomplete__clear"
+            className="autocomplete__clear"
           >
             ×
           </button>
@@ -119,18 +119,18 @@ const IngredientAutocomplete = ({ ingredients, onSelectIngredient }) => {
       </div>
 
       {isOpen && suggestions.length > 0 && (
-        <div className="ingredient-autocomplete__dropdown">
-          <div className="ingredient-autocomplete__suggestions">
+        <div className="autocomplete__dropdown">
+          <div className="autocomplete__list">
             {suggestions.map((ingredient, index) => (
               <div
                 key={ingredient.id}
                 ref={el => suggestionRefs.current[index] = el}
-                className={`ingredient-autocomplete__suggestion ${
-                  index === highlightedIndex ? 'ingredient-autocomplete__suggestion--highlighted' : ''
+                className={`autocomplete__item ${
+                  index === highlightedIndex ? 'autocomplete__item--active' : ''
                 }`}
                 onClick={() => handleSelect(ingredient)}
               >
-                <div className="ingredient-autocomplete__suggestion-image">
+                <div className="autocomplete__image">
                   {ingredient.imageUrl ? (
                     <img 
                       src={ingredient.imageUrl} 
@@ -141,26 +141,26 @@ const IngredientAutocomplete = ({ ingredients, onSelectIngredient }) => {
                       }}
                     />
                   ) : null}
-                  <div className="ingredient-autocomplete__suggestion-placeholder">
+                  <div className="autocomplete__placeholder">
                     🥄
                   </div>
                 </div>
-                <div className="ingredient-autocomplete__suggestion-content">
-                  <div className="ingredient-autocomplete__suggestion-name">
+                <div className="autocomplete__content">
+                  <div className="autocomplete__name">
                     {ingredient.name}
                   </div>
-                  <div className="ingredient-autocomplete__suggestion-unit">
+                  <div className="autocomplete__unit">
                     Unité: {ingredient.unit}
                   </div>
                 </div>
-                <div className="ingredient-autocomplete__suggestion-add">
+                <div className="autocomplete__add">
                   +
                 </div>
               </div>
             ))}
           </div>
           {suggestions.length === 6 && (
-            <div className="ingredient-autocomplete__more">
+            <div className="autocomplete__more">
               Tapez plus de caractères pour affiner la recherche
             </div>
           )}

@@ -56,7 +56,7 @@ const HomePage = () => {
     <div>
       <h1>Recettes de Cuisine</h1>
       <FilterBar onFilterChange={handleFilterChange} />
-      <div className="recipe-list">
+      <div className="recipes">
         {filteredRecipes.map((recipe) => (
           <RecipeCard key={recipe.firestoreId} recipe={recipe} onClick={handleRecipeClick} />
         ))}

@@ -5,26 +5,22 @@
     --vert: #3D9E70;
     --vert-hover: #22553d;
     --blanc: #fff;
-
+    --orange: #FF6500;
     --bleu-ciel: #2AA3CC;
-
-    --clair: rgba(255,255,255, 0.6);
-    --clair2: rgba(255,255,255, 0.2);
+    --clair: rgb(255 255 255 / 60%);
+    --clair2: rgb(255 255 255 / 20%);
     
     // Variables supplémentaires pour la cohérence
-    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.1);
-    --shadow-medium: 0 4px 15px rgba(0, 0, 0, 0.2);
-    --shadow-heavy: 0 8px 25px rgba(0, 0, 0, 0.3);
-    
+    --shadow-light: 0 2px 8px rgb(0 0 0 / 10%);
+    --shadow-medium: 0 4px 15px rgb(0 0 0 / 20%);
+    --shadow-heavy: 0 8px 25px rgb(0 0 0 / 30%);
     --border-width: 1px;
     --border-width-thick: 2px;
-    
     --spacing-xs: 0.5rem;
     --spacing-sm: 1rem;
     --spacing-md: 1.5rem;
     --spacing-lg: 2rem;
     --spacing-xl: 3rem;
-    
     --transition-fast: 0.15s ease;
     --transition-normal: 0.3s ease;
     --transition-slow: 0.5s ease;

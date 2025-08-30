@@ -65,7 +65,7 @@ const ImageUpload = ({ onImageUpload, initialImage = null, className = "" }) => 
   };
 
   return (
-    <div className={`image-upload ${className}`}>
+    <div className={`upload ${className}`}>
       <input
         type="file"
         ref={fileInputRef}
@@ -75,19 +75,19 @@ const ImageUpload = ({ onImageUpload, initialImage = null, className = "" }) => 
       />
       
       {!preview ? (
-        <div className="upload-placeholder" onClick={triggerFileInput}>
-          <div className="upload-icon">📷</div>
+        <div className="upload__placeholder" onClick={triggerFileInput}>
+          <div className="upload__icon">📷</div>
           <p>Cliquez pour ajouter une photo</p>
           <small>JPG, PNG, GIF (max 5MB)</small>
         </div>
       ) : (
-        <div className="image-preview">
+        <div className="upload__preview">
           <img src={preview} alt="Aperçu" />
-          <div className="image-actions">
-            <button type="button" onClick={triggerFileInput} className="change-btn">
+          <div className="upload__actions">
+            <button type="button" onClick={triggerFileInput} className="upload__button">
               Changer
             </button>
-            <button type="button" onClick={handleRemoveImage} className="remove-btn">
+            <button type="button" onClick={handleRemoveImage} className="upload__button upload__button--remove">
               Supprimer
             </button>
           </div>
@@ -95,14 +95,14 @@ const ImageUpload = ({ onImageUpload, initialImage = null, className = "" }) => 
       )}
       
       {uploading && (
-        <div className="upload-status">
-          <div className="loading-spinner"></div>
+        <div className="upload__status">
+          <div className="upload__spinner"></div>
           <p>Upload en cours...</p>
         </div>
       )}
       
       {error && (
-        <div className="error-message">
+        <div className="upload__error">
           {error}
         </div>
       )}

@@ -41,12 +41,12 @@ const IngredientCard = ({ ingredient, onQuantityChange, onRemove }) => {
   };
 
   return (
-    <div className="ingredient-card" onClick={!isEditing ? handleClick : undefined}>
-      <div className="ingredient-card__remove" onClick={onRemove}>
+    <div className="ingredient" onClick={!isEditing ? handleClick : undefined}>
+      <div className="ingredient__remove" onClick={onRemove}>
         ×
       </div>
       
-      <div className="ingredient-card__image">
+      <div className="ingredient__image">
         {ingredient.imageUrl ? (
           <img 
             src={ingredient.imageUrl} 
@@ -58,43 +58,43 @@ const IngredientCard = ({ ingredient, onQuantityChange, onRemove }) => {
           />
         ) : null}
         <div 
-          className="ingredient-card__placeholder"
+          className="ingredient__placeholder"
           style={{ display: ingredient.imageUrl ? 'none' : 'flex' }}
         >
           🥄
         </div>
       </div>
       
-      <div className="ingredient-card__content">
-        <h4 className="ingredient-card__name">{ingredient.name}</h4>
+      <div className="ingredient__content">
+        <h4 className="ingredient__name">{ingredient.name}</h4>
         
         {isEditing ? (
-          <form onSubmit={handleQuantitySubmit} className="ingredient-card__edit-form">
+          <form onSubmit={handleQuantitySubmit} className="ingredient__edit-form">
             <input
               type="number"
               value={tempQuantity}
               onChange={(e) => setTempQuantity(e.target.value)}
               onKeyDown={handleKeyDown}
               onBlur={handleBlur}
-              className="ingredient-card__quantity-input"
+              className="ingredient__input"
               min="0"
               step="0.1"
               autoFocus
             />
-            <span className="ingredient-card__unit">{ingredient.unit}</span>
+            <span className="ingredient__unit">{ingredient.unit}</span>
           </form>
         ) : (
-          <div className="ingredient-card__quantity">
-            <span className="ingredient-card__quantity-value">
+          <div className="ingredient__quantity">
+            <span className="ingredient__quantity-value">
               {ingredient.quantity || '?'}
             </span>
-            <span className="ingredient-card__unit">{ingredient.unit}</span>
+            <span className="ingredient__unit">{ingredient.unit}</span>
           </div>
         )}
       </div>
       
       {!isEditing && (
-        <div className="ingredient-card__edit-hint">
+        <div className="ingredient__hint">
           Cliquer pour modifier
         </div>
       )}

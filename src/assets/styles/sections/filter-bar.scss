@@ -1,24 +1,20 @@
-.filter-bar {
-    display: flex;
-    justify-content: space-evenly;
-    gap: 30px;
-    margin: 0 30px;
-    padding: 20px 0;
+.filter {
+    display: flex;gap: 30px;justify-content: space-evenly;
+    margin: 0 30px;padding: 20px 0;
+
+    @media (width <= 768px) {
+        flex-direction: column;gap: 15px;
+        margin: 0 20px;
+    }
 
     input, select {
-        padding: 14px 18px;
-        border: 1px solid var(--clair2);
-        appearance: none;
-        border-radius: 0;
         display: block;
-        font-size: 1rem;
-        width: 100%;
-        box-sizing: border-box;
-        background-color: var(--dark);
-        color: var(--blanc);
-        font-weight: 500;
+        width: 100%;box-sizing: border-box;padding: 14px 18px;
+        color: var(--blanc);background-color: var(--dark);
+        font-family: Inter, sans-serif;font-size: 1rem;font-weight: 500;
+        border: 1px solid var(--clair2);border-radius: 0;
         transition: 0.3s all ease;
-        font-family: "Inter", sans-serif;
+        appearance: none;
 
         &::placeholder {
             color: var(--clair);
@@ -26,10 +22,8 @@
         }
 
         &:focus {
-            outline: none;
-            border-color: var(--bleu-ciel);
             background-color: var(--bleu);
-            box-shadow: 0 0 0 2px rgba(42, 163, 204, 0.2);
+            border-color: var(--bleu-ciel);box-shadow: 0 0 0 2px rgb(42 163 204 / 20%);outline: none;
         }
 
         &:hover:not(:focus) {
@@ -41,14 +35,7 @@
         cursor: pointer;
         
         option {
-            background-color: var(--bleu);
-            color: var(--blanc);
+            color: var(--blanc);background-color: var(--bleu);
         }
-    }
-
-    @media (max-width: 768px) {
-        flex-direction: column;
-        gap: 15px;
-        margin: 0 20px;
     }
 }

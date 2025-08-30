@@ -179,19 +179,19 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
   };
 
   return (
-    <div className="recipe-form-container">
-      <form onSubmit={handleSubmit} className="recipe-form">
+    <div className="form-container">
+      <form onSubmit={handleSubmit} className="form">
         
         {/* Header Section */}
-        <div className="recipe-form__header">
-          <div className="recipe-form__section">
-            <label className="recipe-form__label">
-              <span className="recipe-form__label-text">Titre de la recette</span>
-              <span className="recipe-form__label-required">*</span>
+        <div className="form__header">
+          <div className="form__section">
+            <label className="form__label">
+              <span className="form__label-text">Titre de la recette</span>
+              <span className="form__required">*</span>
             </label>
             <input 
               type="text" 
-              className="recipe-form__input recipe-form__input--title" 
+              className="form__input" 
               name="title" 
               value={formData.title} 
               onChange={handleChange} 
@@ -200,12 +200,12 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
             />
           </div>
 
-          <div className="recipe-form__section">
-            <label className="recipe-form__label">
-              <span className="recipe-form__label-text">Catégorie</span>
+          <div className="form__section">
+            <label className="form__label">
+              <span className="form__label-text">Catégorie</span>
             </label>
             <select 
-              className="recipe-form__select" 
+              className="form__select" 
               name="category" 
               value={formData.category} 
               onChange={handleChange}
@@ -219,52 +219,52 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
             </select>
           </div>
 
-          <div className="recipe-form__section">
-            <label className="recipe-form__label">
-              <span className="recipe-form__label-text">Temps de préparation</span>
+          <div className="form__section">
+            <label className="form__label">
+              <span className="form__label-text">Temps de préparation</span>
             </label>
-            <div className="recipe-form__time-input">
+            <div className="form__time">
               <input 
                 type="number" 
-                className="recipe-form__input recipe-form__input--time" 
+                className="form__input form__input--time" 
                 name="time" 
                 value={formData.time} 
                 onChange={handleChange} 
                 placeholder="45"
                 min="1"
               />
-              <span className="recipe-form__time-unit">minutes</span>
+              <span className="form__time-unit">minutes</span>
             </div>
           </div>
         </div>
 
         {/* Image Section */}
-        <div className="recipe-form__section recipe-form__section--full">
-          <label className="recipe-form__label">
-            <span className="recipe-form__label-text">Photo de la recette</span>
+        <div className="form__section form__section--full">
+          <label className="form__label">
+            <span className="form__label-text">Photo de la recette</span>
           </label>
           <ImageUpload 
             onImageUpload={handleImageUpload}
             initialImage={formData.image}
-            className="recipe-form__image-upload"
+            className="form__upload"
           />
         </div>
 
         {/* Ingredients Section */}
-        <div className="recipe-form__section recipe-form__section--full">
-          <label className="recipe-form__label">
-            <span className="recipe-form__label-text">Ingrédients</span>
-            <span className="recipe-form__label-required">*</span>
+        <div className="form__section form__section--full">
+          <label className="form__label">
+            <span className="form__label-text">Ingrédients</span>
+            <span className="form__required">*</span>
           </label>
           
-          <div className="recipe-form__ingredients-add">
+          <div className="form__ingredients-add">
             <IngredientAutocomplete
               ingredients={allIngredients}
               onSelectIngredient={handleSelectIngredient}
             />
           </div>
 
-          <div className="recipe-form__ingredients-grid">
+          <div className="form__ingredients">
             {formData.ingredients.map((ingredient, index) => (
               <IngredientCard
                 key={`${ingredient.id}-${index}`}
@@ -274,8 +274,8 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
               />
             ))}
             {formData.ingredients.length === 0 && (
-              <div className="recipe-form__empty-ingredients">
-                <div className="recipe-form__empty-icon">🥄</div>
+              <div className="form__empty">
+                <div className="form__empty-icon">🥄</div>
                 <p>Commencez par ajouter des ingrédients à votre recette</p>
               </div>
             )}
@@ -283,12 +283,12 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
         </div>
 
         {/* Steps Section */}
-        <div className="recipe-form__section recipe-form__section--full">
-          <label className="recipe-form__label">
-            <span className="recipe-form__label-text">Étapes de préparation</span>
-            <span className="recipe-form__label-required">*</span>
+        <div className="form__section form__section--full">
+          <label className="form__label">
+            <span className="form__label-text">Étapes de préparation</span>
+            <span className="form__required">*</span>
           </label>
-          <div className="recipe-form__editor">
+          <div className="form__editor">
             <Editor
               apiKey='n7ca9rt9c55rw2ov1ypquw5nbtnldtc9x7l9n57btzo3a0c2'
               value={formData.steps}
@@ -299,9 +299,9 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
                 skin: 'oxide-dark',
                 content_css: 'dark',
                 plugins: [
-                  'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-                  'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                  'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount'
+                  'advlist', 'autolink', 'lists', 'link', 'charmap',
+                  'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                  'insertdatetime', 'table', 'help', 'wordcount'
                 ],
                 toolbar: 'undo redo | blocks | ' +
                 'bold italic forecolor | alignleft aligncenter ' +
@@ -315,16 +315,16 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
         </div>
 
         {/* Submit Button */}
-        <div className="recipe-form__submit">
+        <div className="form__submit">
           <button 
             type="submit" 
-            className={`recipe-form__submit-btn ${isSubmitting ? 'recipe-form__submit-btn--loading' : ''}`}
+            className={`form__button ${isSubmitting ? 'form__button--loading' : ''}`}
             disabled={isSubmitting}
           >
-            <span className="recipe-form__submit-text">
+            <span className="form__button-text">
               {isSubmitting ? 'Enregistrement en cours...' : 'Enregistrer la recette'}
             </span>
-            <div className="recipe-form__submit-spinner"></div>
+            <div className="form__spinner"></div>
           </button>
         </div>
 

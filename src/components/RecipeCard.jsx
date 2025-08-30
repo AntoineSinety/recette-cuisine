@@ -50,31 +50,31 @@ const RecipeCard = ({ recipe, onClick }) => {
   };
 
   return (
-    <div className="recipe-card" onClick={(e) => {
-      if (e.target.closest('.card-buttons')) return;
+    <div className="card" onClick={(e) => {
+      if (e.target.closest('.card__buttons')) return;
       onClick(recipe);
     }}>
       {recipe.image && (
-        <img src={recipe.image} alt={recipe.title} className="recipe-image" />
+        <img src={recipe.image} alt={recipe.title} className="card__image" />
       )}
-      <div className="card-content">
-        <h3 className="recipe-title">{recipe.title}</h3>
+      <div className="card__content">
+        <h3 className="card__title">{recipe.title}</h3>
         {recipe.category && (
-          <div className="recipe-category">{recipe.category}</div>
+          <div className="card__category">{recipe.category}</div>
         )}
-        <div className="recipe-ingredients">
+        <div className="card__ingredients">
           {ingredients.map((ingredient, index) => (
-            <span key={index} className="ingredient-item">
+            <span key={index} className="card__ingredient">
               {ingredient.name}
             </span>
           ))}
         </div>
-        <div className="recipe-time">
-          <span className="time-icon">⏱</span>
+        <div className="card__time">
+          <span className="card__time-icon">⏱</span>
           {recipe.time} min
         </div>
       </div>
-      <div className="card-buttons">
+      <div className="card__buttons">
         <button onClick={handleEdit}>Modifier</button>
         <button onClick={handleDelete}>Supprimer</button>
       </div>

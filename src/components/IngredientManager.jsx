@@ -144,12 +144,15 @@ const IngredientManager = () => {
   return (
     <div>
       <div className="ingredient-manager">
-        <button className="bouton" onClick={openPopup}>Ajouter un Ingrédient</button>
+        <div className="ingredient-manager__header">
+          <h1>Gestion des Ingrédients</h1>
+          <button className="bouton" onClick={openPopup}>Ajouter un Ingrédient</button>
+        </div>
         <div className="ingredient-list">
           {ingredients.map(ingredient => (
             <div
               key={ingredient.id}
-              className="ingredient-list-item"
+              className="ingredient-item"
               onClick={() => handleEditIngredient(ingredient)}
               style={{ cursor: 'pointer' }}
             >
@@ -209,10 +212,10 @@ const IngredientManager = () => {
               </select>
             </div>
             <div className="popup-actions">
-              <button className="bouton" onClick={editingIngredient ? handleUpdateIngredient : handleAddIngredient}>
+              <button className="bouton add edit" onClick={editingIngredient ? handleUpdateIngredient : handleAddIngredient}>
                 {editingIngredient ? 'Mettre à jour' : 'Ajouter'}
               </button>
-              <button className="bouton" onClick={closePopup}>
+              <button className="bouton delete" onClick={closePopup}>
                 Annuler
               </button>
             </div>

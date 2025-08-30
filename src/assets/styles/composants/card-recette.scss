@@ -1,109 +1,81 @@
-.recipe-card {
+.card {
     position: relative;
+    display: flex;flex-direction: column;
     background-color: var(--bleu-clair);
-    border: 1px solid var(--clair2);
-    border-radius: 0;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-    overflow: hidden;
+    border: 1px solid var(--clair2);border-radius: 0;box-shadow: 0 4px 15px rgb(0 0 0 / 40%);
+    cursor: pointer;overflow: hidden;
     transition: 0.3s all ease;
-    cursor: pointer;
-    flex-direction: column;
-    display: flex;
 
     &:hover {
+        border-color: var(--bleu-ciel);box-shadow: 0 8px 25px rgb(0 0 0 / 50%);
         transform: translateY(-3px);
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-        border-color: var(--bleu-ciel);
     }
   
-    .recipe-image {
-      aspect-ratio: 16/9;
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      border-bottom: 1px solid #333;
+    &__image {
       display: block;
+      width: 100%;height: auto;object-fit: cover;
+      border-bottom: 1px solid #333;
+      aspect-ratio: 16/9;
     }
 
-    .card-content {
+    &__content {
+      flex: 1;
       padding: 15px;
       text-align: left;
-      flex: 1;
 
-      .recipe-title {
-        background-color: transparent;
-        color: var(--blanc);
-        margin: 0 0 12px 0;
-        font-size: 1.4em;
-        font-weight: 700;
-        text-align: center;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+      .card__title {
+        margin: 0 0 12px;
+        color: var(--blanc);background-color: transparent;
+        font-size: 1.4em;font-weight: 700;text-align: center;text-transform: uppercase;letter-spacing: 0.5px;
       }
 
-      .recipe-category {
-        background-color: var(--vert);
-        color: var(--blanc);
-        padding: 6px 12px;
-        border-radius: 0;
-        font-size: 0.8em;
+      .card__category {
         display: inline-block;
-        margin-bottom: 16px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
+        margin-bottom: 16px;padding: 6px 12px;
+        color: var(--blanc);background-color: var(--vert);
+        font-size: 0.8em;font-weight: 600;text-transform: uppercase;letter-spacing: 0.3px;
+        border-radius: 0;
       }
 
-      .recipe-ingredients {
-        margin-bottom: 12px;
-        max-height: 70px; overflow: hidden; text-overflow: ellipsis;
+      .card__ingredients {
+        max-height: 70px;margin-bottom: 12px;
+         text-overflow: ellipsis;
+          overflow: hidden;
         white-space: nowrap;
 
-        .ingredient-item {
+        .card__ingredient {
           display: inline-block;
-          background-color: var(--dark);
-          color: var(--blanc);
-          padding: 4px 10px;
-          margin: 2px 4px 2px 0;
-          border-radius: 0;
+          margin: 2px 4px 2px 0;padding: 4px 10px;
+          color: var(--blanc);background-color: var(--dark);
           font-size: 0.85em;
-          border: 1px solid var(--clair2);
+          border: 1px solid var(--clair2);border-radius: 0;
         }
       }
 
-      .recipe-time {
+      .card__time {
+        display: flex;gap: 8px;align-items: center;
         color: var(--clair);
-        font-size: 0.95em;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-weight: 500;
+        font-size: 0.95em;font-weight: 500;
 
-        .time-icon {
-          font-size: 1.2em;
+        .card__time-icon {
           color: var(--bleu-ciel);
+          font-size: 1.2em;
         }
       }
     }
   
-    .card-buttons {
-      display: flex;
-      justify-content: stretch;
+    &__buttons {
+      display: flex;justify-content: stretch;
       border-top: 1px solid var(--clair2);
   
       button {
-        background-color: var(--dark);
-        color: var(--blanc);
-        border: none;
-        border-radius: 0;
+        flex: 1;
         padding: 14px;
+        color: var(--blanc);background-color: var(--dark);
+        font-size: 0.9em;font-weight: 600;text-transform: uppercase;letter-spacing: 0.3px;
+        border: none;border-radius: 0;
         cursor: pointer;
         transition: 0.3s all ease;
-        flex: 1;
-        font-size: 0.9em;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
 
         &:nth-child(1) {
             border-right: 1px solid var(--clair2);

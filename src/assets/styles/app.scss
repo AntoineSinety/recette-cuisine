@@ -26,24 +26,21 @@
 }
 
 body {
-    background-color: var(--bleu);
-    color: var(--blanc);
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
-    font-size: 16px;
+    margin: 0;padding: 0;
+    color: var(--blanc);background-color: var(--bleu);
+    font-size: 16px;line-height: 1.6;
 
     .page {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
+        display: flex;flex-direction: column;
+        min-height: 100vh;padding: 10px 20px;
+        background-color: var(--bleu-clair);
     }
 
     main {
         flex: 1;
         margin: 30px;
         
-        @media (max-width: 768px) {
+        @media (width <= 768px) {
             margin: 20px;
         }
     }
@@ -51,18 +48,18 @@ body {
 
 // Animations globales
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from { transform: translateY(10px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 @keyframes slideInFromRight {
-    from { opacity: 0; transform: translateX(30px); }
-    to { opacity: 1; transform: translateX(0); }
+    from { transform: translateX(30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 
 @keyframes slideInFromLeft {
-    from { opacity: 0; transform: translateX(-30px); }
-    to { opacity: 1; transform: translateX(0); }
+    from { transform: translateX(-30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 
 // Classes utilitaires pour les animations
@@ -80,10 +77,8 @@ body {
 
 // Focus visible pour l'accessibilité
 *:focus-visible {
-    outline: 2px solid var(--bleu-ciel);
-    outline-offset: 2px;
+    outline: 2px solid var(--bleu-ciel);outline-offset: 2px;
 }
 
-.logo-site {
-  height: 120px; width: auto;
+.logo-site { width: auto;height: 120px;
 }

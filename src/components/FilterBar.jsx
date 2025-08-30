@@ -8,7 +8,7 @@ const FilterBar = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="filter-bar">
+    <div className="filter">
       <input type="text" name="ingredient" placeholder="Filtrer par ingrédient" onChange={handleChange} />
       <input type="text" name="type" placeholder="Filtrer par type" onChange={handleChange} />
       <input type="number" name="time" placeholder="Filtrer par temps (min)" onChange={handleChange} />

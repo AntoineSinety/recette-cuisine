@@ -6,7 +6,7 @@ import logo from '../assets/img/logo.png';
 const NavBar = () => {
   return (
     <nav className="navbar">
-      <img className="logo-site" src={logo} alt="" />
+      <img className="navbar__logo" src={logo} alt="" />
       <ul>
         <li>
           <Link to="/">Accueil</Link>

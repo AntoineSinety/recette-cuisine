@@ -34,10 +34,10 @@ const IngredientPopup = ({ ingredient, onClose, onSave, onChange, onImageChange 
           </select>
         </div>
         <div className="popup-actions">
-          <button className="bouton" onClick={onSave}>
+          <button className="bouton add" onClick={onSave}>
             {ingredient.id ? 'Mettre à jour' : 'Ajouter'}
           </button>
-          <button className="bouton" onClick={onClose}>
+          <button className="bouton delete" onClick={onClose}>
             Annuler
           </button>
         </div>
