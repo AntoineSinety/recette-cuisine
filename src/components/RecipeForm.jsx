@@ -222,7 +222,6 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
           <div className="recipe-form__section">
             <label className="recipe-form__label">
               <span className="recipe-form__label-text">Temps de préparation</span>
-              <span className="recipe-form__label-required">*</span>
             </label>
             <div className="recipe-form__time-input">
               <input 
@@ -233,7 +232,6 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
                 onChange={handleChange} 
                 placeholder="45"
                 min="1"
-                required 
               />
               <span className="recipe-form__time-unit">minutes</span>
             </div>
@@ -298,6 +296,8 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
               init={{
                 height: 400,
                 menubar: false,
+                skin: 'oxide-dark',
+                content_css: 'dark',
                 plugins: [
                   'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
                   'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
@@ -307,7 +307,7 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
                 'bold italic forecolor | alignleft aligncenter ' +
                 'alignright alignjustify | bullist numlist outdent indent | ' +
                 'removeformat | help',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; line-height: 1.6; }',
+                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; line-height: 1.6; background-color: rgba(30, 30, 30, 0.85); color: #fff; }',
                 placeholder: 'Décrivez les étapes de votre recette...'
               }}
             />

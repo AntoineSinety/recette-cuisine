@@ -7,7 +7,9 @@
     overflow: hidden;
     transition: 0.3s all ease;
     cursor: pointer;
-    
+    flex-direction: column;
+    display: flex;
+
     &:hover {
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
@@ -26,6 +28,7 @@
     .card-content {
       padding: 15px;
       text-align: left;
+      flex: 1;
 
       .recipe-title {
         background-color: transparent;
@@ -53,6 +56,8 @@
 
       .recipe-ingredients {
         margin-bottom: 12px;
+        max-height: 70px; overflow: hidden; text-overflow: ellipsis;
+        white-space: nowrap;
 
         .ingredient-item {
           display: inline-block;
@@ -63,12 +68,6 @@
           border-radius: 0;
           font-size: 0.85em;
           border: 1px solid var(--clair2);
-          transition: 0.3s all ease;
-          
-          &:hover {
-            background-color: var(--bleu-ciel);
-            border-color: var(--blanc);
-          }
         }
       }
 
