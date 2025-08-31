@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { doc, setDoc, onSnapshot, getDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import useMenuPlanning from './useMenuPlanning';
+import { formatQuantityWithBestUnit, canCombineUnits, convertToBaseUnit, getUnitConfig } from '../utils/unitConverter';
 
 const useShoppingList = () => {
   const { weeklyMenu, getCurrentWeekId } = useMenuPlanning();
@@ -94,9 +95,18 @@ const useShoppingList = () => {
               const name = ingredientsData[key]?.name || `Ingrédient ${key}`;
               
               if (ingredientsList[key]) {
-                if (ingredientsList[key].unit === unit || !unit) {
-                  ingredientsList[key].totalQuantity += quantity;
+                // Vérifier si les unités peuvent être combinées
+                if (canCombineUnits(ingredientsList[key].unit, unit)) {
+                  // Convertir tout en unité de base pour l'addition
+                  const existingBaseQuantity = convertToBaseUnit(ingredientsList[key].totalQuantity, ingredientsList[key].unit);
+                  const newBaseQuantity = convertToBaseUnit(quantity, unit);
+                  const totalBaseQuantity = existingBaseQuantity + newBaseQuantity;
+                  
+                  // Reconvertir vers l'unité d'origine
+                  const config = getUnitConfig(ingredientsList[key].unit);
+                  ingredientsList[key].totalQuantity = totalBaseQuantity / config.factor;
                 } else {
+                  // Unités différentes, ajouter comme quantité alternative
                   ingredientsList[key].alternateQuantities = ingredientsList[key].alternateQuantities || [];
                   ingredientsList[key].alternateQuantities.push({
                     quantity,
@@ -104,6 +114,8 @@ const useShoppingList = () => {
                     source: `${dayKey}-${mealType}`
                   });
                 }
+                // Ajouter la source
+                ingredientsList[key].sources.push(`${dayKey}-${mealType}`);
               } else {
                 ingredientsList[key] = {
                   id: key,
@@ -131,9 +143,18 @@ const useShoppingList = () => {
               const name = ingredientsData[key]?.name || `Ingrédient ${key}`;
               
               if (ingredientsList[key]) {
-                if (ingredientsList[key].unit === unit || !unit) {
-                  ingredientsList[key].totalQuantity += quantity;
+                // Vérifier si les unités peuvent être combinées
+                if (canCombineUnits(ingredientsList[key].unit, unit)) {
+                  // Convertir tout en unité de base pour l'addition
+                  const existingBaseQuantity = convertToBaseUnit(ingredientsList[key].totalQuantity, ingredientsList[key].unit);
+                  const newBaseQuantity = convertToBaseUnit(quantity, unit);
+                  const totalBaseQuantity = existingBaseQuantity + newBaseQuantity;
+                  
+                  // Reconvertir vers l'unité d'origine
+                  const config = getUnitConfig(ingredientsList[key].unit);
+                  ingredientsList[key].totalQuantity = totalBaseQuantity / config.factor;
                 } else {
+                  // Unités différentes, ajouter comme quantité alternative
                   ingredientsList[key].alternateQuantities = ingredientsList[key].alternateQuantities || [];
                   ingredientsList[key].alternateQuantities.push({
                     quantity,
@@ -141,6 +162,8 @@ const useShoppingList = () => {
                     source: `extra-${extra.id}`
                   });
                 }
+                // Ajouter la source
+                ingredientsList[key].sources.push(`extra-${extra.id}`);
               } else {
                 ingredientsList[key] = {
                   id: key,

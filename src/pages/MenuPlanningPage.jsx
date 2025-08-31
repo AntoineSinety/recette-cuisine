@@ -100,12 +100,14 @@ const MenuPlanningPage = () => {
       </div>
 
       <div className="menu-planning__container">
-        <div className="menu-planning__grid">
+        <div className="menu-planning__main-section">
           {weekDays.map(day => (
-            <div key={day.key} className="menu-planning__day">
-              <h2 className="menu-planning__day-title">{day.displayName}</h2>
+            <div key={day.key} className="menu-planning__day-row">
+              <div className="menu-planning__day-info">
+                <h2 className="menu-planning__day-title">{day.displayName}</h2>
+              </div>
               
-              <div className="menu-planning__meals">
+              <div className="menu-planning__meals-row">
                 {['midi', 'soir'].map(mealType => (
                   <div key={mealType} className="menu-planning__meal">
                     <h3 className="menu-planning__meal-title">

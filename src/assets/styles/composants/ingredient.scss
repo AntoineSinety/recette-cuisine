@@ -2,6 +2,17 @@
     padding: 20px;
     background-color: var(--bleu);
 
+    // Style pour les champs en erreur
+    .field-input.error {
+        border-color: #e74c3c;
+        box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+        
+        &:focus {
+            border-color: #e74c3c;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.3);
+        }
+    }
+
     &__header {
         display: flex; gap: 20px;align-items: center; justify-content: space-between;
         margin-bottom: 20px;

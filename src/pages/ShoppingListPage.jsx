@@ -1,6 +1,7 @@
 import React from 'react';
 import useShoppingList from '../hooks/useShoppingList';
 import useMenuPlanning from '../hooks/useMenuPlanning';
+import { formatQuantityWithBestUnit } from '../utils/unitConverter';
 
 const ShoppingListPage = () => {
   const { shoppingList, checkedItems, loading, toggleIngredient, toggleAll, resetList, getStats } = useShoppingList();
@@ -127,7 +128,7 @@ const ShoppingListPage = () => {
                     </span>
                     <div className="shopping-list__item-details">
                       <span className="shopping-list__item-quantity">
-                        {ingredient.totalQuantity} {ingredient.unit}
+                        {formatQuantityWithBestUnit(ingredient.totalQuantity, ingredient.unit)}
                       </span>
                       
                       {/* Quantités alternatives si différentes unités */}
@@ -135,7 +136,7 @@ const ShoppingListPage = () => {
                         <div className="shopping-list__alternate-quantities">
                           {ingredient.alternateQuantities.map((alt, index) => (
                             <span key={index} className="shopping-list__alt-quantity">
-                              + {alt.quantity} {alt.unit}
+                              + {formatQuantityWithBestUnit(alt.quantity, alt.unit)}
                             </span>
                           ))}
                         </div>

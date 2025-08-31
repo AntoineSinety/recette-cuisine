@@ -1,42 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { useIngredients } from '../hooks/useIngredients';
+import { useToast } from './ToastContainer';
 import IngredientPreview from './IngredientPreview';
 import IngredientPopup from './IngredientPopup';
-import MediaUploader from './MediaUploader';
-import { getStorage, ref, listAll, getDownloadURL } from 'firebase/storage';
+import IngredientMediaManager from './IngredientMediaManager';
 
 const PLACEHOLDER_IMAGE = './src/assets/img/placeholder.jpg';
 
 const IngredientManager = () => {
-  const { ingredients, addIngredient, updateIngredient, deleteIngredient, uploadImage } = useIngredients();
+  const { ingredients, addIngredient, updateIngredient, deleteIngredient } = useIngredients();
+  const { showError, showSuccess } = useToast();
   const [newIngredient, setNewIngredient] = useState({ name: '', imageUrl: '', unit: '' });
   const [editingIngredient, setEditingIngredient] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isMediaManagerOpen, setIsMediaManagerOpen] = useState(false);
-  const [storageImages, setStorageImages] = useState([]);
-  const [loadingImages, setLoadingImages] = useState(false);
+  const [nameError, setNameError] = useState('');
 
-  // Récupère toutes les images depuis Firebase Storage
-  useEffect(() => {
-    if (isMediaManagerOpen) {
-      setLoadingImages(true);
-      const fetchImages = async () => {
-        try {
-          const storage = getStorage();
-          const listRef = ref(storage, 'ingredients');
-          const res = await listAll(listRef);
-          const urls = await Promise.all(
-            res.items.map(itemRef => getDownloadURL(itemRef))
-          );
-          setStorageImages(urls);
-        } catch (e) {
-          setStorageImages([]);
-        }
-        setLoadingImages(false);
-      };
-      fetchImages();
-    }
-  }, [isMediaManagerOpen]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,13 +23,20 @@ const IngredientManager = () => {
       ...prevIngredient,
       [name]: value,
     }));
+
+    // Validation en temps réel pour le nom
+    if (name === 'name') {
+      if (value.trim() === '') {
+        setNameError('Le nom est obligatoire');
+      } else if (checkIngredientExists(value, editingIngredient?.id)) {
+        setNameError(`L'ingrédient "${value.trim()}" existe déjà`);
+      } else {
+        setNameError('');
+      }
+    }
   };
 
-  const handleImageChange = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    // Upload dans le dossier 'ingredients'
-    const imageUrl = await uploadImage(file, 'ingredients');
+  const handleImageSelect = (imageUrl) => {
     setNewIngredient((prevIngredient) => ({
       ...prevIngredient,
       imageUrl: imageUrl,
@@ -58,25 +44,43 @@ const IngredientManager = () => {
     setIsMediaManagerOpen(false);
   };
 
-  const handleSelectExistingImage = (url) => {
-    setNewIngredient((prevIngredient) => ({
-      ...prevIngredient,
-      imageUrl: url,
-    }));
-    setIsMediaManagerOpen(false);
+  // Fonction pour vérifier si un ingrédient existe déjà
+  const checkIngredientExists = (name, excludeId = null) => {
+    const trimmedName = name.trim().toLowerCase();
+    return ingredients.some(ingredient => 
+      ingredient.name.trim().toLowerCase() === trimmedName && 
+      ingredient.id !== excludeId
+    );
   };
 
-  const handleSelectNoImage = () => {
-    setNewIngredient((prevIngredient) => ({
-      ...prevIngredient,
-      imageUrl: '',
-    }));
-    setIsMediaManagerOpen(false);
+  // Validation des données de l'ingrédient
+  const validateIngredient = (ingredient, excludeId = null) => {
+    if (!ingredient.name || ingredient.name.trim() === '') {
+      showError('Le nom de l\'ingrédient est obligatoire');
+      return false;
+    }
+
+    if (checkIngredientExists(ingredient.name, excludeId)) {
+      showError(`L'ingrédient "${ingredient.name.trim()}" existe déjà`);
+      return false;
+    }
+
+    return true;
   };
 
   const handleAddIngredient = async () => {
-    await addIngredient(newIngredient);
-    closePopup();
+    if (!validateIngredient(newIngredient)) {
+      return; // Arrêter si la validation échoue
+    }
+
+    try {
+      await addIngredient(newIngredient);
+      showSuccess(`Ingrédient "${newIngredient.name.trim()}" ajouté avec succès`);
+      closePopup();
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de l\'ingrédient:', error);
+      showError('Erreur lors de l\'ajout de l\'ingrédient');
+    }
   };
 
   const handleEditIngredient = (ingredient) => {
@@ -86,12 +90,33 @@ const IngredientManager = () => {
   };
 
   const handleUpdateIngredient = async () => {
-    await updateIngredient(editingIngredient.id, newIngredient);
-    closePopup();
+    if (!validateIngredient(newIngredient, editingIngredient.id)) {
+      return; // Arrêter si la validation échoue
+    }
+
+    try {
+      await updateIngredient(editingIngredient.id, newIngredient);
+      showSuccess(`Ingrédient "${newIngredient.name.trim()}" modifié avec succès`);
+      closePopup();
+    } catch (error) {
+      console.error('Erreur lors de la modification de l\'ingrédient:', error);
+      showError('Erreur lors de la modification de l\'ingrédient');
+    }
   };
 
   const handleDeleteIngredient = async (id) => {
-    await deleteIngredient(id);
+    const ingredient = ingredients.find(ing => ing.id === id);
+    const ingredientName = ingredient?.name || 'cet ingrédient';
+    
+    if (window.confirm(`Êtes-vous sûr de vouloir supprimer "${ingredientName}" ?`)) {
+      try {
+        await deleteIngredient(id);
+        showSuccess(`Ingrédient "${ingredientName}" supprimé avec succès`);
+      } catch (error) {
+        console.error('Erreur lors de la suppression de l\'ingrédient:', error);
+        showError('Erreur lors de la suppression de l\'ingrédient');
+      }
+    }
   };
 
   const openPopup = () => {
@@ -102,6 +127,7 @@ const IngredientManager = () => {
     setIsPopupOpen(false);
     setEditingIngredient(null);
     setNewIngredient({ name: '', imageUrl: '', unit: '' });
+    setNameError(''); // Réinitialiser l'erreur
   };
 
   const handleOverlayClick = (e) => {
@@ -122,24 +148,6 @@ const IngredientManager = () => {
     };
   }, [isPopupOpen]);
 
-  const handleMediaUpload = async (fileOrUrl) => {
-    if (typeof fileOrUrl === 'string') {
-      // C'est une image capturée par webcam (base64)
-      const imageUrl = await uploadImage(fileOrUrl, 'ingredients', true);
-      setNewIngredient((prevIngredient) => ({
-        ...prevIngredient,
-        imageUrl: imageUrl,
-      }));
-    } else {
-      // C'est un fichier
-      const imageUrl = await uploadImage(fileOrUrl, 'ingredients');
-      setNewIngredient((prevIngredient) => ({
-        ...prevIngredient,
-        imageUrl: imageUrl,
-      }));
-    }
-    setIsMediaManagerOpen(false);
-  };
 
   return (
     <div>
@@ -170,14 +178,26 @@ const IngredientManager = () => {
           <div className="popup-content" onClick={(e) => e.stopPropagation()}>
             <h3>{editingIngredient ? 'Modifier' : 'Ajouter'} Ingrédient</h3>
             <div className="ingredient-form">
-              <input
-                className="field-input"
-                type="text"
-                name="name"
-                value={newIngredient.name}
-                onChange={handleInputChange}
-                placeholder="Nom"
-              />
+              <div style={{ marginBottom: '16px' }}>
+                <input
+                  className={`field-input ${nameError ? 'error' : ''}`}
+                  type="text"
+                  name="name"
+                  value={newIngredient.name}
+                  onChange={handleInputChange}
+                  placeholder="Nom de l'ingrédient *"
+                />
+                {nameError && (
+                  <div className="error-message" style={{
+                    color: '#e74c3c',
+                    fontSize: '0.85em',
+                    marginTop: '4px',
+                    fontWeight: '500'
+                  }}>
+                    {nameError}
+                  </div>
+                )}
+              </div>
               {/* Gestionnaire de média */}
               <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}>
                 <img
@@ -212,7 +232,15 @@ const IngredientManager = () => {
               </select>
             </div>
             <div className="popup-actions">
-              <button className="bouton add edit" onClick={editingIngredient ? handleUpdateIngredient : handleAddIngredient}>
+              <button 
+                className="bouton add edit" 
+                onClick={editingIngredient ? handleUpdateIngredient : handleAddIngredient}
+                disabled={!!nameError || !newIngredient.name.trim()}
+                style={{
+                  opacity: (!!nameError || !newIngredient.name.trim()) ? 0.5 : 1,
+                  cursor: (!!nameError || !newIngredient.name.trim()) ? 'not-allowed' : 'pointer'
+                }}
+              >
                 {editingIngredient ? 'Mettre à jour' : 'Ajouter'}
               </button>
               <button className="bouton delete" onClick={closePopup}>
@@ -220,122 +248,13 @@ const IngredientManager = () => {
               </button>
             </div>
           </div>
-          {/* Media Manager Popup */}
-          {isMediaManagerOpen && (
-            <div
-              className="popup-overlay"
-              style={{ zIndex: 1100 }}
-              onClick={() => setIsMediaManagerOpen(false)}
-            >
-              <div
-                className="popup-content mediatheque"
-                style={{
-                  maxWidth: 540,
-                  minHeight: 340,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 16,
-                  overflow: 'hidden'
-                }}
-                onClick={e => e.stopPropagation()}
-              >
-                <h4 style={{ marginBottom: 8 }}>Médiathèque des ingrédients</h4>
-                <div style={{
-                  fontSize: 15,
-                  color: '#333',
-                  marginBottom: 8,
-                  background: '#f8f8f8',
-                  padding: '8px 12px',
-                  borderRadius: 6
-                }}>
-                  <b>1.</b> Ajoutez une image par glisser-déposer ou sélection.<br />
-                  <b>2.</b> Cliquez sur une image pour l'utiliser.<br />
-                  <b>3.</b> Vous pouvez choisir "Pas d'image".
-                </div>
-                <div style={{ display: 'flex', gap: 20 }}>
-                  <div style={{ flex: 1, minWidth: 160 }}>
-                    <div style={{ marginBottom: 8, fontWeight: 500 }}>Ajouter une image :</div>
-                    <MediaUploader onMediaChange={handleMediaUpload} />
-                  </div>
-                  <div style={{ flex: 2 }}>
-                    <div style={{ marginBottom: 8, fontWeight: 500 }}>Images du dossier "ingredients" :</div>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(auto-fit, minmax(60px, 1fr))',
-                        gap: 10,
-                        maxHeight: 180,
-                        overflowY: 'auto',
-                        padding: '4px'
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'column',
-                          alignItems: 'center',
-                          cursor: 'pointer'
-                        }}
-                        onClick={handleSelectNoImage}
-                      >
-                        <img
-                          src={PLACEHOLDER_IMAGE}
-                          alt="Pas d'image"
-                          style={{
-                            width: 60,
-                            height: 60,
-                            objectFit: 'contain',
-                            border: '2px solid #ccc',
-                            borderRadius: 4,
-                            background: '#fff'
-                          }}
-                        />
-                        <span style={{ fontSize: 12, color: '#888' }}>Pas d'image</span>
-                      </div>
-                      {loadingImages && (
-                        <span style={{ color: '#888', gridColumn: '1/-1', textAlign: 'center' }}>Chargement...</span>
-                      )}
-                      {!loadingImages && storageImages.length === 0 && (
-                        <span style={{ color: '#888', gridColumn: '1/-1', textAlign: 'center' }}>Aucune image trouvée</span>
-                      )}
-                      {!loadingImages && storageImages.map(url => (
-                        <div
-                          key={url}
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            cursor: 'pointer'
-                          }}
-                          onClick={() => handleSelectExistingImage(url)}
-                        >
-                          <img
-                            src={url}
-                            alt="media"
-                            style={{
-                              width: 60,
-                              height: 60,
-                              objectFit: 'contain',
-                              border: '2px solid #ccc',
-                              borderRadius: 4,
-                              background: '#fff'
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <button
-                  className="bouton"
-                  style={{ marginTop: 12, alignSelf: 'flex-end' }}
-                  onClick={() => setIsMediaManagerOpen(false)}
-                >
-                  Fermer
-                </button>
-              </div>
-            </div>
-          )}
+          {/* Media Manager */}
+          <IngredientMediaManager
+            isOpen={isMediaManagerOpen}
+            onClose={() => setIsMediaManagerOpen(false)}
+            onImageSelect={handleImageSelect}
+            currentImageUrl={newIngredient.imageUrl}
+          />
         </div>
       )}
     </div>
