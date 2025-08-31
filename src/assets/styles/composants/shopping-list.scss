@@ -1,0 +1,410 @@
+.shopping-list {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 30px;
+
+    h1 {
+      color: var(--blanc);
+      font-size: 2.5em;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    p {
+      color: var(--clair);
+      font-size: 1.1em;
+      opacity: 0.8;
+    }
+  }
+
+  &__container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+
+    @media (max-width: 1100px) {
+      flex-direction: column;
+    }
+  }
+
+  &__main {
+    flex: 1;
+    min-width: 0;
+  }
+
+  // Statistiques
+  &__stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    justify-content: center;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+
+  &__stat {
+    background-color: var(--bleu-clair);
+    border: 1px solid var(--clair2);
+    border-radius: 8px;
+    padding: 15px 20px;
+    text-align: center;
+    min-width: 120px;
+
+    &:nth-child(2) {
+      border-color: var(--vert);
+      background-color: rgba(var(--vert-rgb, 46, 204, 113), 0.1);
+    }
+
+    &:nth-child(3) {
+      border-color: var(--orange);
+      background-color: rgba(var(--orange-rgb, 230, 126, 34), 0.1);
+    }
+  }
+
+  &__stat-number {
+    display: block;
+    color: var(--blanc);
+    font-size: 2em;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  &__stat-label {
+    color: var(--clair);
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 5px;
+  }
+
+  // Actions
+  &__actions {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  &__btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+
+    &--secondary {
+      background-color: var(--dark);
+      color: var(--blanc);
+      border: 1px solid var(--clair2);
+
+      &:hover {
+        background-color: var(--bleu-ciel);
+        border-color: var(--bleu-ciel);
+        transform: translateY(-2px);
+      }
+    }
+
+    &--danger {
+      background-color: var(--rouge);
+      color: var(--blanc);
+
+      &:hover {
+        background-color: var(--rouge-hover);
+        transform: translateY(-2px);
+      }
+    }
+  }
+
+  // Liste des ingrédients
+  &__items {
+    background-color: var(--bleu-clair);
+    border: 1px solid var(--clair2);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  &__empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--clair);
+
+    p {
+      margin-bottom: 10px;
+      
+      &:first-child {
+        font-size: 1.1em;
+        font-weight: 600;
+      }
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--clair2);
+    transition: all 0.3s ease;
+    cursor: pointer;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: var(--dark);
+    }
+
+    &--checked {
+      opacity: 0.6;
+      background-color: var(--dark);
+
+      .shopping-list__item-name {
+        text-decoration: line-through;
+      }
+    }
+  }
+
+  // Checkbox personnalisée
+  &__checkbox {
+    position: relative;
+    cursor: pointer;
+    user-select: none;
+
+    input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+      height: 0;
+      width: 0;
+    }
+  }
+
+  &__checkmark {
+    display: block;
+    width: 22px;
+    height: 22px;
+    background-color: var(--dark);
+    border: 2px solid var(--clair2);
+    border-radius: 4px;
+    position: relative;
+    transition: all 0.3s ease;
+
+    &::after {
+      content: "";
+      position: absolute;
+      display: none;
+      left: 6px;
+      top: 2px;
+      width: 6px;
+      height: 10px;
+      border: solid var(--blanc);
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+  }
+
+  &__checkbox input:checked ~ &__checkmark {
+    background-color: var(--vert);
+    border-color: var(--vert);
+
+    &::after {
+      display: block;
+    }
+  }
+
+  &__checkbox:hover &__checkmark {
+    border-color: var(--vert);
+  }
+
+  &__item-image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+    border: 1px solid var(--clair2);
+  }
+
+  &__item-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__item-name {
+    color: var(--blanc);
+    font-size: 1.1em;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  &__item-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__item-quantity {
+    color: var(--clair);
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+
+  &__alternate-quantities {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  &__alt-quantity {
+    color: var(--orange);
+    font-size: 0.8em;
+    background-color: var(--dark);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  // Récapitulatif du menu
+  &__menu-recap {
+    min-width: 300px;
+    max-width: 350px;
+    background-color: var(--bleu-clair);
+    border: 1px solid var(--clair2);
+    border-radius: 8px;
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+
+    @media (max-width: 1100px) {
+      max-width: none;
+      min-width: auto;
+      position: static;
+      max-height: none;
+    }
+  }
+
+  &__recap-title {
+    color: var(--blanc);
+    font-size: 1.3em;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-align: center;
+    border-bottom: 2px solid var(--bleu-ciel);
+    padding-bottom: 8px;
+  }
+
+  &__week-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  &__day-summary {
+    background-color: var(--dark);
+    border-radius: 6px;
+    padding: 12px;
+  }
+
+  &__day-name {
+    color: var(--blanc);
+    font-size: 0.9em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__meals-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__meal-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85em;
+  }
+
+  &__meal-type {
+    font-size: 14px;
+    width: 20px;
+  }
+
+  &__meal-name {
+    color: var(--clair);
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // Extras
+  &__extras-summary {
+    border-top: 1px solid var(--clair2);
+    padding-top: 15px;
+  }
+
+  &__extras-title {
+    color: var(--blanc);
+    font-size: 1em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  &__extras-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  &__extra-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: var(--dark);
+    padding: 8px;
+    border-radius: 4px;
+    border-left: 3px solid var(--vert);
+  }
+
+  &__extra-icon {
+    font-size: 12px;
+  }
+
+  &__extra-name {
+    color: var(--clair);
+    font-size: 0.85em;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+// Variables couleurs supplémentaires
+:root {
+  --vert-rgb: 46, 204, 113;
+  --orange-rgb: 230, 126, 34;
+}

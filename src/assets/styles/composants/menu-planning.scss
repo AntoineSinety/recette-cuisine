@@ -1,0 +1,406 @@
+.menu-planning {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+
+  &__header {
+    text-align: center;
+    margin-bottom: 30px;
+
+    h1 {
+      color: var(--blanc);
+      font-size: 2.5em;
+      font-weight: 700;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    p {
+      color: var(--clair);
+      font-size: 1.1em;
+      opacity: 0.8;
+    }
+  }
+
+  &__container {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+
+    @media (max-width: 1200px) {
+      flex-direction: column;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    flex: 1;
+    margin-bottom: 20px;
+  }
+
+  &__day {
+    background-color: var(--bleu-clair);
+    border: 1px solid var(--clair2);
+    border-radius: 8px;
+    padding: 15px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: var(--bleu-ciel);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  &__day-title {
+    color: var(--blanc);
+    font-size: 1.3em;
+    font-weight: 600;
+    margin-bottom: 15px;
+    text-align: center;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--dark);
+  }
+
+  &__meals {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  &__meal {
+    background-color: var(--dark);
+    border-radius: 6px;
+    padding: 12px;
+  }
+
+  &__meal-title {
+    color: var(--blanc);
+    font-size: 1em;
+    font-weight: 600;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  &__add-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: transparent;
+    border: 2px dashed var(--clair2);
+    border-radius: 4px;
+    color: var(--clair);
+    font-size: 0.9em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: var(--bleu-ciel);
+      color: var(--bleu-ciel);
+      background-color: rgba(var(--bleu-ciel-rgb), 0.1);
+    }
+
+  }
+
+  &__selected-recipe {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bleu-fonce);
+    border-radius: 4px;
+    padding: 8px;
+    margin-bottom: 5px;
+  }
+
+  &__recipe-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+  }
+
+  &__recipe-image {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  &__recipe-title {
+    color: var(--blanc);
+    font-size: 0.9em;
+    font-weight: 500;
+  }
+
+  &__remove-btn {
+    background-color: var(--rouge);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    color: var(--blanc);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--rouge-hover);
+      transform: scale(1.1);
+    }
+  }
+
+  &__modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  &__modal-content {
+    background-color: var(--bleu-clair);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--clair2);
+
+    h3 {
+      color: var(--blanc);
+      font-size: 1.4em;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+
+  &__modal-close {
+    background: none;
+    border: none;
+    color: var(--clair);
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 5px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--rouge);
+      color: var(--blanc);
+    }
+  }
+
+  &__recipe-list {
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__recipe-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px;
+    background-color: var(--dark);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--bleu-fonce);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  &__recipe-item-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  &__recipe-item-info {
+    flex: 1;
+
+    h4 {
+      color: var(--blanc);
+      font-size: 1em;
+      font-weight: 600;
+      margin: 0 0 5px 0;
+    }
+  }
+
+  &__recipe-category {
+    background-color: var(--vert);
+    color: var(--blanc);
+    font-size: 0.8em;
+    font-weight: 500;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+
+  // Styles pour le formulaire d'extra
+  &__extra-form {
+    padding: 20px;
+    border-bottom: 1px solid var(--clair2);
+  }
+
+  &__form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    label {
+      color: var(--blanc);
+      font-size: 0.9em;
+      font-weight: 500;
+    }
+  }
+
+  &__input {
+    padding: 10px 12px;
+    background-color: var(--dark);
+    border: 1px solid var(--clair2);
+    border-radius: 4px;
+    color: var(--blanc);
+    font-size: 0.9em;
+
+    &::placeholder {
+      color: var(--clair);
+      opacity: 0.7;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: var(--vert);
+      box-shadow: 0 0 0 2px rgba(var(--vert-rgb, 46, 204, 113), 0.2);
+    }
+  }
+
+  // Section Extras à droite
+  &__extras-section {
+    min-width: 300px;
+    max-width: 350px;
+    background-color: var(--bleu-clair);
+    border: 1px solid var(--clair2);
+    border-radius: 8px;
+    padding: 20px;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+
+    @media (max-width: 1200px) {
+      max-width: none;
+      min-width: auto;
+      position: static;
+      max-height: none;
+    }
+  }
+
+  &__extras-title {
+    color: var(--blanc);
+    font-size: 1.4em;
+    font-weight: 600;
+    margin-bottom: 8px;
+    text-align: center;
+    border-bottom: 2px solid var(--vert);
+    padding-bottom: 8px;
+  }
+
+  &__extras-subtitle {
+    color: var(--clair);
+    font-size: 0.9em;
+    text-align: center;
+    margin-bottom: 20px;
+    opacity: 0.8;
+    font-style: italic;
+  }
+
+  &__extras-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  &__extra-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--dark);
+    border-left: 3px solid var(--vert);
+    border-radius: 4px;
+    padding: 12px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--bleu-fonce);
+      transform: translateX(3px);
+    }
+  }
+
+  &__extra-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  &__recipe-subtitle {
+    color: var(--clair);
+    font-size: 0.8em;
+    opacity: 0.7;
+    font-style: italic;
+  }
+
+  &__add-btn--extra {
+    width: 100%;
+    border-color: var(--vert);
+    color: var(--vert);
+
+    &:hover {
+      border-color: var(--vert);
+      color: var(--blanc);
+      background-color: var(--vert);
+    }
+  }
+}
+
+// Variables couleurs (à ajouter si pas déjà définies)
+:root {
+  --rouge: #e74c3c;
+  --rouge-hover: #c0392b;
+  --bleu-fonce: #2c3e50;
+  --bleu-ciel-rgb: 52, 152, 219;
+}

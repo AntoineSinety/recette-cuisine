@@ -17,6 +17,12 @@ const NavBar = () => {
         <li>
           <Link to="/manage-ingredients">Gérer les Ingrédients</Link>
         </li>
+        <li>
+          <Link to="/menu-planning">Menu de la semaine</Link>
+        </li>
+        <li>
+          <Link to="/shopping-list">Liste de courses</Link>
+        </li>
       </ul>
     </nav>
   );

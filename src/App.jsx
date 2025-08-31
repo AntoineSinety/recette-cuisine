@@ -5,6 +5,8 @@ import HomePage from './pages/HomePage';
 import AddRecipePage from './pages/AddRecipePage';
 import EditRecipePage from './pages/EditRecipePage';
 import IngredientManagerPage from './pages/IngredientManagerPage';
+import MenuPlanningPage from './pages/MenuPlanningPage';
+import ShoppingListPage from './pages/ShoppingListPage';
 import NavBar from './components/NavBar';
 import { ToastProvider } from './components/ToastContainer';
 import './assets/styles/app.scss';
@@ -20,6 +22,8 @@ const App = () => {
             <Route path="/add-recipe" element={<AddRecipePage />} />
             <Route path="/edit/:id" element={<EditRecipePage />} />
             <Route path="/manage-ingredients" element={<IngredientManagerPage />} />
+            <Route path="/menu-planning" element={<MenuPlanningPage />} />
+            <Route path="/shopping-list" element={<ShoppingListPage />} />
           </Routes>
         </main>
       </Router>
