@@ -11,7 +11,6 @@ const IngredientMediaManager = ({ isOpen, onClose, onImageSelect, currentImageUr
   const [storageImages, setStorageImages] = useState([]);
   const [loadingImages, setLoadingImages] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [activeTab, setActiveTab] = useState('upload');
   const [searchTerm, setSearchTerm] = useState('');
   const [cameraOpen, setCameraOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
@@ -23,10 +22,10 @@ const IngredientMediaManager = ({ isOpen, onClose, onImageSelect, currentImageUr
 
   // Récupère toutes les images depuis Firebase Storage
   useEffect(() => {
-    if (isOpen && activeTab === 'gallery') {
+    if (isOpen) {
       loadStorageImages();
     }
-  }, [isOpen, activeTab]);
+  }, [isOpen]);
 
   const loadStorageImages = async () => {
     setLoadingImages(true);
@@ -94,7 +93,6 @@ const IngredientMediaManager = ({ isOpen, onClose, onImageSelect, currentImageUr
       const imageUrl = await uploadImage(file, 'ingredients');
       onImageSelect(imageUrl);
       await loadStorageImages(); // Recharger la galerie
-      setActiveTab('gallery'); // Basculer vers la galerie
     } catch (error) {
       console.error('Erreur lors du téléchargement:', error);
     }
@@ -116,7 +114,6 @@ const IngredientMediaManager = ({ isOpen, onClose, onImageSelect, currentImageUr
       onImageSelect(imageUrl);
       setCameraOpen(false);
       await loadStorageImages();
-      setActiveTab('gallery');
     } catch (error) {
       console.error('Erreur lors de la capture:', error);
     }
@@ -147,7 +144,7 @@ const IngredientMediaManager = ({ isOpen, onClose, onImageSelect, currentImageUr
 
   return (
     <div className="ingredient-media-manager__overlay" onClick={onClose}>
-      <div className="ingredient-media-manager__overlay ingredient-media-manager__manager" onClick={(e) => e.stopPropagation()}>
+      <div className="ingredient-media-manager__modal" onClick={(e) => e.stopPropagation()}>
         <div className="ingredient-media-manager__header">
           <h3>Médiathèque des Ingrédients</h3>
           <button 
@@ -158,119 +155,109 @@ const IngredientMediaManager = ({ isOpen, onClose, onImageSelect, currentImageUr
           </button>
         </div>
 
-        {/* Tabs */}
-        <div className="ingredient-media-manager__tabs">
-          <button 
-            className={`ingredient-media-manager__tab ${activeTab === 'upload' ? 'active' : ''}`}
-            onClick={() => setActiveTab('upload')}
-          >
-            📤 Télécharger
-          </button>
-          <button 
-            className={`ingredient-media-manager__tab ${activeTab === 'gallery' ? 'active' : ''}`}
-            onClick={() => setActiveTab('gallery')}
-          >
-            🖼️ Galerie ({storageImages.length})
-          </button>
-        </div>
-
         <div className="ingredient-media-manager__content">
-          {activeTab === 'upload' && (
-            <div className="ingredient-media-manager__upload-section">
-              <div className="ingredient-media-manager__instructions">
-                <h4>Ajouter une nouvelle image</h4>
-                <p>Glissez-déposez une image ou utilisez les options ci-dessous</p>
-              </div>
-
-              {/* Zone de drag & drop */}
-              <div
-                {...getRootProps()}
-                className={`ingredient-media-manager__dropzone ${isDragActive ? 'active' : ''} ${dragActive ? 'drag-active' : ''}`}
-              >
-                <input {...getInputProps()} />
-                <div className="ingredient-media-manager__dropzone-content">
-                  <div className="ingredient-media-manager__dropzone-icon">📁</div>
-                  {isDragActive ? (
-                    <p>Déposez l'image ici...</p>
-                  ) : (
-                    <div>
-                      <p><strong>Glissez-déposez une image ici</strong></p>
-                      <p>ou cliquez pour sélectionner</p>
-                      <p className="ingredient-media-manager__supported-formats">
-                        Formats supportés: JPG, PNG, GIF, WebP
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="ingredient-media-manager__actions">
-                <button 
-                  type="button" 
-                  className="ingredient-media-manager__btn ingredient-media-manager__btn--primary"
-                  onClick={() => fileInputRef.current?.click()}
-                  disabled={uploading}
-                >
-                  📂 Choisir un fichier
-                </button>
-                <button 
-                  type="button" 
-                  className="ingredient-media-manager__btn ingredient-media-manager__btn--secondary"
-                  onClick={() => setCameraOpen(!cameraOpen)}
-                  disabled={uploading}
-                >
-                  📷 {cameraOpen ? 'Fermer' : 'Prendre'} une photo
-                </button>
-              </div>
-
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                style={{ display: 'none' }}
-                accept="image/*"
-                disabled={uploading}
-              />
-
-              {/* Webcam */}
-              {cameraOpen && (
-                <div className="ingredient-media-manager__webcam">
-                  <Webcam
-                    audio={false}
-                    ref={webcamRef}
-                    screenshotFormat="image/jpeg"
-                    className="ingredient-media-manager__webcam-preview"
-                  />
-                  <div className="ingredient-media-manager__webcam-actions">
-                    <button 
-                      className="ingredient-media-manager__btn ingredient-media-manager__btn--primary"
-                      onClick={capturePhoto}
-                      disabled={uploading}
-                    >
-                      📸 Capturer
-                    </button>
-                    <button 
-                      className="ingredient-media-manager__btn ingredient-media-manager__btn--secondary"
-                      onClick={() => setCameraOpen(false)}
-                    >
-                      Annuler
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {uploading && (
-                <div className="ingredient-media-manager__uploading">
-                  <div className="ingredient-media-manager__loader"></div>
-                  <p>Téléchargement en cours...</p>
-                </div>
-              )}
+          {/* Section d'ajout d'image */}
+          <div className="ingredient-media-manager__upload-section">
+            <div className="ingredient-media-manager__instructions">
+              <h4>📤 Ajouter une nouvelle image</h4>
+              <p>Glissez-déposez une image ou utilisez les options ci-dessous</p>
             </div>
-          )}
 
-          {activeTab === 'gallery' && (
-            <div className="ingredient-media-manager__gallery-section">
+            {/* Zone de drag & drop */}
+            <div
+              {...getRootProps()}
+              className={`ingredient-media-manager__dropzone ${isDragActive ? 'active' : ''} ${dragActive ? 'drag-active' : ''}`}
+            >
+              <input {...getInputProps()} />
+              <div className="ingredient-media-manager__dropzone-content">
+                <div className="ingredient-media-manager__dropzone-icon">📁</div>
+                {isDragActive ? (
+                  <p>Déposez l'image ici...</p>
+                ) : (
+                  <div>
+                    <p><strong>Glissez-déposez une image ici</strong></p>
+                    <p>ou utilisez les boutons ci-dessous</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="ingredient-media-manager__actions">
+              <button 
+                type="button" 
+                className="ingredient-media-manager__btn ingredient-media-manager__btn--primary"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploading}
+              >
+                📂 Choisir un fichier
+              </button>
+              <button 
+                type="button" 
+                className="ingredient-media-manager__btn ingredient-media-manager__btn--secondary"
+                onClick={() => setCameraOpen(!cameraOpen)}
+                disabled={uploading}
+              >
+                📷 {cameraOpen ? 'Fermer' : 'Prendre'} une photo
+              </button>
+            </div>
+
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: 'none' }}
+              accept="image/*"
+              disabled={uploading}
+            />
+
+            {/* Webcam */}
+            {cameraOpen && (
+              <div className="ingredient-media-manager__webcam">
+                <Webcam
+                  audio={false}
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  className="ingredient-media-manager__webcam-preview"
+                />
+                <div className="ingredient-media-manager__webcam-actions">
+                  <button 
+                    className="ingredient-media-manager__btn ingredient-media-manager__btn--primary"
+                    onClick={capturePhoto}
+                    disabled={uploading}
+                  >
+                    📸 Capturer
+                  </button>
+                  <button 
+                    className="ingredient-media-manager__btn ingredient-media-manager__btn--secondary"
+                    onClick={() => setCameraOpen(false)}
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {uploading && (
+              <div className="ingredient-media-manager__uploading">
+                <div className="ingredient-media-manager__loader"></div>
+                <p>Téléchargement en cours...</p>
+              </div>
+            )}
+          </div>
+
+          {/* Séparateur */}
+          <div className="ingredient-media-manager__separator">
+            <div className="ingredient-media-manager__separator-line"></div>
+            <span className="ingredient-media-manager__separator-text">OU CHOISIR UNE IMAGE EXISTANTE</span>
+            <div className="ingredient-media-manager__separator-line"></div>
+          </div>
+
+          {/* Section galerie */}
+          <div className="ingredient-media-manager__gallery-section">
+            <div className="ingredient-media-manager__gallery-header">
+              <h4>🖼️ Images disponibles ({storageImages.length})</h4>
+              
               {/* Barre de recherche */}
               <div className="ingredient-media-manager__search">
                 <input
@@ -285,95 +272,81 @@ const IngredientMediaManager = ({ isOpen, onClose, onImageSelect, currentImageUr
                 />
                 <span className="ingredient-media-manager__search-icon">🔍</span>
               </div>
+            </div>
 
+            {/* Galerie d'images */}
+            <div className="ingredient-media-manager__gallery">
               {/* Option "Pas d'image" */}
-              <div className="ingredient-media-manager__no-image-option">
-                <div
-                  className={`ingredient-media-manager__image-item ${!currentImageUrl ? 'selected' : ''}`}
-                  onClick={handleNoImage}
-                >
-                  <img
-                    src={PLACEHOLDER_IMAGE}
-                    alt="Pas d'image"
-                    className="ingredient-media-manager__image"
-                  />
-                  <div className="ingredient-media-manager__image-overlay">
-                    <span>Pas d'image</span>
-                  </div>
+              <div
+                className={`ingredient-media-manager__image-item no-image ${!currentImageUrl ? 'selected' : ''}`}
+                onClick={handleNoImage}
+              >
+                <img
+                  src={PLACEHOLDER_IMAGE}
+                  alt="Pas d'image"
+                  className="ingredient-media-manager__image"
+                />
+                <div className="ingredient-media-manager__image-overlay">
+                  <span>Pas d'image</span>
                 </div>
               </div>
 
-              {/* Galerie d'images */}
-              <div className="ingredient-media-manager__gallery">
-                {loadingImages ? (
-                  <div className="ingredient-media-manager__loading">
-                    <div className="ingredient-media-manager__loader"></div>
-                    <p>Chargement des images...</p>
-                  </div>
-                ) : paginatedImages.length === 0 ? (
-                  <div className="ingredient-media-manager__empty">
-                    <p>
-                      {searchTerm ? 'Aucune image trouvée pour cette recherche' : 'Aucune image dans la galerie'}
-                    </p>
-                    {!searchTerm && (
-                      <button 
-                        className="ingredient-media-manager__btn ingredient-media-manager__btn--primary"
-                        onClick={() => setActiveTab('upload')}
-                      >
-                        Ajouter votre première image
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <>
-                    <div className="ingredient-media-manager__grid">
-                      {paginatedImages.map((image) => (
-                        <div
-                          key={image.url}
-                          className={`ingredient-media-manager__image-item ${currentImageUrl === image.url ? 'selected' : ''}`}
-                          onClick={() => handleImageSelect(image.url)}
-                        >
-                          <img
-                            src={image.url}
-                            alt={image.name}
-                            className="ingredient-media-manager__image"
-                          />
-                          <div className="ingredient-media-manager__image-overlay">
-                            <span className="ingredient-media-manager__image-name">
-                              {image.name.replace(/\.[^/.]+$/, '')}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
+              {loadingImages ? (
+                <div className="ingredient-media-manager__loading">
+                  <div className="ingredient-media-manager__loader"></div>
+                  <p>Chargement des images...</p>
+                </div>
+              ) : paginatedImages.length === 0 ? (
+                <div className="ingredient-media-manager__empty">
+                  <p>
+                    {searchTerm ? 'Aucune image trouvée pour cette recherche' : 'Aucune image dans la galerie'}
+                  </p>
+                </div>
+              ) : (
+                paginatedImages.map((image) => (
+                  <div
+                    key={image.url}
+                    className={`ingredient-media-manager__image-item ${currentImageUrl === image.url ? 'selected' : ''}`}
+                    onClick={() => handleImageSelect(image.url)}
+                  >
+                    <img
+                      src={image.url}
+                      alt={image.name}
+                      className="ingredient-media-manager__image"
+                    />
+                    <div className="ingredient-media-manager__image-overlay">
+                      <span className="ingredient-media-manager__image-name">
+                        {image.name.replace(/\.[^/.]+$/, '')}
+                      </span>
                     </div>
-
-                    {/* Pagination */}
-                    {totalPages > 1 && (
-                      <div className="ingredient-media-manager__pagination">
-                        <button
-                          className="ingredient-media-manager__btn ingredient-media-manager__btn--secondary"
-                          onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
-                          disabled={currentPage === 0}
-                        >
-                          ← Précédent
-                        </button>
-                        <span className="ingredient-media-manager__page-info">
-                          Page {currentPage + 1} sur {totalPages}
-                        </span>
-                        <button
-                          className="ingredient-media-manager__btn ingredient-media-manager__btn--secondary"
-                          onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
-                          disabled={currentPage === totalPages - 1}
-                        >
-                          Suivant →
-                        </button>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
+                  </div>
+                ))
+              )}
             </div>
-          )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="ingredient-media-manager__pagination">
+                <button
+                  className="ingredient-media-manager__btn ingredient-media-manager__btn--secondary"
+                  onClick={() => setCurrentPage(Math.max(0, currentPage - 1))}
+                  disabled={currentPage === 0}
+                >
+                  ← Précédent
+                </button>
+                <span className="ingredient-media-manager__page-info">
+                  Page {currentPage + 1} sur {totalPages}
+                </span>
+                <button
+                  className="ingredient-media-manager__btn ingredient-media-manager__btn--secondary"
+                  onClick={() => setCurrentPage(Math.min(totalPages - 1, currentPage + 1))}
+                  disabled={currentPage === totalPages - 1}
+                >
+                  Suivant →
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Footer avec preview de l'image sélectionnée */}
@@ -387,6 +360,12 @@ const IngredientMediaManager = ({ isOpen, onClose, onImageSelect, currentImageUr
               />
               <span>Image sélectionnée</span>
             </div>
+            <button 
+              className="ingredient-media-manager__btn ingredient-media-manager__btn--primary"
+              onClick={onClose}
+            >
+              Utiliser cette image
+            </button>
           </div>
         )}
       </div>
