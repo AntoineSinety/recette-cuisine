@@ -78,29 +78,45 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
         <button className="close-button" onClick={() => ref.current.close()}>Fermer</button>
         <h2>{recipe.title}</h2>
         {recipe.image && <img src={recipe.image} alt={recipe.title} />}
-        <p><strong>Temps de préparation:</strong> {recipe.prepTime} min</p>
-        <p><strong>Temps de cuisson:</strong> {recipe.cookTime} min</p>
-        <p><strong>Difficulté:</strong> {recipe.difficulty}</p>
+        <div className="recipe-detail__info">
+          <span className="recipe-detail__time">
+            <span className="recipe-detail__time-icon">⏱</span>
+            {recipe.time} min
+          </span>
+          {recipe.category && (
+            <span className="recipe-detail__category">{recipe.category}</span>
+          )}
+        </div>
         {ingredients.length > 0 && (
-          <div>
-            <h3>Ingrédients:</h3>
-            <ul>
+          <div className="recipe-detail__section">
+            <h3 className="recipe-detail__section-title">Ingrédients</h3>
+            <div className="recipe-detail__ingredients">
               {ingredients.map((ingredient, index) => (
-                <li key={index}>
-                  {ingredient.name} ({ingredient.quantity} {ingredient.unit})
-                </li>
+                <div key={index} className="recipe-detail__ingredient-card">
+                  {ingredient.imageUrl && (
+                    <img 
+                      src={ingredient.imageUrl} 
+                      alt={ingredient.name}
+                      className="recipe-detail__ingredient-image"
+                    />
+                  )}
+                  <div className="recipe-detail__ingredient-info">
+                    <span className="recipe-detail__ingredient-name">{ingredient.name}</span>
+                    <span className="recipe-detail__ingredient-quantity">
+                      {ingredient.quantity} {ingredient.unit}
+                    </span>
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         )}
         {recipe.steps && (
-          <div>
-            <h3>Instructions:</h3>
-            <div dangerouslySetInnerHTML={{ __html: recipe.steps }} />
+          <div className="recipe-detail__section">
+            <h3 className="recipe-detail__section-title">Instructions</h3>
+            <div className="recipe-detail__steps" dangerouslySetInnerHTML={{ __html: recipe.steps }} />
           </div>
         )}
-        {recipe.categories && <p><strong>Catégories:</strong> {recipe.categories.join(', ')}</p>}
-        {recipe.allergens && <p><strong>Allergènes:</strong> {recipe.allergens.join(', ')}</p>}
       </div>
     </div>
   );

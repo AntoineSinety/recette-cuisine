@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { useIngredients } from '../hooks/useIngredients';
 import { useCategories } from '../hooks/useCategories';
+import { addDoc, collection } from 'firebase/firestore';
 import { useToast } from './ToastContainer';
 import IngredientAutocomplete from './IngredientAutocomplete';
 import IngredientCard from './IngredientCard';
@@ -28,6 +29,8 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
 
   const [formData, setFormData] = useState({ ...initialFormState, ...initialRecipe });
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showNewCategoryInput, setShowNewCategoryInput] = useState(false);
+  const [newCategoryName, setNewCategoryName] = useState('');
   const { ingredients: allIngredients } = useIngredients();
   const { categories, loading: categoriesLoading } = useCategories();
   const { showSuccess, showError, showLoading } = useToast();
@@ -88,10 +91,63 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    
+    // Si on sélectionne "Créer une nouvelle catégorie"
+    if (name === 'category' && value === '__create_new__') {
+      setShowNewCategoryInput(true);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: '',
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
+  };
+  
+  const handleCreateCategory = async () => {
+    if (!newCategoryName.trim()) {
+      showError('Le nom de la catégorie est obligatoire');
+      return;
+    }
+    
+    try {
+      const loadingToastId = showLoading('Création de la catégorie en cours...');
+      
+      // Ajouter la catégorie à Firebase
+      await addDoc(collection(db, 'categories'), {
+        name: newCategoryName.trim()
+      });
+      
+      // Mettre à jour le formulaire
+      setFormData(prev => ({
+        ...prev,
+        category: newCategoryName.trim()
+      }));
+      
+      // Reset et fermer l'input
+      setNewCategoryName('');
+      setShowNewCategoryInput(false);
+      
+      showSuccess('Catégorie créée avec succès !');
+      
+      // Recharger les catégories (optionnel si vous avez un refetch)
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Erreur lors de la création de la catégorie:', error);
+      showError('Erreur lors de la création de la catégorie');
+    }
+  };
+  
+  const handleCancelNewCategory = () => {
+    setNewCategoryName('');
+    setShowNewCategoryInput(false);
+    setFormData(prev => ({ ...prev, category: '' }));
   };
 
   const handleSelectIngredient = (ingredient) => {
@@ -204,19 +260,56 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
             <label className="form__label">
               <span className="form__label-text">Catégorie</span>
             </label>
-            <select 
-              className="form__select" 
-              name="category" 
-              value={formData.category} 
-              onChange={handleChange}
-            >
-              <option value="">Choisir une catégorie</option>
-              {categories.map(category => (
-                <option key={category.id} value={category.name}>
-                  {category.name}
-                </option>
-              ))}
-            </select>
+            {!showNewCategoryInput ? (
+              <select 
+                className="form__select" 
+                name="category" 
+                value={formData.category} 
+                onChange={handleChange}
+              >
+                <option value="">Choisir une catégorie</option>
+                {categories.map(category => (
+                  <option key={category.id} value={category.name}>
+                    {category.name}
+                  </option>
+                ))}
+                <option value="__create_new__">+ Créer une nouvelle catégorie</option>
+              </select>
+            ) : (
+              <div className="form__new-category">
+                <input
+                  type="text"
+                  className="form__input"
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                  placeholder="Nom de la nouvelle catégorie..."
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleCreateCategory();
+                    } else if (e.key === 'Escape') {
+                      handleCancelNewCategory();
+                    }
+                  }}
+                />
+                <div className="form__category-actions">
+                  <button
+                    type="button"
+                    className="form__category-btn form__category-btn--create"
+                    onClick={handleCreateCategory}
+                  >
+                    Créer
+                  </button>
+                  <button
+                    type="button"
+                    className="form__category-btn form__category-btn--cancel"
+                    onClick={handleCancelNewCategory}
+                  >
+                    Annuler
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="form__section">

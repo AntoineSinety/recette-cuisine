@@ -45,11 +45,17 @@
     p, ul, ol {
       padding: 15px 30px;
       line-height: 1.7;
+
+    
     }
     
     ul, ol {
       li {
         margin-bottom: 8px;
+
+          & > p {
+            padding: 0;
+          }
         
         &:last-child {
           margin-bottom: 0;
