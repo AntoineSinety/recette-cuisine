@@ -1,6 +1,6 @@
-// src/components/NavBar.jsx
+// src/components/NavBar.jsx - DEPRECATED, remplacé par PageNavigator
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation } from '../context/NavigationContext';
 import logo from '../assets/img/logo.png';
 
 const NavBar = () => {

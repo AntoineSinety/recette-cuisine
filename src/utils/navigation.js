@@ -7,6 +7,7 @@ export const NAVIGATION_COOKIE_EXPIRES = 30; // jours
 export const PAGES = {
   HOME: 'home',
   ADD_RECIPE: 'add-recipe',
+  EDIT_RECIPE: 'edit-recipe',
   MANAGE_INGREDIENTS: 'manage-ingredients',
   MENU_PLANNING: 'menu-planning',
   SHOPPING_LIST: 'shopping-list'
@@ -16,6 +17,7 @@ export const PAGES = {
 export const PAGE_COMPONENTS = {
   [PAGES.HOME]: () => import('../pages/HomePage'),
   [PAGES.ADD_RECIPE]: () => import('../pages/AddRecipePage'),
+  [PAGES.EDIT_RECIPE]: () => import('../pages/EditRecipePage'),
   [PAGES.MANAGE_INGREDIENTS]: () => import('../pages/IngredientManagerPage'),
   [PAGES.MENU_PLANNING]: () => import('../pages/MenuPlanningPage'),
   [PAGES.SHOPPING_LIST]: () => import('../pages/ShoppingListPage')
@@ -25,6 +27,7 @@ export const PAGE_COMPONENTS = {
 export const PAGE_NAMES = {
   [PAGES.HOME]: 'Accueil',
   [PAGES.ADD_RECIPE]: 'Ajouter une Recette',
+  [PAGES.EDIT_RECIPE]: 'Modifier une Recette',
   [PAGES.MANAGE_INGREDIENTS]: 'Gérer les Ingrédients',
   [PAGES.MENU_PLANNING]: 'Menu de la semaine',
   [PAGES.SHOPPING_LIST]: 'Liste de courses'
@@ -34,9 +37,19 @@ export const PAGE_NAMES = {
 export const PAGE_ICONS = {
   [PAGES.HOME]: '🏠',
   [PAGES.ADD_RECIPE]: '➕',
+  [PAGES.EDIT_RECIPE]: '✏️',
   [PAGES.MANAGE_INGREDIENTS]: '🥄',
   [PAGES.MENU_PLANNING]: '📅',
   [PAGES.SHOPPING_LIST]: '🛒'
+};
+
+// Pages visibles dans le menu (edit-recipe est caché)
+export const VISIBLE_PAGES = {
+  [PAGES.HOME]: PAGES.HOME,
+  [PAGES.ADD_RECIPE]: PAGES.ADD_RECIPE,
+  [PAGES.MANAGE_INGREDIENTS]: PAGES.MANAGE_INGREDIENTS,
+  [PAGES.MENU_PLANNING]: PAGES.MENU_PLANNING,
+  [PAGES.SHOPPING_LIST]: PAGES.SHOPPING_LIST
 };
 
 // Utilitaires pour les cookies

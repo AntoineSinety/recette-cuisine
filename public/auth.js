@@ -128,24 +128,30 @@
     }
     
     // Vérification au chargement de la page
-    if (!isAuthenticated()) {
-        // Masquer le contenu pendant l'authentification
-        document.body.style.visibility = 'hidden';
-        
-        // Attendre que la page soit chargée
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-                if (!authenticate()) {
-                    return; // L'utilisateur a annulé
-                }
-                document.body.style.visibility = 'visible';
-            });
-        } else {
+    function initAuth() {
+        if (!isAuthenticated()) {
+            // Masquer le contenu pendant l'authentification
+            if (document.body) {
+                document.body.style.visibility = 'hidden';
+            }
+            
             if (!authenticate()) {
                 return; // L'utilisateur a annulé
             }
-            document.body.style.visibility = 'visible';
+            
+            // Restaurer la visibilité
+            if (document.body) {
+                document.body.style.visibility = 'visible';
+            }
         }
+    }
+    
+    // Attendre que le DOM soit prêt
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initAuth);
+    } else {
+        // DOM déjà chargé
+        initAuth();
     }
     
     // Ajouter un bouton de déconnexion (optionnel)

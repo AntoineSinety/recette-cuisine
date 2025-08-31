@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '../context/NavigationContext';
 import { useDeleteRecipe } from '../hooks/useDeleteRecipe';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';

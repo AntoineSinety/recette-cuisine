@@ -1,0 +1,281 @@
+// Styles pour le navigateur de pages par cookies
+
+.page-navigator {
+  min-height: 100vh;
+  background: var(--dark);
+  color: var(--blanc);
+}
+
+.page-nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 30px;
+  background-color: var(--bleu-clair);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 30%);
+  min-height: 80px;
+
+  &__brand {
+    z-index: 101;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.5em;
+    font-weight: 700;
+    color: var(--blanc);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__menu {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  &__btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    color: var(--blanc);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+
+    &:hover:not(&--active) {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-1px);
+    }
+
+    &--active {
+      background-color: var(--orange);
+      border-color: var(--orange);
+      color: var(--blanc);
+      box-shadow: 0 4px 12px rgba(255, 145, 77, 0.3);
+    }
+
+    &-icon {
+      font-size: 16px;
+    }
+
+    &-text {
+      font-weight: 600;
+    }
+  }
+}
+
+.page-content {
+  min-height: calc(100vh - 80px);
+  padding: 0;
+}
+
+.page-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  color: var(--clair);
+
+  &__spinner {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  &__dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--orange);
+    border-radius: 50%;
+    animation: loadingBounce 1.4s ease-in-out both infinite;
+
+    &:nth-child(1) { animation-delay: -0.32s; }
+    &:nth-child(2) { animation-delay: -0.16s; }
+    &:nth-child(3) { animation-delay: 0s; }
+  }
+
+  p {
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: 500;
+  }
+}
+
+.page-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  text-align: center;
+  color: var(--clair);
+
+  h2 {
+    margin-bottom: 16px;
+    font-size: 2em;
+    color: var(--orange);
+  }
+
+  p {
+    margin-bottom: 24px;
+    font-size: 1.1em;
+  }
+
+  &__btn {
+    padding: 12px 24px;
+    background-color: var(--orange);
+    color: var(--blanc);
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--orange-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 145, 77, 0.3);
+    }
+  }
+}
+
+// Responsive Design
+@media (width <= 1200px) {
+  .page-nav {
+    padding: 0 20px;
+    
+    &__btn {
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+  }
+}
+
+@media (width <= 992px) {
+  .page-nav {
+    padding: 0 16px;
+    
+    &__title {
+      font-size: 1.3em;
+    }
+    
+    &__btn {
+      padding: 8px 12px;
+      font-size: 12px;
+      
+      &-text {
+        display: none; // Masquer le texte sur tablette
+      }
+    }
+  }
+}
+
+@media (width <= 768px) {
+  .page-nav {
+    flex-direction: column;
+    padding: 16px;
+    min-height: auto;
+    gap: 16px;
+
+    &__title {
+      font-size: 1.2em;
+      text-align: center;
+    }
+
+    &__menu {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 8px;
+      width: 100%;
+    }
+
+    &__btn {
+      flex-direction: column;
+      gap: 6px;
+      padding: 16px 12px;
+      text-align: center;
+      min-height: 70px;
+
+      &-text {
+        display: block;
+        font-size: 11px;
+        line-height: 1.2;
+      }
+
+      &-icon {
+        font-size: 20px;
+      }
+    }
+  }
+
+  .page-content {
+    min-height: calc(100vh - 140px);
+  }
+}
+
+@media (width <= 480px) {
+  .page-nav {
+    padding: 12px;
+
+    &__title {
+      font-size: 1.1em;
+    }
+
+    &__menu {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 6px;
+    }
+
+    &__btn {
+      padding: 12px 8px;
+      min-height: 60px;
+
+      &-text {
+        font-size: 10px;
+      }
+
+      &-icon {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes loadingBounce {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+// Touch-friendly sur mobile
+@media (hover: none) and (pointer: coarse) {
+  .page-nav__btn:hover {
+    transform: none;
+  }
+  
+  .page-nav__btn:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+}

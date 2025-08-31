@@ -1,11 +1,11 @@
 import React from 'react';
 import RecipeForm from '../components/RecipeForm';
 import { useAddRecipe } from '../hooks/useAddRecipe';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '../context/NavigationContext';
 
 const AddRecipePage = () => {
   const addRecipe = useAddRecipe();
-  const navigate = useNavigate(); // 🚀 Remplace history par useNavigate
+  const navigate = useNavigate();
 
   const handleSubmit = async (recipe) => {
     await addRecipe(recipe);
