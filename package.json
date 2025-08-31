@@ -11,6 +11,7 @@
     "lint:css": "stylelint \"src/**/*.scss\"",
     "preview": "vite preview"
   },
+  "homepage": "https://antoinesinety.github.io/recette-cuisine",
   "dependencies": {
     "@tinymce/tinymce-react": "^6.3.0",
     "firebase": "^11.3.1",
