@@ -11,6 +11,22 @@
         transform: translateY(-3px);
     }
   
+    figure {
+      display: block;
+      width: 100%;
+      margin: 0;
+      position: relative;
+    }
+
+    .card__category {
+      position: absolute; top: 0;
+      right: 0;
+      display: inline-block;
+      padding: 5px 10px;
+      color: var(--blanc);background-color: var(--orange);
+      font-size: 14px;font-weight: 400; line-height: normal;
+    }
+
     &__image {
       display: block;
       width: 100%;height: auto;object-fit: cover;
@@ -20,40 +36,38 @@
 
     &__content {
       flex: 1;
-      padding: 15px;
+      padding: 10px;
       text-align: left;
 
       .card__title {
         margin: 0 0 12px;
         color: var(--blanc);background-color: transparent;
-        font-size: 1.4em;font-weight: 700;text-align: center;text-transform: uppercase;letter-spacing: 0.5px;
+        font-size: 16px;font-weight: 700;
       }
 
-      .card__category {
-        display: inline-block;
-        margin-bottom: 16px;padding: 6px 12px;
-        color: var(--blanc);background-color: var(--vert);
-        font-size: 0.8em;font-weight: 600;text-transform: uppercase;letter-spacing: 0.3px;
-        border-radius: 0;
-      }
+     
 
       .card__ingredients {
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
-        max-height: 2.6em;margin-bottom: 12px;
+        margin-bottom: 12px;
         overflow: hidden;
         line-height: 1.3;
+        position: relative;
       }
 
       .card__ingredient {
-        display: inline;
+        display: inline-block;
         color: var(--blanc);background-color: var(--dark);
-        font-size: 0.8em;font-weight: 500;
-        
-        &:not(:last-child)::after {
-          content: ", ";
-          color: var(--clair);
+        font-size: 0.8em;font-weight: 500; line-height: normal;
+        padding: 5px; margin-right: 5px;
+        margin-top: 5px;
+
+        &--more {
+          font-weight: 600;
+          background-color: var(--vert);
+          position: absolute;bottom: 0;right: 0;
         }
       }
 

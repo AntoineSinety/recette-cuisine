@@ -9,6 +9,8 @@ const RecipeCard = ({ recipe, onClick }) => {
   const deleteRecipe = useDeleteRecipe();
 
   const [ingredients, setIngredients] = useState([]);
+  const [visibleIngredients, setVisibleIngredients] = useState([]);
+  const [hiddenCount, setHiddenCount] = useState(0);
 
   useEffect(() => {
     const fetchIngredients = async () => {
@@ -29,6 +31,20 @@ const RecipeCard = ({ recipe, onClick }) => {
       fetchIngredients();
     }
   }, [recipe]);
+
+  useEffect(() => {
+    if (ingredients.length > 0) {
+      // Limite à 6 ingrédients visibles (environ 2 lignes)
+      const maxVisible = 6;
+      if (ingredients.length > maxVisible) {
+        setVisibleIngredients(ingredients.slice(0, maxVisible));
+        setHiddenCount(ingredients.length - maxVisible);
+      } else {
+        setVisibleIngredients(ingredients);
+        setHiddenCount(0);
+      }
+    }
+  }, [ingredients]);
 
   const handleEdit = () => {
     // Assurez-vous que recipe.id est correctement défini
@@ -54,20 +70,28 @@ const RecipeCard = ({ recipe, onClick }) => {
       if (e.target.closest('.card__buttons')) return;
       onClick(recipe);
     }}>
-      {recipe.image && (
-        <img src={recipe.image} alt={recipe.title} className="card__image" />
-      )}
+      <figure>
+        {recipe.image && (
+          <img src={recipe.image} alt={recipe.title} className="card__image" />
+        )}
+        {recipe.category && (
+            <div className="card__category">{recipe.category}</div>
+          )}
+      </figure>
       <div className="card__content">
         <h3 className="card__title">{recipe.title}</h3>
-        {recipe.category && (
-          <div className="card__category">{recipe.category}</div>
-        )}
+       
         <div className="card__ingredients">
-          {ingredients.map((ingredient, index) => (
+          {visibleIngredients.map((ingredient, index) => (
             <span key={index} className="card__ingredient">
               {ingredient.name}
             </span>
           ))}
+          {hiddenCount > 0 && (
+            <span className="card__ingredient card__ingredient--more">
+              +{hiddenCount}
+            </span>
+          )}
         </div>
         <div className="card__time">
           <span className="card__time-icon">⏱</span>
