@@ -387,20 +387,39 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
               value={formData.steps}
               onEditorChange={handleStepsChange}
               init={{
-                height: 400,
+                height: window.innerWidth <= 768 ? 300 : 400,
                 menubar: false,
                 skin: 'oxide-dark',
                 content_css: 'dark',
+                mobile: {
+                  theme: 'mobile',
+                  toolbar: ['undo', 'redo', 'bold', 'italic', 'underline', 'bullist', 'numlist'],
+                  plugins: ['lists', 'autolink']
+                },
                 plugins: [
                   'advlist', 'autolink', 'lists', 'link', 'charmap',
                   'searchreplace', 'visualblocks', 'code', 'fullscreen',
                   'insertdatetime', 'table', 'help', 'wordcount'
                 ],
-                toolbar: 'undo redo | blocks | ' +
-                'bold italic forecolor | alignleft aligncenter ' +
-                'alignright alignjustify | bullist numlist outdent indent | ' +
-                'removeformat | help',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; line-height: 1.6; background-color: rgba(30, 30, 30, 0.85); color: #fff; }',
+                toolbar: window.innerWidth <= 768 ? 
+                  'undo redo | bold italic | bullist numlist | removeformat' :
+                  'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
+                toolbar_mode: window.innerWidth <= 768 ? 'sliding' : 'floating',
+                resize: window.innerWidth <= 768 ? false : true,
+                branding: false,
+                statusbar: window.innerWidth <= 768 ? false : true,
+                content_style: `
+                  body { 
+                    font-family: Helvetica, Arial, sans-serif; 
+                    font-size: ${window.innerWidth <= 768 ? '16px' : '14px'}; 
+                    line-height: 1.6; 
+                    background-color: rgba(30, 30, 30, 0.85); 
+                    color: #fff;
+                    padding: ${window.innerWidth <= 768 ? '12px' : '16px'};
+                  }
+                  p { margin-bottom: 12px; }
+                  li { margin-bottom: 6px; }
+                `,
                 placeholder: 'Décrivez les étapes de votre recette...'
               }}
             />
