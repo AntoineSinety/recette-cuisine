@@ -27,6 +27,20 @@
       font-size: 14px;font-weight: 400; line-height: normal;
     }
 
+    .card__time {
+        position: absolute; top: 0; left: 0;
+        background-color: var(--dark);
+        padding: 5px 10px;
+        display: flex;gap: 8px;align-items: center;
+        color: var(--clair);
+        font-size: 12px;font-weight: 500;
+
+        .card__time-icon {
+          color: var(--bleu-ciel);
+          font-size: 12px;
+        }
+      }
+
     &__image {
       display: block;
       width: 100%;height: auto;object-fit: cover;
@@ -40,7 +54,6 @@
       text-align: left;
 
       .card__title {
-        margin: 0 0 12px;
         color: var(--blanc);background-color: transparent;
         font-size: 16px;font-weight: 700;
       }
@@ -71,16 +84,7 @@
         }
       }
 
-      .card__time {
-        display: flex;gap: 8px;align-items: center;
-        color: var(--clair);
-        font-size: 0.95em;font-weight: 500;
-
-        .card__time-icon {
-          color: var(--bleu-ciel);
-          font-size: 1.2em;
-        }
-      }
+      
     }
   
     &__buttons {
@@ -89,9 +93,9 @@
   
       button {
         flex: 1;
-        padding: 14px;
+        padding: 10px 14px;
         color: var(--blanc);background-color: var(--dark);
-        font-size: 0.9em;font-weight: 600;text-transform: uppercase;letter-spacing: 0.3px;
+        font-size: 12px;font-weight: 600; text-transform: uppercase;
         border: none;border-radius: 0;
         cursor: pointer;
         transition: 0.3s all ease;

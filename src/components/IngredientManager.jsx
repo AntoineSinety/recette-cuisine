@@ -229,23 +229,46 @@ const IngredientManager = () => {
             >
               <div
                 className="popup-content mediatheque"
-                style={{ maxWidth: 540, minHeight: 340, display: 'flex', flexDirection: 'column', gap: 16 }}
+                style={{
+                  maxWidth: 540,
+                  minHeight: 340,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 16,
+                  overflow: 'hidden'
+                }}
                 onClick={e => e.stopPropagation()}
               >
                 <h4 style={{ marginBottom: 8 }}>Médiathèque des ingrédients</h4>
-                <div style={{ fontSize: 15, color: '#333', marginBottom: 8 }}>
-                  <b>1.</b> Glissez-déposez ou sélectionnez une image pour l'ajouter au dossier.<br />
+                <div style={{
+                  fontSize: 15,
+                  color: '#333',
+                  marginBottom: 8,
+                  background: '#f8f8f8',
+                  padding: '8px 12px',
+                  borderRadius: 6
+                }}>
+                  <b>1.</b> Ajoutez une image par glisser-déposer ou sélection.<br />
                   <b>2.</b> Cliquez sur une image pour l'utiliser.<br />
-                  <b>3.</b> Vous pouvez aussi choisir "Pas d'image".
+                  <b>3.</b> Vous pouvez choisir "Pas d'image".
                 </div>
-                <div style={{ display: 'flex', gap: 24 }}>
-                  <div style={{ flex: 1, minWidth: 180 }}>
+                <div style={{ display: 'flex', gap: 20 }}>
+                  <div style={{ flex: 1, minWidth: 160 }}>
                     <div style={{ marginBottom: 8, fontWeight: 500 }}>Ajouter une image :</div>
                     <MediaUploader onMediaChange={handleMediaUpload} />
                   </div>
                   <div style={{ flex: 2 }}>
                     <div style={{ marginBottom: 8, fontWeight: 500 }}>Images du dossier "ingredients" :</div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12 }}>
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(60px, 1fr))',
+                        gap: 10,
+                        maxHeight: 180,
+                        overflowY: 'auto',
+                        padding: '4px'
+                      }}
+                    >
                       <div
                         style={{
                           display: 'flex',
@@ -269,33 +292,43 @@ const IngredientManager = () => {
                         />
                         <span style={{ fontSize: 12, color: '#888' }}>Pas d'image</span>
                       </div>
-                      {loadingImages && <span style={{ color: '#888' }}>Chargement...</span>}
+                      {loadingImages && (
+                        <span style={{ color: '#888', gridColumn: '1/-1', textAlign: 'center' }}>Chargement...</span>
+                      )}
                       {!loadingImages && storageImages.length === 0 && (
-                        <span style={{ color: '#888' }}>Aucune image trouvée</span>
+                        <span style={{ color: '#888', gridColumn: '1/-1', textAlign: 'center' }}>Aucune image trouvée</span>
                       )}
                       {!loadingImages && storageImages.map(url => (
-                        <img
+                        <div
                           key={url}
-                          src={url}
-                          alt="media"
                           style={{
-                            width: 60,
-                            height: 60,
-                            objectFit: 'contain',
-                            border: '2px solid #ccc',
-                            borderRadius: 4,
-                            cursor: 'pointer',
-                            background: '#fff'
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            cursor: 'pointer'
                           }}
                           onClick={() => handleSelectExistingImage(url)}
-                        />
+                        >
+                          <img
+                            src={url}
+                            alt="media"
+                            style={{
+                              width: 60,
+                              height: 60,
+                              objectFit: 'contain',
+                              border: '2px solid #ccc',
+                              borderRadius: 4,
+                              background: '#fff'
+                            }}
+                          />
+                        </div>
                       ))}
                     </div>
                   </div>
                 </div>
                 <button
                   className="bouton"
-                  style={{ marginTop: 12 }}
+                  style={{ marginTop: 12, alignSelf: 'flex-end' }}
                   onClick={() => setIsMediaManagerOpen(false)}
                 >
                   Fermer

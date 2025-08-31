@@ -272,37 +272,33 @@
         }
     }
     
-    .images-list {
-        display: grid;grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));gap: 16px;
-        margin-top: 20px;
-        
-        .image-thumb {
-            position: relative;
-            width: 100%;height: 100px;object-fit: cover;
-            background: var(--dark);
-            border: 2px solid var(--clair2);border-radius: 0;
-            cursor: pointer;
-            transition: 0.3s all ease;
-            
-            &:hover {
-                z-index: 2;
-                border-color: var(--bleu-ciel);
-                transform: scale(1.05);
-            }
-            
-            &.selected {
-                border-color: var(--vert);box-shadow: 0 0 0 2px var(--vert);
-                transform: scale(1.05);
-            }
+    .images-list,
+    .media-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+        gap: 10px;
+        max-height: 180px;
+        overflow-y: auto;
+        padding: 4px;
+    }
+    .image-thumb {
+        width: 60px;
+        height: 60px;
+        object-fit: contain;
+        border: 2px solid #ccc;
+        border-radius: 4px;
+        background: #fff;
+        cursor: pointer;
+        transition: border 0.2s;
+        &:hover {
+            border: 2px solid var(--bleu);
         }
-        
-        .no-image {
-            grid-column: 1 / -1;
-            padding: 40px;
-            color: var(--clair);background: var(--dark);
-            font-size: 1rem;font-style: italic;text-align: center;
-            border: 1px solid var(--clair2);
-        }
+    }
+    .no-image {
+        color: #888;
+        font-size: 12px;
+        text-align: center;
+        grid-column: 1 / -1;
     }
     
     .mediatheque-instructions {
@@ -472,5 +468,9 @@
         position: static;
     }
 }
+    .ingredient-list-item .ingredient-actions {
+        position: static;
+    }
+
 
 

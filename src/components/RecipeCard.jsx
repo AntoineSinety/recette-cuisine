@@ -77,26 +77,17 @@ const RecipeCard = ({ recipe, onClick }) => {
         {recipe.category && (
             <div className="card__category">{recipe.category}</div>
           )}
+
+        {recipe.time && (
+          <div className="card__time">
+            <span className="card__time-icon">⏱</span>
+            {recipe.time} min
+          </div>
+          )}
+
       </figure>
       <div className="card__content">
         <h3 className="card__title">{recipe.title}</h3>
-       
-        <div className="card__ingredients">
-          {visibleIngredients.map((ingredient, index) => (
-            <span key={index} className="card__ingredient">
-              {ingredient.name}
-            </span>
-          ))}
-          {hiddenCount > 0 && (
-            <span className="card__ingredient card__ingredient--more">
-              +{hiddenCount}
-            </span>
-          )}
-        </div>
-        <div className="card__time">
-          <span className="card__time-icon">⏱</span>
-          {recipe.time} min
-        </div>
       </div>
       <div className="card__buttons">
         <button onClick={handleEdit}>Modifier</button>
