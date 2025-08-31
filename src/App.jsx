@@ -12,9 +12,12 @@ import { ToastProvider } from './components/ToastContainer';
 import './assets/styles/app.scss';
 
 const App = () => {
+  // Déterminer la base URL selon l'environnement
+  const basename = process.env.NODE_ENV === 'production' ? '/recette-cuisine' : '';
+  
   return (
     <ToastProvider>
-      <Router>
+      <Router basename={basename}>
         <NavBar />
         <main>
           <Routes>
