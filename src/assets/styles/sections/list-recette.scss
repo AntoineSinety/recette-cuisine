@@ -1,9 +1,35 @@
 .recipes {
-    display: grid;grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));gap: 30px;
-    padding: 30px;
-    
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--spacing-2xl);
+    padding: var(--spacing-2xl) 0;
+    animation: fadeIn 0.4s ease-out;
+
+    @media (width <= 1024px) {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: var(--spacing-xl);
+        padding: var(--spacing-xl) 0;
+    }
+
     @media (width <= 768px) {
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));gap: 20px;
-        padding: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: var(--spacing-lg);
+        padding: var(--spacing-lg) 0;
+    }
+
+    @media (width <= 480px) {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
