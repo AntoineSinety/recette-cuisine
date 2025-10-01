@@ -9,10 +9,14 @@
       "Bash(npm run lint:*)",
       "Bash(npx stylelint:*)",
       "Bash(npm uninstall:*)",
+<<<<<<< Updated upstream
       "Bash(npm run build:*)",
       "Bash(git add:*)",
       "Bash(git push:*)",
       "Bash(git commit:*)"
+=======
+      "Bash(rm:*)"
+>>>>>>> Stashed changes
     ],
     "deny": [],
     "ask": []
