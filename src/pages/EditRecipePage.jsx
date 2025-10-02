@@ -18,17 +18,23 @@ const EditRecipePage = () => {
         // Essayer de récupérer depuis le cookie d'abord
         const savedData = getCookie('recette_edit_data');
         if (savedData) {
-          const recipeData = JSON.parse(savedData);
-          setRecipe(recipeData);
-          setLoading(false);
-          return;
+          try {
+            const recipeData = JSON.parse(decodeURIComponent(savedData));
+            setRecipe(recipeData);
+            setLoading(false);
+            return;
+          } catch (jsonError) {
+            console.warn('Cookie corrompu, chargement depuis Firestore:', jsonError);
+            // Supprimer le cookie corrompu
+            document.cookie = 'recette_edit_data=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+          }
         }
 
         // Sinon charger depuis Firestore avec l'ID
         if (id) {
           const docRef = doc(db, 'recipes', id);
           const docSnap = await getDoc(docRef);
-          
+
           if (docSnap.exists()) {
             setRecipe({ id, ...docSnap.data() });
           }

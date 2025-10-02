@@ -23,6 +23,7 @@ const PageNavigator = () => {
   });
   const [CurrentComponent, setCurrentComponent] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Charger le composant de la page courante
   useEffect(() => {
@@ -50,7 +51,8 @@ const PageNavigator = () => {
     if (page !== currentPage) {
       setCurrentPage(page);
       saveLastPage(page);
-      
+      setIsMenuOpen(false); // Fermer le menu après navigation
+
       // Si on quitte la page d'édition, supprimer l'ID de recette
       if (currentPage === PAGES.EDIT_RECIPE && page !== PAGES.EDIT_RECIPE) {
         document.cookie = 'recette_edit_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
@@ -79,8 +81,19 @@ const PageNavigator = () => {
             {PAGE_ICONS[currentPage]} {PAGE_NAMES[currentPage]}
           </h1>
         </div>
-        
-        <div className="page-nav__menu">
+
+        {/* Bouton burger */}
+        <button
+          className={`page-nav__burger ${isMenuOpen ? 'page-nav__burger--open' : ''}`}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          aria-label="Toggle menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <div className={`page-nav__menu ${isMenuOpen ? 'page-nav__menu--open' : ''}`}>
           {Object.entries(VISIBLE_PAGES).map(([key, page]) => (
             <button
               key={page}
@@ -93,6 +106,14 @@ const PageNavigator = () => {
             </button>
           ))}
         </div>
+
+        {/* Overlay pour fermer le menu */}
+        {isMenuOpen && (
+          <div
+            className="page-nav__overlay"
+            onClick={() => setIsMenuOpen(false)}
+          />
+        )}
       </nav>
 
       {/* Page Content */}

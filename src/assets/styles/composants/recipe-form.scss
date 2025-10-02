@@ -28,6 +28,11 @@
     &--full {
       grid-column: 1 / -1;
     }
+
+    &--ingredients {
+      position: relative;
+      z-index: 2; // Pour que le dropdown passe au-dessus des autres sections
+    }
   }
 
   &__label {
@@ -153,14 +158,18 @@
   }
 
   &__ingredients-add {
+    position: relative;
     margin-bottom: 16px;
+    z-index: 50; // Plus élevé que les sections suivantes
   }
 
   &__ingredients {
+    position: relative;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 10px;
     min-height: 90px;
+    z-index: 1; // Plus bas pour ne pas interférer avec le dropdown
   }
 
   &__empty {
@@ -195,8 +204,10 @@
   }
 
   &__editor {
+    position: relative;
     border: 1px solid var(--clair2);border-radius: 0;
     overflow: hidden;
+    z-index: 1; // Plus bas pour ne pas interférer avec le dropdown
     
     .tox-tinymce {
       border: none !important;border-radius: 0 !important;

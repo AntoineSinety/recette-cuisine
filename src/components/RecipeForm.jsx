@@ -344,7 +344,7 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
         </div>
 
         {/* Ingredients Section */}
-        <div className="form__section form__section--full">
+        <div className="form__section form__section--full form__section--ingredients">
           <label className="form__label">
             <span className="form__label-text">Ingrédients</span>
             <span className="form__required">*</span>

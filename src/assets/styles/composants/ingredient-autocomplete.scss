@@ -1,6 +1,7 @@
 .autocomplete {
   position: relative;
   width: 100%;
+  z-index: 100; // S'assurer qu'il passe au-dessus du contenu suivant
 
   &__wrapper {
     position: relative;
@@ -12,9 +13,9 @@
     width: 100%;
     padding: 12px 40px 12px 14px;
     color: var(--blanc);
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(10, 14, 39, 0.8);
     font-size: 0.95em;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 8px;
     transition: all 0.2s ease;
 
@@ -23,13 +24,15 @@
     }
 
     &:focus {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(10, 14, 39, 0.95);
       border-color: var(--bleu-ciel);
+      box-shadow: 0 0 0 3px rgba(42, 163, 204, 0.15);
       outline: none;
     }
 
     &:hover:not(:focus) {
-      border-color: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.18);
+      background: rgba(10, 14, 39, 0.9);
     }
   }
 
@@ -63,10 +66,11 @@
     right: 0;
     left: 0;
     z-index: 1000;
-    background: var(--dark);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(10, 14, 39, 0.98);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 8px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.05);
     overflow: hidden;
     animation: dropdownSlideIn 0.15s ease-out;
   }
@@ -99,16 +103,17 @@
     align-items: center;
     gap: 12px;
     padding: 10px 12px;
+    background: transparent;
     cursor: pointer;
     transition: all 0.15s ease;
 
     &:not(:last-child) {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     &:hover,
     &--active {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(42, 163, 204, 0.15);
 
       .autocomplete__add {
         opacity: 1;
@@ -194,11 +199,181 @@
     text-align: center;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
   }
+
+  &__no-results {
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.02);
+    text-align: center;
+
+    p {
+      margin-bottom: 12px;
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9em;
+    }
+  }
+
+  &__create-btn {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(135deg, var(--vert) 0%, var(--vert-hover) 100%);
+    color: var(--blanc);
+    font-size: 0.9em;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    &--bottom {
+      margin: 8px 8px 8px 8px;
+      border-radius: 6px;
+    }
+  }
+
+  // Modal styles
+  &__modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.2s ease;
+  }
+
+  &__modal {
+    width: 90%;
+    max-width: 500px;
+    padding: 24px;
+    background: rgba(10, 14, 39, 0.98);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    animation: slideUp 0.3s ease;
+  }
+
+  &__modal-title {
+    margin: 0 0 20px;
+    color: var(--blanc);
+    font-size: 1.3em;
+    font-weight: 600;
+  }
+
+  &__modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  &__modal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    label {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 0.9em;
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      padding: 10px 12px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--blanc);
+      font-size: 0.95em;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 6px;
+      transition: all 0.2s ease;
+
+      &:focus {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: var(--bleu-ciel);
+        box-shadow: 0 0 0 3px rgba(42, 163, 204, 0.15);
+        outline: none;
+      }
+
+      &:hover:not(:focus) {
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+  }
+
+  &__modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  &__modal-btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 0.95em;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &--cancel {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--blanc);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+    }
+
+    &--save {
+      background: linear-gradient(135deg, var(--vert) 0%, var(--vert-hover) 100%);
+      color: var(--blanc);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
+      &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
 }
 
 @keyframes dropdownSlideIn {
   from {
     transform: translateY(-8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
     opacity: 0;
   }
   to {

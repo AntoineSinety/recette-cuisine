@@ -59,7 +59,9 @@ export const NavigationProvider = ({ children, currentPage, onNavigate }) => {
     if (options.state?.recipe?.id) {
       // Navigation vers édition avec données
       setCookie('recette_edit_id', options.state.recipe.id, 1);
-      setCookie('recette_edit_data', JSON.stringify(options.state.recipe), 1);
+      // Encoder les données en JSON puis en URI pour éviter les problèmes de caractères spéciaux
+      const encodedData = encodeURIComponent(JSON.stringify(options.state.recipe));
+      setCookie('recette_edit_data', encodedData, 1);
       targetPage = PAGES.EDIT_RECIPE;
     }
     
