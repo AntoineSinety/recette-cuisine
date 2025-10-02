@@ -153,42 +153,45 @@
   }
 
   &__ingredients-add {
-    margin-bottom: 20px;
+    margin-bottom: 16px;
   }
 
   &__ingredients {
-    display: grid;grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
     min-height: 90px;
-    
-    @media (width <= 768px) {
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));gap: 12px;
-    }
   }
 
   &__empty {
-    display: flex;flex-direction: column;grid-column: 1 / -1;align-items: center;justify-content: center;
-    padding: 50px 20px;
-    background: var(--dark);
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    background: rgba(255, 255, 255, 0.02);
     text-align: center;
-    border: 2px dashed var(--clair2);border-radius: 0;
-    transition: 0.3s all ease;
-    
+    border: 1px dashed rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
     &:hover {
-      background: var(--bleu);
-      border-color: var(--bleu-ciel);
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.15);
     }
-    
+
     p {
-      margin: 16px 0 0;
-      color: var(--clair);
-      font-size: 1.1em;font-style: italic;
+      margin: 12px 0 0;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.95em;
     }
   }
 
   &__empty-icon {
     margin-bottom: 8px;
-    font-size: 3em;
-    opacity: 0.5;
+    font-size: 2.5em;
+    opacity: 0.4;
   }
 
   &__editor {
@@ -483,21 +486,21 @@
     }
     
     &__ingredients {
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 8px;
     }
-    
+
     &__empty {
-      padding: 40px 16px;
-      
+      padding: 32px 16px;
+
       p {
-        font-size: 1em;
+        font-size: 0.9em;
         line-height: 1.4;
       }
     }
-    
+
     &__empty-icon {
-      font-size: 2.5em;
+      font-size: 2em;
     }
     
     &__submit {
@@ -556,21 +559,21 @@
     }
     
     &__ingredients {
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 10px;
+      grid-template-columns: 1fr;
+      gap: 6px;
     }
-    
+
     &__empty {
-      padding: 30px 12px;
-      
+      padding: 28px 12px;
+
       p {
-        font-size: 0.9em;
-        margin-top: 12px;
+        font-size: 0.85em;
+        margin-top: 10px;
       }
     }
-    
+
     &__empty-icon {
-      font-size: 2em;
+      font-size: 1.8em;
     }
     
     &__submit {
@@ -588,11 +591,7 @@
 @media (width <= 360px) {
   .form {
     padding: 12px 8px;
-    
-    &__ingredients {
-      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    }
-    
+
     &__button {
       padding: 12px 14px;
       font-size: 0.9em;

@@ -45,11 +45,11 @@ const IngredientCard = ({ ingredient, onQuantityChange, onRemove }) => {
       <div className="ingredient__remove" onClick={onRemove}>
         ×
       </div>
-      
+
       <div className="ingredient__image">
         {ingredient.imageUrl ? (
-          <img 
-            src={ingredient.imageUrl} 
+          <img
+            src={ingredient.imageUrl}
             alt={ingredient.name}
             onError={(e) => {
               e.target.style.display = 'none';
@@ -57,17 +57,17 @@ const IngredientCard = ({ ingredient, onQuantityChange, onRemove }) => {
             }}
           />
         ) : null}
-        <div 
+        <div
           className="ingredient__placeholder"
           style={{ display: ingredient.imageUrl ? 'none' : 'flex' }}
         >
           🥄
         </div>
       </div>
-      
+
       <div className="ingredient__content">
-        <h4 className="ingredient__name">{ingredient.name}</h4>
-        
+        <div className="ingredient__name">{ingredient.name}</div>
+
         {isEditing ? (
           <form onSubmit={handleQuantitySubmit} className="ingredient__edit-form">
             <input
@@ -92,12 +92,6 @@ const IngredientCard = ({ ingredient, onQuantityChange, onRemove }) => {
           </div>
         )}
       </div>
-      
-      {!isEditing && (
-        <div className="ingredient__hint">
-          Cliquer pour modifier
-        </div>
-      )}
     </div>
   );
 };
