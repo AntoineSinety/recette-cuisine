@@ -4,13 +4,14 @@ import { useToast } from './ToastContainer';
 import IngredientPreview from './IngredientPreview';
 import IngredientPopup from './IngredientPopup';
 import IngredientMediaManager from './IngredientMediaManager';
+import { INGREDIENT_CATEGORIES, getCategoryInfo } from '../constants/ingredientCategories';
 
 const PLACEHOLDER_IMAGE = './src/assets/img/placeholder.jpg';
 
 const IngredientManager = () => {
   const { ingredients, addIngredient, updateIngredient, deleteIngredient } = useIngredients();
   const { showError, showSuccess } = useToast();
-  const [newIngredient, setNewIngredient] = useState({ name: '', imageUrl: '', unit: '' });
+  const [newIngredient, setNewIngredient] = useState({ name: '', imageUrl: '', unit: '', category: '' });
   const [editingIngredient, setEditingIngredient] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isMediaManagerOpen, setIsMediaManagerOpen] = useState(false);
@@ -126,7 +127,7 @@ const IngredientManager = () => {
   const closePopup = () => {
     setIsPopupOpen(false);
     setEditingIngredient(null);
-    setNewIngredient({ name: '', imageUrl: '', unit: '' });
+    setNewIngredient({ name: '', imageUrl: '', unit: '', category: '' });
     setNameError(''); // Réinitialiser l'erreur
   };
 
@@ -149,6 +150,23 @@ const IngredientManager = () => {
   }, [isPopupOpen]);
 
 
+  // Grouper les ingrédients par catégorie
+  const groupedIngredients = ingredients.reduce((groups, ingredient) => {
+    const category = ingredient.category || '';
+    if (!groups[category]) {
+      groups[category] = [];
+    }
+    groups[category].push(ingredient);
+    return groups;
+  }, {});
+
+  // Trier les groupes par ordre de catégorie
+  const sortedCategories = Object.keys(groupedIngredients).sort((a, b) => {
+    const catA = INGREDIENT_CATEGORIES.find(cat => cat.value === a) || { order: 99 };
+    const catB = INGREDIENT_CATEGORIES.find(cat => cat.value === b) || { order: 99 };
+    return catA.order - catB.order;
+  });
+
   return (
     <div>
       <div className="ingredient-manager">
@@ -156,22 +174,36 @@ const IngredientManager = () => {
           <h1>Gestion des Ingrédients</h1>
           <button className="bouton" onClick={openPopup}>Ajouter un Ingrédient</button>
         </div>
-        <div className="ingredient-list">
-          {ingredients.map(ingredient => (
-            <div
-              key={ingredient.id}
-              className="ingredient-item"
-              onClick={() => handleEditIngredient(ingredient)}
-              style={{ cursor: 'pointer' }}
-            >
-              <IngredientPreview
-                ingredient={ingredient}
-                onEdit={handleEditIngredient}
-                onDelete={handleDeleteIngredient}
-              />
+        {sortedCategories.map(categoryValue => {
+          const categoryInfo = getCategoryInfo(categoryValue);
+          const categoryIngredients = groupedIngredients[categoryValue];
+
+          return (
+            <div key={categoryValue} className="ingredient-category">
+              <div className="ingredient-category__header">
+                <span className="ingredient-category__icon">{categoryInfo.icon}</span>
+                <h2 className="ingredient-category__title">{categoryInfo.label}</h2>
+                <span className="ingredient-category__count">({categoryIngredients.length})</span>
+              </div>
+              <div className="ingredient-list">
+                {categoryIngredients.map(ingredient => (
+                  <div
+                    key={ingredient.id}
+                    className="ingredient-item"
+                    onClick={() => handleEditIngredient(ingredient)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <IngredientPreview
+                      ingredient={ingredient}
+                      onEdit={handleEditIngredient}
+                      onDelete={handleDeleteIngredient}
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
       {isPopupOpen && (
         <div className="popup-overlay" onClick={handleOverlayClick}>
@@ -214,6 +246,19 @@ const IngredientManager = () => {
                   Choisir une image
                 </button>
               </div>
+              <select
+                className="field-select"
+                name="category"
+                value={newIngredient.category}
+                onChange={handleInputChange}
+                style={{ marginBottom: '12px' }}
+              >
+                {INGREDIENT_CATEGORIES.map(cat => (
+                  <option key={cat.value} value={cat.value}>
+                    {cat.icon} {cat.label}
+                  </option>
+                ))}
+              </select>
               <select
                 className="field-select"
                 name="unit"

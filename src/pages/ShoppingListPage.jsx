@@ -2,6 +2,7 @@ import React from 'react';
 import useShoppingList from '../hooks/useShoppingList';
 import useMenuPlanning from '../hooks/useMenuPlanning';
 import { formatQuantityWithBestUnit } from '../utils/unitConverter';
+import { INGREDIENT_CATEGORIES, getCategoryInfo } from '../constants/ingredientCategories';
 
 const ShoppingListPage = () => {
   const { shoppingList, checkedItems, loading, toggleIngredient, toggleAll, resetList, getStats } = useShoppingList();
@@ -33,6 +34,23 @@ const ShoppingListPage = () => {
   };
 
   const weekDays = generateWeekDays();
+
+  // Grouper les ingrédients par catégorie
+  const groupedIngredients = shoppingList.reduce((groups, ingredient) => {
+    const category = ingredient.category || '';
+    if (!groups[category]) {
+      groups[category] = [];
+    }
+    groups[category].push(ingredient);
+    return groups;
+  }, {});
+
+  // Trier les catégories par ordre défini
+  const sortedCategories = Object.keys(groupedIngredients).sort((a, b) => {
+    const catA = getCategoryInfo(a);
+    const catB = getCategoryInfo(b);
+    return catA.order - catB.order;
+  });
 
   if (loading) {
     return (
@@ -92,7 +110,7 @@ const ShoppingListPage = () => {
             </button>
           </div>
 
-          {/* Liste des ingrédients */}
+          {/* Liste des ingrédients groupés par catégorie */}
           <div className="shopping-list__items">
             {shoppingList.length === 0 ? (
               <div className="shopping-list__empty">
@@ -100,7 +118,21 @@ const ShoppingListPage = () => {
                 <p>Ajoutez des recettes à votre menu de la semaine pour générer automatiquement votre liste.</p>
               </div>
             ) : (
-              shoppingList.map(ingredient => (
+              sortedCategories.map(categoryKey => {
+                const categoryInfo = getCategoryInfo(categoryKey);
+                const ingredients = groupedIngredients[categoryKey];
+
+                return (
+                  <div key={categoryKey} className="shopping-list__category-group">
+                    <h3 className="shopping-list__category-title">
+                      <span className="shopping-list__category-icon">{categoryInfo.icon}</span>
+                      {categoryInfo.label}
+                      <span className="shopping-list__category-count">
+                        {ingredients.length}
+                      </span>
+                    </h3>
+                    <div className="shopping-list__category-items">
+                      {ingredients.map(ingredient => (
                 <div 
                   key={ingredient.id} 
                   className={`shopping-list__item ${checkedItems[ingredient.id] ? 'shopping-list__item--checked' : ''}`}
@@ -175,7 +207,11 @@ const ShoppingListPage = () => {
                     </div>
                   </div>
                 </div>
-              ))
+                      ))}
+                    </div>
+                  </div>
+                );
+              })
             )}
           </div>
         </div>

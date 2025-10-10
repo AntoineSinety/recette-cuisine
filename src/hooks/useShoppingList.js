@@ -140,6 +140,7 @@ const useShoppingList = () => {
                   totalQuantity: quantity,
                   unit,
                   imageUrl: ingredientsData[key]?.imageUrl || '',
+                  category: ingredientsData[key]?.category || '',
                   sources: [`${dayKey}-${mealType}`],
                   alternateQuantities: []
                 };
@@ -188,6 +189,7 @@ const useShoppingList = () => {
                   totalQuantity: quantity,
                   unit,
                   imageUrl: ingredientsData[key]?.imageUrl || '',
+                  category: ingredientsData[key]?.category || '',
                   sources: [`extra-${extra.id}`],
                   alternateQuantities: []
                 };

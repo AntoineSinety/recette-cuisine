@@ -80,7 +80,6 @@
 .ingredient-list {
     position: relative;
     display: grid;grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));gap: 16px;
-    min-height: 300px;
     border-radius: 0;
     
     @media (width <= 768px) {
