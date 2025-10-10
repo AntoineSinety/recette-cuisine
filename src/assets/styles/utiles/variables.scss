@@ -12,6 +12,9 @@
     --accent-warning: #FFB84D;
     --accent-danger: #FF6B6B;
 
+    // Legacy colors (pour compatibilité)
+    --bleu-clair: #14172B;
+
     // Dégradés
     --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     --gradient-secondary: linear-gradient(135deg, #5B8DEE 0%, #7B68EE 100%);

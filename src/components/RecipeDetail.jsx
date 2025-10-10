@@ -2,11 +2,13 @@ import React, { forwardRef, useImperativeHandle, useRef, useEffect, useState } f
 import gsap from 'gsap';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
+import { useNavigate } from '../context/NavigationContext';
 
 const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
   const detailRef = useRef(null);
   const overlayRef = useRef(null);
   const [ingredients, setIngredients] = useState([]);
+  const navigate = useNavigate();
 
   useImperativeHandle(ref, () => ({
     open() {
@@ -46,6 +48,13 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
     }
   };
 
+  const handleEdit = () => {
+    if (recipe.id) {
+      ref.current.close();
+      navigate(`/edit/${recipe.id}`, { state: { recipe } });
+    }
+  };
+
   useEffect(() => {
     const fetchIngredients = async () => {
       const ingredientsData = await Promise.all(
@@ -75,48 +84,77 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
   return (
     <div className="recipe-detail-overlay" ref={overlayRef} onClick={handleOverlayClick}>
       <div className="recipe-detail" ref={detailRef} onClick={e => e.stopPropagation()}>
-        <button className="close-button" onClick={() => ref.current.close()}>Fermer</button>
-        <h2>{recipe.title}</h2>
-        {recipe.image && <img src={recipe.image} alt={recipe.title} />}
-        <div className="recipe-detail__info">
-          <span className="recipe-detail__time">
-            <span className="recipe-detail__time-icon">⏱</span>
-            {recipe.time} min
-          </span>
-          {recipe.category && (
-            <span className="recipe-detail__category">{recipe.category}</span>
+        <div className="recipe-detail__actions">
+          <button className="edit-button" onClick={handleEdit} title="Modifier la recette">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+            </svg>
+          </button>
+          <button className="close-button" onClick={() => ref.current.close()} title="Fermer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        {recipe.image && (
+          <div className="recipe-detail__hero">
+            <img src={recipe.image} alt={recipe.title} />
+          </div>
+        )}
+
+        <div className="recipe-detail__header">
+          <h2 className="recipe-detail__title">{recipe.title}</h2>
+          <div className="recipe-detail__meta">
+            {recipe.time && (
+              <div className="recipe-detail__meta-item">
+                <span className="icon">⏱</span>
+                <span>{recipe.time} min</span>
+              </div>
+            )}
+            {recipe.category && (
+              <div className="recipe-detail__meta-item category">
+                {recipe.category}
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="recipe-detail__body">
+          <div className="recipe-detail__instructions">
+            <h3>Instructions</h3>
+            {recipe.steps && (
+              <div className="recipe-detail__steps" dangerouslySetInnerHTML={{ __html: recipe.steps }} />
+            )}
+          </div>
+
+          {ingredients.length > 0 && (
+            <aside className="recipe-detail__sidebar">
+              <div className="recipe-detail__sidebar-inner">
+                <h3>Ingrédients</h3>
+                <div className="recipe-detail__ingredients">
+                  {ingredients.map((ingredient, index) => (
+                    <div key={index} className="ingredient-item">
+                      {ingredient.imageUrl && (
+                        <div className="ingredient-item__image">
+                          <img src={ingredient.imageUrl} alt={ingredient.name} />
+                        </div>
+                      )}
+                      <div className="ingredient-item__content">
+                        <div className="ingredient-item__name">{ingredient.name}</div>
+                        <div className="ingredient-item__quantity">
+                          {ingredient.quantity} {ingredient.unit}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </aside>
           )}
         </div>
-        {ingredients.length > 0 && (
-          <div className="recipe-detail__section">
-            <h3 className="recipe-detail__section-title">Ingrédients</h3>
-            <div className="recipe-detail__ingredients">
-              {ingredients.map((ingredient, index) => (
-                <div key={index} className="recipe-detail__ingredient-card">
-                  {ingredient.imageUrl && (
-                    <img 
-                      src={ingredient.imageUrl} 
-                      alt={ingredient.name}
-                      className="recipe-detail__ingredient-image"
-                    />
-                  )}
-                  <div className="recipe-detail__ingredient-info">
-                    <span className="recipe-detail__ingredient-name">{ingredient.name}</span>
-                    <span className="recipe-detail__ingredient-quantity">
-                      {ingredient.quantity} {ingredient.unit}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-        {recipe.steps && (
-          <div className="recipe-detail__section">
-            <h3 className="recipe-detail__section-title">Instructions</h3>
-            <div className="recipe-detail__steps" dangerouslySetInnerHTML={{ __html: recipe.steps }} />
-          </div>
-        )}
       </div>
     </div>
   );
