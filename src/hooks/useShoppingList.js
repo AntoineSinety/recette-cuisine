@@ -38,10 +38,21 @@ const useShoppingList = () => {
       const ingredientsList = {};
       const ingredientIds = new Set();
 
-      // Collecter tous les IDs d'ingrédients
+      // Date d'aujourd'hui à minuit pour comparaison
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      // Collecter tous les IDs d'ingrédients (uniquement pour les dates futures ou aujourd'hui)
       Object.keys(weeklyMenu).forEach(dayKey => {
         if (dayKey === 'extras') return;
-        
+
+        // Vérifier si la date du jour est passée
+        const dayDate = new Date(dayKey);
+        if (dayDate < today) {
+          console.log(`Ignoring past day: ${dayKey}`);
+          return; // Ignorer les jours passés
+        }
+
         const dayMenu = weeklyMenu[dayKey];
         ['midi', 'soir'].forEach(mealType => {
           const recipe = dayMenu[mealType];
@@ -80,10 +91,16 @@ const useShoppingList = () => {
         })
       );
 
-      // Construire la liste avec les vraies données
+      // Construire la liste avec les vraies données (uniquement jours futurs)
       Object.keys(weeklyMenu).forEach(dayKey => {
         if (dayKey === 'extras') return;
-        
+
+        // Vérifier si la date du jour est passée
+        const dayDate = new Date(dayKey);
+        if (dayDate < today) {
+          return; // Ignorer les jours passés
+        }
+
         const dayMenu = weeklyMenu[dayKey];
         ['midi', 'soir'].forEach(mealType => {
           const recipe = dayMenu[mealType];
@@ -93,7 +110,7 @@ const useShoppingList = () => {
               const quantity = ingredientRef.quantity || 1;
               const unit = ingredientRef.unit || ingredientsData[key]?.unit || '';
               const name = ingredientsData[key]?.name || `Ingrédient ${key}`;
-              
+
               if (ingredientsList[key]) {
                 // Vérifier si les unités peuvent être combinées
                 if (canCombineUnits(ingredientsList[key].unit, unit)) {
@@ -101,7 +118,7 @@ const useShoppingList = () => {
                   const existingBaseQuantity = convertToBaseUnit(ingredientsList[key].totalQuantity, ingredientsList[key].unit);
                   const newBaseQuantity = convertToBaseUnit(quantity, unit);
                   const totalBaseQuantity = existingBaseQuantity + newBaseQuantity;
-                  
+
                   // Reconvertir vers l'unité d'origine
                   const config = getUnitConfig(ingredientsList[key].unit);
                   ingredientsList[key].totalQuantity = totalBaseQuantity / config.factor;

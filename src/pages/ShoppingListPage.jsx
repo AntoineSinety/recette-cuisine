@@ -123,14 +123,45 @@ const ShoppingListPage = () => {
                   )}
                   
                   <div className="shopping-list__item-content">
-                    <span className="shopping-list__item-name">
-                      {ingredient.name}
-                    </span>
+                    <div className="shopping-list__item-header">
+                      <span className="shopping-list__item-name">
+                        {ingredient.name}
+                      </span>
+                      {ingredient.sources && ingredient.sources.length > 0 && (
+                        <div className="shopping-list__item-days">
+                          {ingredient.sources.map((source, idx) => {
+                            // Parser la source (format: "YYYY-MM-DD-midi" ou "extra-123")
+                            if (source.startsWith('extra-')) {
+                              return (
+                                <span key={idx} className="shopping-list__day-badge shopping-list__day-badge--extra">
+                                  Extra
+                                </span>
+                              );
+                            }
+                            const [dateStr, mealType] = source.split('-').slice(0, 4).join('-').split('-').reduce((acc, val, i) => {
+                              if (i < 3) acc[0] += (i > 0 ? '-' : '') + val;
+                              else acc[1] = val;
+                              return acc;
+                            }, ['', '']);
+
+                            const date = new Date(dateStr);
+                            const dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' });
+                            const mealIcon = mealType === 'midi' ? '☀️' : '🌙';
+
+                            return (
+                              <span key={idx} className="shopping-list__day-badge" title={`${dayName} ${mealType}`}>
+                                {dayName.substring(0, 3)} {mealIcon}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
                     <div className="shopping-list__item-details">
                       <span className="shopping-list__item-quantity">
                         {formatQuantityWithBestUnit(ingredient.totalQuantity, ingredient.unit)}
                       </span>
-                      
+
                       {/* Quantités alternatives si différentes unités */}
                       {ingredient.alternateQuantities && ingredient.alternateQuantities.length > 0 && (
                         <div className="shopping-list__alternate-quantities">

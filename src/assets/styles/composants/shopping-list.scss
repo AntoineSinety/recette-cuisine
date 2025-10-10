@@ -294,13 +294,57 @@
     min-width: 0;
   }
 
+  &__item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-xs);
+  }
+
   &__item-name {
     color: var(--text-primary);
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-semibold);
-    display: block;
-    margin-bottom: var(--spacing-xs);
     transition: all var(--transition-normal);
+  }
+
+  &__item-days {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+  }
+
+  &__day-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 8px;
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: var(--radius-sm);
+    color: #a78bfa;
+    font-size: 11px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(139, 92, 246, 0.25);
+      border-color: rgba(139, 92, 246, 0.5);
+      transform: scale(1.05);
+    }
+
+    &--extra {
+      background: rgba(78, 205, 196, 0.15);
+      border-color: rgba(78, 205, 196, 0.3);
+      color: #4ecdc4;
+
+      &:hover {
+        background: rgba(78, 205, 196, 0.25);
+        border-color: rgba(78, 205, 196, 0.5);
+      }
+    }
   }
 
   &__item-details {

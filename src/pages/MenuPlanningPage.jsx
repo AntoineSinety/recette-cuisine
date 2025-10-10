@@ -12,10 +12,40 @@ const MenuPlanningPage = () => {
     addExtraMeal,
     removeExtraMeal
   } = useMenuPlanning();
-  
+
   const [showRecipeSelector, setShowRecipeSelector] = useState(null);
   const [showExtraModal, setShowExtraModal] = useState(null);
   const [extraName, setExtraName] = useState('');
+
+  // États pour les filtres
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [maxTime, setMaxTime] = useState('');
+
+  // Extraire les catégories uniques
+  const categories = [...new Set(recipes.map(r => r.category).filter(Boolean))];
+
+  // Filtrer les recettes
+  const filteredRecipes = recipes.filter(recipe => {
+    const matchesSearch = !searchQuery ||
+      recipe.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      recipe.ingredients?.some(ing =>
+        ing.name?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+    const matchesCategory = !selectedCategory || recipe.category === selectedCategory;
+
+    const matchesTime = !maxTime || (recipe.time && parseInt(recipe.time) <= parseInt(maxTime));
+
+    return matchesSearch && matchesCategory && matchesTime;
+  });
+
+  // Réinitialiser les filtres
+  const resetFilters = () => {
+    setSearchQuery('');
+    setSelectedCategory('');
+    setMaxTime('');
+  };
 
   // Générer les 7 prochains jours
   const generateWeekDays = () => {
@@ -206,16 +236,68 @@ const MenuPlanningPage = () => {
           <div className="menu-planning__modal-content">
             <div className="menu-planning__modal-header">
               <h3>Choisir une recette</h3>
-              <button 
+              <button
                 className="menu-planning__modal-close"
                 onClick={() => setShowRecipeSelector(null)}
               >
                 ✕
               </button>
             </div>
-            
+
+            {/* Filtres */}
+            <div className="menu-planning__filters">
+              <div className="menu-planning__filter-group">
+                <input
+                  type="text"
+                  placeholder="🔍 Rechercher une recette ou un ingrédient..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="menu-planning__filter-input"
+                />
+              </div>
+
+              <div className="menu-planning__filter-row">
+                <div className="menu-planning__filter-group">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="menu-planning__filter-select"
+                  >
+                    <option value="">Toutes les catégories</option>
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="menu-planning__filter-group">
+                  <input
+                    type="number"
+                    placeholder="⏱ Temps max (min)"
+                    value={maxTime}
+                    onChange={(e) => setMaxTime(e.target.value)}
+                    className="menu-planning__filter-input menu-planning__filter-input--small"
+                    min="0"
+                  />
+                </div>
+
+                {(searchQuery || selectedCategory || maxTime) && (
+                  <button
+                    onClick={resetFilters}
+                    className="menu-planning__filter-reset"
+                  >
+                    Réinitialiser
+                  </button>
+                )}
+              </div>
+
+              <div className="menu-planning__filter-results">
+                {filteredRecipes.length} recette(s) trouvée(s)
+              </div>
+            </div>
+
             <div className="menu-planning__recipe-list">
-              {recipes.map(recipe => (
+              {filteredRecipes.map(recipe => (
                 <div 
                   key={recipe.id || recipe.firestoreId} 
                   className="menu-planning__recipe-item"
@@ -277,9 +359,61 @@ const MenuPlanningPage = () => {
                 />
               </div>
             </div>
-            
+
+            {/* Filtres */}
+            <div className="menu-planning__filters">
+              <div className="menu-planning__filter-group">
+                <input
+                  type="text"
+                  placeholder="🔍 Rechercher une recette ou un ingrédient..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="menu-planning__filter-input"
+                />
+              </div>
+
+              <div className="menu-planning__filter-row">
+                <div className="menu-planning__filter-group">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="menu-planning__filter-select"
+                  >
+                    <option value="">Toutes les catégories</option>
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="menu-planning__filter-group">
+                  <input
+                    type="number"
+                    placeholder="⏱ Temps max (min)"
+                    value={maxTime}
+                    onChange={(e) => setMaxTime(e.target.value)}
+                    className="menu-planning__filter-input menu-planning__filter-input--small"
+                    min="0"
+                  />
+                </div>
+
+                {(searchQuery || selectedCategory || maxTime) && (
+                  <button
+                    onClick={resetFilters}
+                    className="menu-planning__filter-reset"
+                  >
+                    Réinitialiser
+                  </button>
+                )}
+              </div>
+
+              <div className="menu-planning__filter-results">
+                {filteredRecipes.length} recette(s) trouvée(s)
+              </div>
+            </div>
+
             <div className="menu-planning__recipe-list">
-              {recipes.map(recipe => (
+              {filteredRecipes.map(recipe => (
                 <div 
                   key={recipe.id || recipe.firestoreId} 
                   className="menu-planning__recipe-item"
