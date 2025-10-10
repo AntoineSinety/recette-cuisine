@@ -74,7 +74,14 @@ const PageNavigator = () => {
 
   return (
     <div className="page-navigator">
-      {/* Navigation Menu */}
+      {/* Header mobile avec titre uniquement */}
+      <header className="page-header">
+        <h1 className="page-header__title">
+          {PAGE_ICONS[currentPage]} {PAGE_NAMES[currentPage]}
+        </h1>
+      </header>
+
+      {/* Navigation Desktop */}
       <nav className="page-nav">
         <div className="page-nav__brand">
           <h1 className="page-nav__title">
@@ -82,18 +89,7 @@ const PageNavigator = () => {
           </h1>
         </div>
 
-        {/* Bouton burger */}
-        <button
-          className={`page-nav__burger ${isMenuOpen ? 'page-nav__burger--open' : ''}`}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label="Toggle menu"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-
-        <div className={`page-nav__menu ${isMenuOpen ? 'page-nav__menu--open' : ''}`}>
+        <div className="page-nav__menu">
           {Object.entries(VISIBLE_PAGES).map(([key, page]) => (
             <button
               key={page}
@@ -106,14 +102,6 @@ const PageNavigator = () => {
             </button>
           ))}
         </div>
-
-        {/* Overlay pour fermer le menu */}
-        {isMenuOpen && (
-          <div
-            className="page-nav__overlay"
-            onClick={() => setIsMenuOpen(false)}
-          />
-        )}
       </nav>
 
       {/* Page Content */}
@@ -129,7 +117,7 @@ const PageNavigator = () => {
             <div className="page-error">
               <h2>⚠️ Erreur</h2>
               <p>Impossible de charger la page demandée.</p>
-              <button 
+              <button
                 className="page-error__btn"
                 onClick={() => navigateToPage(PAGES.HOME)}
               >
@@ -139,6 +127,21 @@ const PageNavigator = () => {
           )}
         </NavigationProvider>
       </main>
+
+      {/* Bottom Navigation Bar - Mobile uniquement */}
+      <nav className="bottom-nav">
+        {Object.entries(VISIBLE_PAGES).map(([key, page]) => (
+          <button
+            key={page}
+            className={`bottom-nav__btn ${currentPage === page ? 'bottom-nav__btn--active' : ''}`}
+            onClick={() => navigateToPage(page)}
+            title={PAGE_NAMES[page]}
+          >
+            <span className="bottom-nav__icon">{PAGE_ICONS[page]}</span>
+            <span className="bottom-nav__label">{PAGE_NAMES[page]}</span>
+          </button>
+        ))}
+      </nav>
     </div>
   );
 };

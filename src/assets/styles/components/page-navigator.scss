@@ -4,6 +4,32 @@
   min-height: 100vh;
   background: var(--dark);
   color: var(--blanc);
+  padding-bottom: 80px; // Espace pour la bottom nav
+}
+
+.page-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 30px;
+  background: rgba(10, 14, 39, 0.95);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  min-height: 70px;
+
+  &__title {
+    margin: 0;
+    font-size: 1.4em;
+    font-weight: 700;
+    color: var(--blanc);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 }
 
 .page-nav {
@@ -342,14 +368,146 @@
   }
 }
 
+// Bottom Navigation Bar
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 8px 0;
+  background: rgba(10, 14, 39, 0.98);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+
+  &__btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px 12px;
+    background: transparent;
+    border: none;
+    border-radius: 12px;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 60px;
+    flex: 1;
+    max-width: 100px;
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    &--active {
+      color: var(--bleu-ciel);
+      background: rgba(42, 163, 204, 0.15);
+
+      .bottom-nav__icon {
+        transform: scale(1.1);
+      }
+    }
+  }
+
+  &__icon {
+    font-size: 24px;
+    line-height: 1;
+    transition: transform 0.2s ease;
+  }
+
+  &__label {
+    font-size: 10px;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+}
+
+// Desktop: masquer la bottom nav, afficher navigation classique
+@media (width >= 769px) {
+  .page-navigator {
+    padding-bottom: 0;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
+  .page-header {
+    display: none;
+  }
+
+  .page-nav {
+    display: flex;
+  }
+}
+
+// Mobile: afficher la bottom nav, masquer navigation desktop
+@media (width <= 768px) {
+  .page-nav {
+    display: none;
+  }
+
+  .page-header {
+    display: flex;
+    min-height: 60px;
+    padding: 0 16px;
+
+    &__title {
+      font-size: 1.1em;
+    }
+  }
+
+  .bottom-nav {
+    display: flex;
+  }
+}
+
+@media (width <= 480px) {
+  .page-header {
+    padding: 0 12px;
+
+    &__title {
+      font-size: 1em;
+      gap: 8px;
+    }
+  }
+
+  .bottom-nav {
+    padding: 6px 0;
+
+    &__icon {
+      font-size: 22px;
+    }
+
+    &__label {
+      font-size: 9px;
+    }
+  }
+}
+
 // Touch-friendly sur mobile
 @media (hover: none) and (pointer: coarse) {
   .page-nav__btn:hover {
     transform: none;
   }
-  
+
   .page-nav__btn:active {
     transform: scale(0.95);
     transition: transform 0.1s ease;
+  }
+
+  .bottom-nav__btn:hover {
+    transform: none;
   }
 }
