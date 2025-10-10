@@ -136,15 +136,15 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
                 <h3>Ingrédients</h3>
                 <div className="recipe-detail__ingredients">
                   {ingredients.map((ingredient, index) => (
-                    <div key={index} className="ingredient-item">
+                    <div key={index} className="recipe-detail__ingredient">
                       {ingredient.imageUrl && (
-                        <div className="ingredient-item__image">
+                        <div className="recipe-detail__ingredient-image">
                           <img src={ingredient.imageUrl} alt={ingredient.name} />
                         </div>
                       )}
-                      <div className="ingredient-item__content">
-                        <div className="ingredient-item__name">{ingredient.name}</div>
-                        <div className="ingredient-item__quantity">
+                      <div className="recipe-detail__ingredient-content">
+                        <div className="recipe-detail__ingredient-name">{ingredient.name}</div>
+                        <div className="recipe-detail__ingredient-quantity">
                           {ingredient.quantity} {ingredient.unit}
                         </div>
                       </div>
