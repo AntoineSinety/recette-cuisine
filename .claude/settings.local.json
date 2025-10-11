@@ -10,7 +10,8 @@
       "Bash(npx stylelint:*)",
       "Bash(npm uninstall:*)",
       "Bash(rm:*)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []
