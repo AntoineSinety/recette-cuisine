@@ -287,14 +287,16 @@
 
   // Sidebar (Ingredients)
   &__sidebar {
+    position: sticky;
+    top: 32px;
+
     @media (width <= 768px) {
       order: -1;
     }
   }
 
   &__sidebar-inner {
-    position: sticky;
-    top: 32px;
+   
     background: #1a1e2e;
     border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: 12px;

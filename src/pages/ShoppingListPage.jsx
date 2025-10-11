@@ -20,6 +20,7 @@ const ShoppingListPage = () => {
   const { weeklyMenu } = useMenuPlanning();
   const [newItemName, setNewItemName] = React.useState('');
   const [isAddingItem, setIsAddingItem] = React.useState(false);
+  const [isMinimalMode, setIsMinimalMode] = React.useState(false);
 
   // Générer les 7 prochains jours pour le récap
   const generateWeekDays = () => {
@@ -109,11 +110,80 @@ const ShoppingListPage = () => {
     );
   }
 
+  // Mode minimaliste - affichage simplifié fullscreen
+  if (isMinimalMode) {
+    return (
+      <div className="shopping-list shopping-list--minimal">
+        {/* Bouton de fermeture discret en position fixe */}
+        <button
+          className="shopping-list__minimal-close"
+          onClick={() => setIsMinimalMode(false)}
+          title="Quitter le mode shopping"
+        >
+          ×
+        </button>
+
+        {/* Compteur discret en haut */}
+        <div className="shopping-list__minimal-counter">
+          {getStats.checked}/{getStats.total}
+        </div>
+
+        {/* Liste compacte */}
+        <div className="shopping-list__minimal-list">
+          {sortedCategories.map(categoryKey => {
+            const categoryInfo = getCategoryInfo(categoryKey);
+            const ingredients = groupedIngredients[categoryKey];
+
+            return (
+              <div key={categoryKey} className="shopping-list__minimal-category">
+                <div className="shopping-list__minimal-category-title">
+                  {categoryInfo.icon} {categoryInfo.label}
+                </div>
+                {ingredients.map(ingredient => (
+                  <label key={ingredient.id} className="shopping-list__minimal-item">
+                    <input
+                      type="checkbox"
+                      checked={checkedItems[ingredient.id] || false}
+                      onChange={() => toggleIngredient(ingredient.id)}
+                    />
+                    <span className="shopping-list__minimal-check"></span>
+                    <span className="shopping-list__minimal-text">
+                      {ingredient.name}
+                      {ingredient.totalQuantity && (
+                        <span className="shopping-list__minimal-qty">
+                          {formatQuantityWithBestUnit(ingredient.totalQuantity, ingredient.unit)}
+                        </span>
+                      )}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="shopping-list">
       <div className="shopping-list__header">
-        <h1>Liste de courses</h1>
-        <p>Basée sur votre menu de la semaine</p>
+        <div className="shopping-list__header-content">
+          <div>
+            <h1>Liste de courses</h1>
+            <p>Basée sur votre menu de la semaine</p>
+          </div>
+          <button
+            className="shopping-list__mode-toggle"
+            onClick={() => setIsMinimalMode(true)}
+            title="Mode shopping simplifié"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+            </svg>
+            Mode Shopping
+          </button>
+        </div>
       </div>
 
       <div className="shopping-list__container">
