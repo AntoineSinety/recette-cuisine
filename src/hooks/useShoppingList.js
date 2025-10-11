@@ -247,20 +247,97 @@ const useShoppingList = () => {
     await saveCheckedItems({});
   };
 
+  // Ajouter un article personnalisé
+  const addCustomItem = async (itemName) => {
+    try {
+      const weekId = getCurrentWeekId();
+      const shoppingDocRef = doc(db, 'shoppingLists', weekId);
+      const docSnap = await getDoc(shoppingDocRef);
+
+      const customItems = docSnap.exists() ? (docSnap.data().customItems || []) : [];
+      const newItem = {
+        id: `custom-${Date.now()}`,
+        name: itemName.trim(),
+        category: 'autres',
+        isCustom: true,
+        addedAt: new Date().toISOString()
+      };
+
+      await setDoc(shoppingDocRef, {
+        customItems: [...customItems, newItem],
+        weekId,
+        lastUpdated: new Date()
+      }, { merge: true });
+
+      return newItem;
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de l\'article personnalisé:', error);
+      throw error;
+    }
+  };
+
+  // Supprimer un article personnalisé
+  const removeCustomItem = async (itemId) => {
+    try {
+      const weekId = getCurrentWeekId();
+      const shoppingDocRef = doc(db, 'shoppingLists', weekId);
+      const docSnap = await getDoc(shoppingDocRef);
+
+      if (docSnap.exists()) {
+        const customItems = (docSnap.data().customItems || []).filter(item => item.id !== itemId);
+
+        await setDoc(shoppingDocRef, {
+          customItems,
+          weekId,
+          lastUpdated: new Date()
+        }, { merge: true });
+
+        // Supprimer aussi de l'état coché si présent
+        const newCheckedItems = { ...checkedItems };
+        delete newCheckedItems[itemId];
+        await saveCheckedItems(newCheckedItems);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'article personnalisé:', error);
+      throw error;
+    }
+  };
+
+  // Charger les articles personnalisés
+  const [customItems, setCustomItems] = useState([]);
+
+  useEffect(() => {
+    const weekId = getCurrentWeekId();
+    const shoppingDocRef = doc(db, 'shoppingLists', weekId);
+
+    const unsubscribe = onSnapshot(shoppingDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setCustomItems(docSnap.data().customItems || []);
+      } else {
+        setCustomItems([]);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [getCurrentWeekId]);
+
   // Obtenir les statistiques
   const getStats = () => {
-    const total = Object.keys(shoppingList).length;
+    const total = Object.keys(shoppingList).length + customItems.length;
     const checked = Object.keys(checkedItems).filter(id => checkedItems[id]).length;
     return { total, checked, remaining: total - checked };
   };
 
   return {
     shoppingList: Object.values(shoppingList).sort((a, b) => a.name.localeCompare(b.name)),
+    customItems,
     checkedItems,
     loading,
     toggleIngredient,
     toggleAll,
     resetList,
+    addCustomItem,
+    removeCustomItem,
     getStats: getStats()
   };
 };

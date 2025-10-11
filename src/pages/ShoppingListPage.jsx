@@ -5,8 +5,21 @@ import { formatQuantityWithBestUnit } from '../utils/unitConverter';
 import { INGREDIENT_CATEGORIES, getCategoryInfo } from '../constants/ingredientCategories';
 
 const ShoppingListPage = () => {
-  const { shoppingList, checkedItems, loading, toggleIngredient, toggleAll, resetList, getStats } = useShoppingList();
+  const {
+    shoppingList,
+    customItems,
+    checkedItems,
+    loading,
+    toggleIngredient,
+    toggleAll,
+    resetList,
+    addCustomItem,
+    removeCustomItem,
+    getStats
+  } = useShoppingList();
   const { weeklyMenu } = useMenuPlanning();
+  const [newItemName, setNewItemName] = React.useState('');
+  const [isAddingItem, setIsAddingItem] = React.useState(false);
 
   // Générer les 7 prochains jours pour le récap
   const generateWeekDays = () => {
@@ -35,6 +48,32 @@ const ShoppingListPage = () => {
 
   const weekDays = generateWeekDays();
 
+  // Gérer l'ajout d'un article personnalisé
+  const handleAddCustomItem = async () => {
+    if (!newItemName.trim()) return;
+
+    setIsAddingItem(true);
+    try {
+      await addCustomItem(newItemName);
+      setNewItemName('');
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de l\'article:', error);
+      alert('Erreur lors de l\'ajout de l\'article');
+    } finally {
+      setIsAddingItem(false);
+    }
+  };
+
+  // Gérer la suppression d'un article personnalisé
+  const handleRemoveCustomItem = async (itemId) => {
+    try {
+      await removeCustomItem(itemId);
+    } catch (error) {
+      console.error('Erreur lors de la suppression:', error);
+      alert('Erreur lors de la suppression de l\'article');
+    }
+  };
+
   // Grouper les ingrédients par catégorie
   const groupedIngredients = shoppingList.reduce((groups, ingredient) => {
     const category = ingredient.category || '';
@@ -44,6 +83,14 @@ const ShoppingListPage = () => {
     groups[category].push(ingredient);
     return groups;
   }, {});
+
+  // Ajouter les articles personnalisés à la catégorie "Autres"
+  if (customItems.length > 0) {
+    if (!groupedIngredients['autres']) {
+      groupedIngredients['autres'] = [];
+    }
+    groupedIngredients['autres'].push(...customItems);
+  }
 
   // Trier les catégories par ordre défini
   const sortedCategories = Object.keys(groupedIngredients).sort((a, b) => {
@@ -90,24 +137,55 @@ const ShoppingListPage = () => {
 
           {/* Actions */}
           <div className="shopping-list__actions">
-            <button 
+            <button
               className="shopping-list__btn shopping-list__btn--secondary"
               onClick={() => toggleAll(true)}
             >
               Tout cocher
             </button>
-            <button 
+            <button
               className="shopping-list__btn shopping-list__btn--secondary"
               onClick={() => toggleAll(false)}
             >
               Tout décocher
             </button>
-            <button 
+            <button
               className="shopping-list__btn shopping-list__btn--danger"
               onClick={resetList}
             >
               Réinitialiser
             </button>
+          </div>
+
+          {/* Formulaire d'ajout d'articles personnalisés */}
+          <div className="shopping-list__add-custom">
+            <div className="shopping-list__add-custom-header">
+              <span className="shopping-list__add-custom-icon">🛒</span>
+              <h3>Ajouter un article</h3>
+              <p>PQ, Savon, Éponge, Shampoing, Sacs poubelle...</p>
+            </div>
+            <div className="shopping-list__add-custom-form">
+              <input
+                type="text"
+                className="shopping-list__add-custom-input"
+                placeholder="Ex: Papier toilette, Savon..."
+                value={newItemName}
+                onChange={(e) => setNewItemName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !isAddingItem) {
+                    handleAddCustomItem();
+                  }
+                }}
+                disabled={isAddingItem}
+              />
+              <button
+                className="shopping-list__btn shopping-list__btn--primary"
+                onClick={handleAddCustomItem}
+                disabled={isAddingItem || !newItemName.trim()}
+              >
+                {isAddingItem ? 'Ajout...' : 'Ajouter'}
+              </button>
+            </div>
           </div>
 
           {/* Liste des ingrédients groupés par catégorie */}
@@ -133,80 +211,96 @@ const ShoppingListPage = () => {
                     </h3>
                     <div className="shopping-list__category-items">
                       {ingredients.map(ingredient => (
-                <div 
-                  key={ingredient.id} 
-                  className={`shopping-list__item ${checkedItems[ingredient.id] ? 'shopping-list__item--checked' : ''}`}
-                >
-                  <label className="shopping-list__checkbox">
-                    <input 
-                      type="checkbox" 
-                      checked={checkedItems[ingredient.id] || false}
-                      onChange={() => toggleIngredient(ingredient.id)}
-                    />
-                    <span className="shopping-list__checkmark"></span>
-                  </label>
-                  
-                  {ingredient.imageUrl && (
-                    <img 
-                      src={ingredient.imageUrl} 
-                      alt={ingredient.name}
-                      className="shopping-list__item-image"
-                    />
-                  )}
-                  
-                  <div className="shopping-list__item-content">
-                    <div className="shopping-list__item-header">
-                      <span className="shopping-list__item-name">
-                        {ingredient.name}
-                      </span>
-                      {ingredient.sources && ingredient.sources.length > 0 && (
-                        <div className="shopping-list__item-days">
-                          {ingredient.sources.map((source, idx) => {
-                            // Parser la source (format: "YYYY-MM-DD-midi" ou "extra-123")
-                            if (source.startsWith('extra-')) {
-                              return (
-                                <span key={idx} className="shopping-list__day-badge shopping-list__day-badge--extra">
-                                  Extra
-                                </span>
-                              );
-                            }
-                            const [dateStr, mealType] = source.split('-').slice(0, 4).join('-').split('-').reduce((acc, val, i) => {
-                              if (i < 3) acc[0] += (i > 0 ? '-' : '') + val;
-                              else acc[1] = val;
-                              return acc;
-                            }, ['', '']);
+                        <div
+                          key={ingredient.id}
+                          className={`shopping-list__item ${checkedItems[ingredient.id] ? 'shopping-list__item--checked' : ''} ${ingredient.isCustom ? 'shopping-list__item--custom' : ''}`}
+                        >
+                          <label className="shopping-list__checkbox">
+                            <input
+                              type="checkbox"
+                              checked={checkedItems[ingredient.id] || false}
+                              onChange={() => toggleIngredient(ingredient.id)}
+                            />
+                            <span className="shopping-list__checkmark"></span>
+                          </label>
 
-                            const date = new Date(dateStr);
-                            const dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' });
-                            const mealIcon = mealType === 'midi' ? '☀️' : '🌙';
+                          {ingredient.imageUrl && (
+                            <img
+                              src={ingredient.imageUrl}
+                              alt={ingredient.name}
+                              className="shopping-list__item-image"
+                            />
+                          )}
 
-                            return (
-                              <span key={idx} className="shopping-list__day-badge" title={`${dayName} ${mealType}`}>
-                                {dayName.substring(0, 3)} {mealIcon}
+                          <div className="shopping-list__item-content">
+                            <div className="shopping-list__item-header">
+                              <span className="shopping-list__item-name">
+                                {ingredient.name}
                               </span>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </div>
-                    <div className="shopping-list__item-details">
-                      <span className="shopping-list__item-quantity">
-                        {formatQuantityWithBestUnit(ingredient.totalQuantity, ingredient.unit)}
-                      </span>
+                              {ingredient.isCustom && (
+                                <span className="shopping-list__custom-badge">Personnalisé</span>
+                              )}
+                              {ingredient.sources && ingredient.sources.length > 0 && (
+                                <div className="shopping-list__item-days">
+                                  {ingredient.sources.map((source, idx) => {
+                                    // Parser la source (format: "YYYY-MM-DD-midi" ou "extra-123")
+                                    if (source.startsWith('extra-')) {
+                                      return (
+                                        <span key={idx} className="shopping-list__day-badge shopping-list__day-badge--extra">
+                                          Extra
+                                        </span>
+                                      );
+                                    }
+                                    const [dateStr, mealType] = source.split('-').slice(0, 4).join('-').split('-').reduce((acc, val, i) => {
+                                      if (i < 3) acc[0] += (i > 0 ? '-' : '') + val;
+                                      else acc[1] = val;
+                                      return acc;
+                                    }, ['', '']);
 
-                      {/* Quantités alternatives si différentes unités */}
-                      {ingredient.alternateQuantities && ingredient.alternateQuantities.length > 0 && (
-                        <div className="shopping-list__alternate-quantities">
-                          {ingredient.alternateQuantities.map((alt, index) => (
-                            <span key={index} className="shopping-list__alt-quantity">
-                              + {formatQuantityWithBestUnit(alt.quantity, alt.unit)}
-                            </span>
-                          ))}
+                                    const date = new Date(dateStr);
+                                    const dayName = date.toLocaleDateString('fr-FR', { weekday: 'short' });
+                                    const mealIcon = mealType === 'midi' ? '☀️' : '🌙';
+
+                                    return (
+                                      <span key={idx} className="shopping-list__day-badge" title={`${dayName} ${mealType}`}>
+                                        {dayName.substring(0, 3)} {mealIcon}
+                                      </span>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                            <div className="shopping-list__item-details">
+                              {ingredient.totalQuantity && (
+                                <span className="shopping-list__item-quantity">
+                                  {formatQuantityWithBestUnit(ingredient.totalQuantity, ingredient.unit)}
+                                </span>
+                              )}
+
+                              {/* Quantités alternatives si différentes unités */}
+                              {ingredient.alternateQuantities && ingredient.alternateQuantities.length > 0 && (
+                                <div className="shopping-list__alternate-quantities">
+                                  {ingredient.alternateQuantities.map((alt, index) => (
+                                    <span key={index} className="shopping-list__alt-quantity">
+                                      + {formatQuantityWithBestUnit(alt.quantity, alt.unit)}
+                                    </span>
+                                  ))}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Bouton de suppression pour articles personnalisés */}
+                          {ingredient.isCustom && (
+                            <button
+                              className="shopping-list__remove-btn"
+                              onClick={() => handleRemoveCustomItem(ingredient.id)}
+                              title="Supprimer cet article"
+                            >
+                              ×
+                            </button>
+                          )}
                         </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
                       ))}
                     </div>
                   </div>
