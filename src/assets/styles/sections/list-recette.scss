@@ -1,6 +1,6 @@
 .recipes {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: var(--spacing-lg);
     padding: var(--spacing-xl) 0;
     animation: fadeIn 0.4s ease-out;

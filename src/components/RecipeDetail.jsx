@@ -8,6 +8,8 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
   const detailRef = useRef(null);
   const overlayRef = useRef(null);
   const [ingredients, setIngredients] = useState([]);
+  const [servings, setServings] = useState(recipe.servings || 4);
+  const [originalServings] = useState(recipe.servings || 4);
   const navigate = useNavigate();
 
   useImperativeHandle(ref, () => ({
@@ -79,6 +81,16 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
     };
   }, [recipe]);
 
+  // Calculer les quantités ajustées
+  const getAdjustedQuantity = (quantity) => {
+    return (quantity * servings / originalServings).toFixed(2).replace(/\.?0+$/, '');
+  };
+
+  const handleServingsChange = (delta) => {
+    const newServings = Math.max(1, servings + delta);
+    setServings(newServings);
+  };
+
   if (!recipe) return null;
 
   return (
@@ -133,7 +145,33 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
           {ingredients.length > 0 && (
             <aside className="recipe-detail__sidebar">
               <div className="recipe-detail__sidebar-inner">
-                <h3>Ingrédients</h3>
+                <div className="recipe-detail__sidebar-header">
+                  <h3>Ingrédients</h3>
+                  <div className="recipe-detail__servings-control">
+                    <button
+                      className="servings-btn"
+                      onClick={() => handleServingsChange(-1)}
+                      disabled={servings <= 1}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>
+                    </button>
+                    <div className="servings-display">
+                      <span className="servings-number">{servings}</span>
+                      <span className="servings-label">portions</span>
+                    </div>
+                    <button
+                      className="servings-btn"
+                      onClick={() => handleServingsChange(1)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                      </svg>
+                    </button>
+                  </div>
+                </div>
                 <div className="recipe-detail__ingredients">
                   {ingredients.map((ingredient, index) => (
                     <div key={index} className="recipe-detail__ingredient">
@@ -145,7 +183,7 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
                       <div className="recipe-detail__ingredient-content">
                         <div className="recipe-detail__ingredient-name">{ingredient.name}</div>
                         <div className="recipe-detail__ingredient-quantity">
-                          {ingredient.quantity} {ingredient.unit}
+                          {getAdjustedQuantity(ingredient.quantity)} {ingredient.unit}
                         </div>
                       </div>
                     </div>
