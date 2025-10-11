@@ -131,12 +131,12 @@ const IngredientAutocomplete = ({ ingredients, onSelectIngredient }) => {
         imageUrl: newIngredient.imageUrl || ''
       };
 
-      await addIngredient(ingredientToAdd);
+      const newIngredientId = await addIngredient(ingredientToAdd);
 
-      // Ajouter l'ingrédient à la recette
+      // Ajouter l'ingrédient à la recette avec le vrai ID Firebase
       onSelectIngredient({
         ...ingredientToAdd,
-        id: Date.now().toString(), // ID temporaire
+        id: newIngredientId,
         quantity: ''
       });
 

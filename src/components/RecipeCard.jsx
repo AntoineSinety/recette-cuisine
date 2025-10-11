@@ -75,7 +75,7 @@ const RecipeCard = ({ recipe, onClick }) => {
           <img src={recipe.image} alt={recipe.title} className="card__image" />
         )}
         {recipe.category && (
-            <div className="card__category">{recipe.category}</div>
+            <div className="card__category" data-category={recipe.category}>{recipe.category}</div>
           )}
 
         {recipe.time && (

@@ -29,8 +29,10 @@ export const useIngredients = () => {
     try {
       const docRef = await addDoc(collection(db, "ingredients"), ingredient);
       setIngredients([...ingredients, { id: docRef.id, ...ingredient }]);
+      return docRef.id;
     } catch (error) {
       console.error("Error adding ingredient:", error);
+      throw error;
     }
   };
 

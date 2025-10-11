@@ -2,39 +2,23 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    background: var(--gradient-card);
-    backdrop-filter: var(--backdrop-blur);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
+    background: rgba(20, 24, 48, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-md);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     cursor: pointer;
     overflow: hidden;
-    transition: all var(--transition-normal);
-
-    // Effet de brillance
-    &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-        opacity: 0;
-        transition: opacity var(--transition-normal);
-    }
+    transition: all 0.2s ease;
+    height: 100%;
 
     &:hover {
-        border-color: var(--accent-primary);
-        box-shadow: var(--shadow-lg), var(--shadow-glow);
-        transform: translateY(-5px);
-
-        &::before {
-            opacity: 1;
-        }
+        border-color: rgba(255, 255, 255, 0.1);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+        transform: translateY(-2px);
 
         .card__image {
-            transform: scale(1.05);
+            transform: scale(1.02);
         }
     }
 
@@ -44,60 +28,98 @@
         margin: 0;
         position: relative;
         overflow: hidden;
-        background: var(--bg-tertiary);
+        background: rgba(15, 19, 38, 0.8);
 
-        // Gradient overlay sur l'image
         &::after {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 50%;
-            background: linear-gradient(to top, rgba(10, 14, 39, 0.8), transparent);
+            height: 40%;
+            background: linear-gradient(to top, rgba(10, 14, 39, 0.9), transparent);
             pointer-events: none;
         }
     }
 
     .card__category {
         position: absolute;
-        top: var(--spacing-sm);
-        right: var(--spacing-sm);
+        top: 6px;
+        right: 6px;
         display: inline-flex;
         align-items: center;
-        padding: 4px 10px;
-        color: var(--text-primary);
-        background: var(--gradient-warm);
-        font-size: var(--font-size-xs);
-        font-weight: var(--font-weight-semibold);
+        padding: 3px 8px;
+        font-size: 10px;
+        font-weight: 600;
         line-height: 1;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border-radius: var(--radius-full);
-        box-shadow: var(--shadow-md);
-        z-index: var(--z-base);
+        letter-spacing: 0.3px;
+        border-radius: 4px;
+        z-index: 2;
+        backdrop-filter: blur(4px);
+
+        // Couleurs par catégorie
+        &[data-category="Entrée"],
+        &[data-category="entree"] {
+            background: rgba(76, 175, 80, 0.85);
+            color: #fff;
+        }
+
+        &[data-category="Plat"],
+        &[data-category="plat"] {
+            background: rgba(255, 152, 0, 0.85);
+            color: #fff;
+        }
+
+        &[data-category="Dessert"],
+        &[data-category="dessert"] {
+            background: rgba(233, 30, 99, 0.85);
+            color: #fff;
+        }
+
+        &[data-category="Apéritif"],
+        &[data-category="aperitif"] {
+            background: rgba(103, 58, 183, 0.85);
+            color: #fff;
+        }
+
+        &[data-category="Boisson"],
+        &[data-category="boisson"] {
+            background: rgba(33, 150, 243, 0.85);
+            color: #fff;
+        }
+
+        &[data-category="Petit-déjeuner"],
+        &[data-category="petit-dejeuner"] {
+            background: rgba(255, 193, 7, 0.85);
+            color: #000;
+        }
+
+        // Catégorie par défaut
+        &:not([data-category]) {
+            background: rgba(158, 158, 158, 0.85);
+            color: #fff;
+        }
     }
 
     .card__time {
         position: absolute;
-        top: var(--spacing-sm);
-        left: var(--spacing-sm);
+        top: 6px;
+        left: 6px;
         display: inline-flex;
         align-items: center;
-        gap: var(--spacing-xs);
-        padding: 4px 10px;
-        background: rgba(10, 14, 39, 0.8);
-        backdrop-filter: blur(10px);
-        color: var(--text-secondary);
-        font-size: var(--font-size-xs);
-        font-weight: var(--font-weight-medium);
-        border-radius: var(--radius-full);
-        border: 1px solid var(--border-subtle);
-        z-index: var(--z-base);
+        gap: 3px;
+        padding: 3px 8px;
+        background: rgba(10, 14, 39, 0.85);
+        backdrop-filter: blur(4px);
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 10px;
+        font-weight: 500;
+        border-radius: 4px;
+        z-index: 2;
 
         .card__time-icon {
-            color: var(--accent-primary);
-            font-size: var(--font-size-sm);
+            font-size: 11px;
         }
     }
 
@@ -106,111 +128,60 @@
         width: 100%;
         height: auto;
         object-fit: cover;
-        aspect-ratio: 16/9;
-        transition: transform var(--transition-slow);
+        aspect-ratio: 4/3;
+        transition: transform 0.3s ease;
     }
 
     &__content {
         flex: 1;
-        padding: var(--spacing-md);
+        padding: 10px;
         text-align: left;
 
         .card__title {
             color: var(--text-primary);
-            font-size: var(--font-size-base);
-            font-weight: var(--font-weight-bold);
+            font-size: 13px;
+            font-weight: 600;
             line-height: 1.3;
-            margin-bottom: var(--spacing-sm);
-            background: linear-gradient(135deg, var(--text-primary) 0%, var(--text-secondary) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .card__ingredients {
+            margin: 0;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
-            margin-bottom: var(--spacing-sm);
             overflow: hidden;
-            line-height: 1.4;
-            position: relative;
         }
 
-        .card__ingredient {
-            display: inline-block;
-            color: var(--text-secondary);
-            background-color: var(--bg-elevated);
-            font-size: var(--font-size-xs);
-            font-weight: var(--font-weight-medium);
-            line-height: 1;
-            padding: 4px 8px;
-            margin-right: var(--spacing-sm);
-            margin-top: var(--spacing-sm);
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--border-subtle);
-
-            &--more {
-                font-weight: var(--font-weight-semibold);
-                background: var(--gradient-success);
-                color: var(--text-primary);
-                border: none;
-                position: absolute;
-                bottom: 0;
-                right: 0;
-            }
-        }
     }
 
     &__buttons {
         display: flex;
         justify-content: stretch;
-        gap: 1px;
-        background: var(--border-subtle);
-        border-top: 1px solid var(--border-subtle);
+        gap: 0;
+        background: rgba(255, 255, 255, 0.03);
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
 
         button {
             flex: 1;
-            padding: 10px;
-            color: var(--text-primary);
-            background-color: var(--bg-elevated);
-            font-size: var(--font-size-xs);
-            font-weight: var(--font-weight-semibold);
+            padding: 8px;
+            color: rgba(255, 255, 255, 0.7);
+            background-color: transparent;
+            font-size: 11px;
+            font-weight: 500;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.3px;
             border: none;
             cursor: pointer;
-            transition: all var(--transition-normal);
-            position: relative;
-            overflow: hidden;
+            transition: all 0.2s ease;
 
-            &::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: var(--gradient-secondary);
-                opacity: 0;
-                transition: opacity var(--transition-normal);
-            }
-
-            span {
-                position: relative;
-                z-index: 1;
+            &:not(:last-child) {
+                border-right: 1px solid rgba(255, 255, 255, 0.05);
             }
 
             &:hover {
-                &::before {
-                    opacity: 1;
-                }
-
-                transform: translateY(-2px);
+                background: rgba(255, 255, 255, 0.05);
+                color: rgba(255, 255, 255, 0.9);
             }
 
             &:active {
-                transform: translateY(0);
+                transform: scale(0.98);
             }
         }
     }
