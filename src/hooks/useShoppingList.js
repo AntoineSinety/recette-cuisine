@@ -248,7 +248,7 @@ const useShoppingList = () => {
   };
 
   // Ajouter un article personnalisé
-  const addCustomItem = async (itemName) => {
+  const addCustomItem = async (itemName, category = 'autres') => {
     try {
       const weekId = getCurrentWeekId();
       const shoppingDocRef = doc(db, 'shoppingLists', weekId);
@@ -258,7 +258,7 @@ const useShoppingList = () => {
       const newItem = {
         id: `custom-${Date.now()}`,
         name: itemName.trim(),
-        category: 'autres',
+        category: category,
         isCustom: true,
         addedAt: new Date().toISOString()
       };
@@ -303,6 +303,32 @@ const useShoppingList = () => {
     }
   };
 
+  // Modifier la catégorie d'un article personnalisé
+  const updateCustomItemCategory = async (itemId, newCategory) => {
+    try {
+      const weekId = getCurrentWeekId();
+      const shoppingDocRef = doc(db, 'shoppingLists', weekId);
+      const docSnap = await getDoc(shoppingDocRef);
+
+      if (docSnap.exists()) {
+        const customItems = (docSnap.data().customItems || []).map(item =>
+          item.id === itemId
+            ? { ...item, category: newCategory }
+            : item
+        );
+
+        await setDoc(shoppingDocRef, {
+          customItems,
+          weekId,
+          lastUpdated: new Date()
+        }, { merge: true });
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de la catégorie:', error);
+      throw error;
+    }
+  };
+
   // Charger les articles personnalisés
   const [customItems, setCustomItems] = useState([]);
 
@@ -338,6 +364,7 @@ const useShoppingList = () => {
     resetList,
     addCustomItem,
     removeCustomItem,
+    updateCustomItemCategory,
     getStats: getStats()
   };
 };

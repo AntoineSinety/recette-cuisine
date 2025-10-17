@@ -15,12 +15,15 @@ const ShoppingListPage = () => {
     resetList,
     addCustomItem,
     removeCustomItem,
+    updateCustomItemCategory,
     getStats
   } = useShoppingList();
   const { weeklyMenu } = useMenuPlanning();
   const [newItemName, setNewItemName] = React.useState('');
+  const [newItemCategory, setNewItemCategory] = React.useState('autres');
   const [isAddingItem, setIsAddingItem] = React.useState(false);
   const [isMinimalMode, setIsMinimalMode] = React.useState(false);
+  const [editingItemId, setEditingItemId] = React.useState(null);
 
   // Générer les 7 prochains jours pour le récap
   const generateWeekDays = () => {
@@ -55,8 +58,9 @@ const ShoppingListPage = () => {
 
     setIsAddingItem(true);
     try {
-      await addCustomItem(newItemName);
+      await addCustomItem(newItemName, newItemCategory);
       setNewItemName('');
+      setNewItemCategory('autres');
     } catch (error) {
       console.error('Erreur lors de l\'ajout de l\'article:', error);
       alert('Erreur lors de l\'ajout de l\'article');
@@ -75,6 +79,17 @@ const ShoppingListPage = () => {
     }
   };
 
+  // Gérer le changement de catégorie d'un article personnalisé
+  const handleCategoryChange = async (itemId, newCategory) => {
+    try {
+      await updateCustomItemCategory(itemId, newCategory);
+      setEditingItemId(null);
+    } catch (error) {
+      console.error('Erreur lors du changement de catégorie:', error);
+      alert('Erreur lors du changement de catégorie');
+    }
+  };
+
   // Grouper les ingrédients par catégorie
   const groupedIngredients = shoppingList.reduce((groups, ingredient) => {
     const category = ingredient.category || '';
@@ -85,12 +100,15 @@ const ShoppingListPage = () => {
     return groups;
   }, {});
 
-  // Ajouter les articles personnalisés à la catégorie "Autres"
+  // Ajouter les articles personnalisés à leur catégorie respective
   if (customItems.length > 0) {
-    if (!groupedIngredients['autres']) {
-      groupedIngredients['autres'] = [];
-    }
-    groupedIngredients['autres'].push(...customItems);
+    customItems.forEach(item => {
+      const category = item.category || 'autres';
+      if (!groupedIngredients[category]) {
+        groupedIngredients[category] = [];
+      }
+      groupedIngredients[category].push(item);
+    });
   }
 
   // Trier les catégories par ordre défini
@@ -248,6 +266,18 @@ const ShoppingListPage = () => {
                 }}
                 disabled={isAddingItem}
               />
+              <select
+                className="shopping-list__add-custom-select"
+                value={newItemCategory}
+                onChange={(e) => setNewItemCategory(e.target.value)}
+                disabled={isAddingItem}
+              >
+                {INGREDIENT_CATEGORIES.map(category => (
+                  <option key={category.value} value={category.value}>
+                    {category.icon} {category.label}
+                  </option>
+                ))}
+              </select>
               <button
                 className="shopping-list__btn shopping-list__btn--primary"
                 onClick={handleAddCustomItem}
@@ -357,18 +387,45 @@ const ShoppingListPage = () => {
                                   ))}
                                 </div>
                               )}
+
+                              {/* Sélecteur de catégorie pour articles personnalisés */}
+                              {ingredient.isCustom && editingItemId === ingredient.id && (
+                                <select
+                                  className="shopping-list__category-selector"
+                                  value={ingredient.category || 'autres'}
+                                  onChange={(e) => handleCategoryChange(ingredient.id, e.target.value)}
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {INGREDIENT_CATEGORIES.map(category => (
+                                    <option key={category.value} value={category.value}>
+                                      {category.icon} {category.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              )}
                             </div>
                           </div>
 
-                          {/* Bouton de suppression pour articles personnalisés */}
+                          {/* Actions pour articles personnalisés */}
                           {ingredient.isCustom && (
-                            <button
-                              className="shopping-list__remove-btn"
-                              onClick={() => handleRemoveCustomItem(ingredient.id)}
-                              title="Supprimer cet article"
-                            >
-                              ×
-                            </button>
+                            <div className="shopping-list__custom-actions">
+                              {editingItemId !== ingredient.id && (
+                                <button
+                                  className="shopping-list__edit-btn"
+                                  onClick={() => setEditingItemId(ingredient.id)}
+                                  title="Changer la catégorie"
+                                >
+                                  🏷️
+                                </button>
+                              )}
+                              <button
+                                className="shopping-list__remove-btn"
+                                onClick={() => handleRemoveCustomItem(ingredient.id)}
+                                title="Supprimer cet article"
+                              >
+                                ×
+                              </button>
+                            </div>
                           )}
                         </div>
                       ))}

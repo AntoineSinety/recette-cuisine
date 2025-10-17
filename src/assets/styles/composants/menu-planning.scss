@@ -633,6 +633,90 @@
       background: var(--bg-secondary);
     }
   }
+
+  // Formulaire de recette personnalisée
+  &__custom-recipe-form {
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, rgba(91, 141, 238, 0.05) 0%, rgba(123, 104, 238, 0.05) 100%);
+    border-bottom: 1px solid var(--border-subtle);
+
+    .menu-planning__form-group {
+      margin-bottom: var(--spacing-md);
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+
+      label {
+        color: var(--text-primary);
+        font-size: var(--font-size-sm);
+        font-weight: var(--font-weight-semibold);
+        margin-bottom: var(--spacing-sm);
+      }
+    }
+  }
+
+  &__custom-recipe-input-group {
+    display: flex;
+    gap: var(--spacing-sm);
+    align-items: stretch;
+
+    input {
+      flex: 1;
+    }
+  }
+
+  &__custom-recipe-btn {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    background: var(--gradient-primary);
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md), var(--shadow-glow);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+    }
+  }
+
+  &__divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: var(--spacing-lg) 0 var(--spacing-md);
+
+    &::before,
+    &::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-medium);
+    }
+
+    span {
+      padding: 0 var(--spacing-md);
+      color: var(--text-tertiary);
+      font-size: var(--font-size-xs);
+      font-weight: var(--font-weight-semibold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
 }
 
 @keyframes fadeIn {

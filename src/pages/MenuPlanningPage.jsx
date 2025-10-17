@@ -16,6 +16,7 @@ const MenuPlanningPage = () => {
   const [showRecipeSelector, setShowRecipeSelector] = useState(null);
   const [showExtraModal, setShowExtraModal] = useState(null);
   const [extraName, setExtraName] = useState('');
+  const [customRecipeText, setCustomRecipeText] = useState('');
 
   // États pour les filtres
   const [searchQuery, setSearchQuery] = useState('');
@@ -83,8 +84,36 @@ const MenuPlanningPage = () => {
         await updateMeal(dayKey, mealType, recipe);
         setShowRecipeSelector(null);
       }
+      setCustomRecipeText('');
     } catch (error) {
       console.error('Erreur lors de la sélection de la recette:', error);
+    }
+  };
+
+  const handleCustomRecipeSubmit = async (dayKey, mealType) => {
+    if (!customRecipeText.trim()) return;
+
+    try {
+      const customRecipe = {
+        id: `custom-${Date.now()}`,
+        title: customRecipeText.trim(),
+        isCustomText: true,
+        image: null,
+        ingredients: [],
+        category: 'Personnalisé'
+      };
+
+      if (mealType === 'extra') {
+        await addExtraMeal('global', customRecipe, extraName);
+        setExtraName('');
+        setShowExtraModal(null);
+      } else {
+        await updateMeal(dayKey, mealType, customRecipe);
+        setShowRecipeSelector(null);
+      }
+      setCustomRecipeText('');
+    } catch (error) {
+      console.error('Erreur lors de l\'ajout de la recette personnalisée:', error);
     }
   };
 
@@ -238,10 +267,53 @@ const MenuPlanningPage = () => {
               <h3>Choisir une recette</h3>
               <button
                 className="menu-planning__modal-close"
-                onClick={() => setShowRecipeSelector(null)}
+                onClick={() => {
+                  setShowRecipeSelector(null);
+                  setCustomRecipeText('');
+                }}
               >
                 ✕
               </button>
+            </div>
+
+            {/* Formulaire de recette personnalisée */}
+            <div className="menu-planning__custom-recipe-form">
+              <div className="menu-planning__form-group">
+                <label htmlFor="customRecipe">
+                  ✍️ Ou saisir une recette personnalisée
+                </label>
+                <div className="menu-planning__custom-recipe-input-group">
+                  <input
+                    id="customRecipe"
+                    type="text"
+                    placeholder="Ex: Pizza maison, Resto..."
+                    value={customRecipeText}
+                    onChange={(e) => setCustomRecipeText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && customRecipeText.trim()) {
+                        handleCustomRecipeSubmit(
+                          showRecipeSelector.dayKey,
+                          showRecipeSelector.mealType
+                        );
+                      }
+                    }}
+                    className="menu-planning__input"
+                  />
+                  <button
+                    onClick={() => handleCustomRecipeSubmit(
+                      showRecipeSelector.dayKey,
+                      showRecipeSelector.mealType
+                    )}
+                    disabled={!customRecipeText.trim()}
+                    className="menu-planning__custom-recipe-btn"
+                  >
+                    Ajouter
+                  </button>
+                </div>
+              </div>
+              <div className="menu-planning__divider">
+                <span>ou choisir une recette existante</span>
+              </div>
             </div>
 
             {/* Filtres */}
@@ -335,28 +407,68 @@ const MenuPlanningPage = () => {
           <div className="menu-planning__modal-content">
             <div className="menu-planning__modal-header">
               <h3>Ajouter un extra</h3>
-              <button 
+              <button
                 className="menu-planning__modal-close"
                 onClick={() => {
                   setShowExtraModal(null);
                   setExtraName('');
+                  setCustomRecipeText('');
                 }}
               >
                 ✕
               </button>
             </div>
-            
-            <div className="menu-planning__extra-form">
+
+            {/* Formulaire de recette personnalisée */}
+            <div className="menu-planning__custom-recipe-form">
+              <div className="menu-planning__form-group">
+                <label htmlFor="customRecipeExtra">
+                  ✍️ Saisir une recette personnalisée
+                </label>
+                <div className="menu-planning__custom-recipe-input-group">
+                  <input
+                    id="customRecipeExtra"
+                    type="text"
+                    placeholder="Ex: Gâteau au chocolat, Crème brûlée..."
+                    value={customRecipeText}
+                    onChange={(e) => setCustomRecipeText(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && customRecipeText.trim()) {
+                        handleCustomRecipeSubmit(
+                          showExtraModal.dayKey,
+                          showExtraModal.mealType
+                        );
+                      }
+                    }}
+                    className="menu-planning__input"
+                  />
+                  <button
+                    onClick={() => handleCustomRecipeSubmit(
+                      showExtraModal.dayKey,
+                      showExtraModal.mealType
+                    )}
+                    disabled={!customRecipeText.trim()}
+                    className="menu-planning__custom-recipe-btn"
+                  >
+                    Ajouter
+                  </button>
+                </div>
+              </div>
+
               <div className="menu-planning__form-group">
                 <label htmlFor="extraName">Nom personnalisé (optionnel)</label>
-                <input 
+                <input
                   id="extraName"
-                  type="text" 
+                  type="text"
                   placeholder="Ex: Dessert, Goûter, etc."
                   value={extraName}
                   onChange={(e) => setExtraName(e.target.value)}
                   className="menu-planning__input"
                 />
+              </div>
+
+              <div className="menu-planning__divider">
+                <span>ou choisir une recette existante</span>
               </div>
             </div>
 
