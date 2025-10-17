@@ -153,6 +153,40 @@ const useMenuPlanning = () => {
     return monday;
   };
 
+  // Déplacer une recette d'un slot à un autre
+  const moveMeal = async (sourceDayKey, sourceMealType, targetDayKey, targetMealType) => {
+    try {
+      // Récupérer la recette source
+      const sourceRecipe = weeklyMenu[sourceDayKey]?.[sourceMealType];
+      if (!sourceRecipe) return;
+
+      // Créer une copie du menu
+      const newMenu = { ...weeklyMenu };
+
+      // Supprimer de la source
+      if (newMenu[sourceDayKey]) {
+        newMenu[sourceDayKey] = {
+          ...newMenu[sourceDayKey],
+          [sourceMealType]: null
+        };
+      }
+
+      // Ajouter à la destination
+      if (!newMenu[targetDayKey]) {
+        newMenu[targetDayKey] = {};
+      }
+      newMenu[targetDayKey] = {
+        ...newMenu[targetDayKey],
+        [targetMealType]: sourceRecipe
+      };
+
+      await saveMenu(newMenu);
+    } catch (error) {
+      console.error('Erreur lors du déplacement de la recette:', error);
+      throw error;
+    }
+  };
+
   return {
     weeklyMenu,
     loading,
@@ -160,6 +194,7 @@ const useMenuPlanning = () => {
     removeMeal,
     addExtraMeal,
     removeExtraMeal,
+    moveMeal,
     saveMenu,
     getCurrentWeekId
   };

@@ -10,13 +10,16 @@ const MenuPlanningPage = () => {
     updateMeal,
     removeMeal,
     addExtraMeal,
-    removeExtraMeal
+    removeExtraMeal,
+    moveMeal
   } = useMenuPlanning();
 
   const [showRecipeSelector, setShowRecipeSelector] = useState(null);
   const [showExtraModal, setShowExtraModal] = useState(null);
   const [extraName, setExtraName] = useState('');
   const [customRecipeText, setCustomRecipeText] = useState('');
+  const [draggedItem, setDraggedItem] = useState(null);
+  const [dragOverSlot, setDragOverSlot] = useState(null);
 
   // États pour les filtres
   const [searchQuery, setSearchQuery] = useState('');
@@ -141,6 +144,59 @@ const MenuPlanningPage = () => {
     }
   };
 
+  // Gestionnaires de drag & drop
+  const handleDragStart = (e, dayKey, mealType) => {
+    setDraggedItem({ dayKey, mealType });
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target);
+    // Ajout d'une classe pour le style pendant le drag
+    e.target.classList.add('dragging');
+  };
+
+  const handleDragEnd = (e) => {
+    setDraggedItem(null);
+    setDragOverSlot(null);
+    e.target.classList.remove('dragging');
+  };
+
+  const handleDragOver = (e, dayKey, mealType) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    setDragOverSlot({ dayKey, mealType });
+  };
+
+  const handleDragLeave = (e) => {
+    // Vérifier si on quitte vraiment l'élément (pas juste un enfant)
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    setDragOverSlot(null);
+  };
+
+  const handleDrop = async (e, targetDayKey, targetMealType) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!draggedItem) return;
+
+    const { dayKey: sourceDayKey, mealType: sourceMealType } = draggedItem;
+
+    // Ne rien faire si on drop au même endroit
+    if (sourceDayKey === targetDayKey && sourceMealType === targetMealType) {
+      setDraggedItem(null);
+      setDragOverSlot(null);
+      return;
+    }
+
+    try {
+      await moveMeal(sourceDayKey, sourceMealType, targetDayKey, targetMealType);
+    } catch (error) {
+      console.error('Erreur lors du déplacement:', error);
+      alert('Erreur lors du déplacement de la recette');
+    }
+
+    setDraggedItem(null);
+    setDragOverSlot(null);
+  };
+
   if (loading) {
     return (
       <div className="menu-planning">
@@ -167,43 +223,67 @@ const MenuPlanningPage = () => {
               </div>
               
               <div className="menu-planning__meals-row">
-                {['midi', 'soir'].map(mealType => (
-                  <div key={mealType} className="menu-planning__meal">
-                    <h3 className="menu-planning__meal-title">
-                      {mealType.charAt(0).toUpperCase() + mealType.slice(1)}
-                    </h3>
-                    
-                    {weeklyMenu[day.key]?.[mealType] ? (
-                      <div className="menu-planning__selected-recipe">
-                        <div className="menu-planning__recipe-info">
-                          {weeklyMenu[day.key][mealType].image && (
-                            <img 
-                              src={weeklyMenu[day.key][mealType].image} 
-                              alt={weeklyMenu[day.key][mealType].title}
-                              className="menu-planning__recipe-image"
-                            />
-                          )}
-                          <span className="menu-planning__recipe-title">
-                            {weeklyMenu[day.key][mealType].title}
-                          </span>
-                        </div>
-                        <button 
-                          className="menu-planning__remove-btn"
-                          onClick={() => handleRemoveRecipe(day.key, mealType)}
+                {['midi', 'soir'].map(mealType => {
+                  const isDropTarget = dragOverSlot?.dayKey === day.key && dragOverSlot?.mealType === mealType;
+                  const hasRecipe = weeklyMenu[day.key]?.[mealType];
+
+                  return (
+                    <div
+                      key={mealType}
+                      className={`menu-planning__meal ${isDropTarget ? 'menu-planning__meal--drag-over' : ''}`}
+                      onDragOver={(e) => handleDragOver(e, day.key, mealType)}
+                      onDragLeave={handleDragLeave}
+                      onDrop={(e) => handleDrop(e, day.key, mealType)}
+                    >
+                      <h3 className="menu-planning__meal-title">
+                        {mealType.charAt(0).toUpperCase() + mealType.slice(1)}
+                      </h3>
+
+                      {hasRecipe ? (
+                        <div
+                          className="menu-planning__selected-recipe"
+                          draggable="true"
+                          onDragStart={(e) => handleDragStart(e, day.key, mealType)}
+                          onDragEnd={handleDragEnd}
                         >
-                          ✕
+                          <div className="menu-planning__recipe-info">
+                            {weeklyMenu[day.key][mealType].image && (
+                              <img
+                                src={weeklyMenu[day.key][mealType].image}
+                                alt={weeklyMenu[day.key][mealType].title}
+                                className="menu-planning__recipe-image"
+                              />
+                            )}
+                            <span className="menu-planning__recipe-title">
+                              {weeklyMenu[day.key][mealType].title}
+                            </span>
+                          </div>
+                          <div className="menu-planning__recipe-actions">
+                            <span className="menu-planning__drag-handle" title="Glisser pour déplacer">
+                              ⋮⋮
+                            </span>
+                            <button
+                              className="menu-planning__remove-btn"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemoveRecipe(day.key, mealType);
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          className="menu-planning__add-btn"
+                          onClick={() => openRecipeSelector(day.key, mealType)}
+                        >
+                          + Ajouter un plat
                         </button>
-                      </div>
-                    ) : (
-                      <button 
-                        className="menu-planning__add-btn"
-                        onClick={() => openRecipeSelector(day.key, mealType)}
-                      >
-                        + Ajouter un plat
-                      </button>
-                    )}
-                  </div>
-                ))}
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           ))}
