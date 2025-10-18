@@ -137,14 +137,23 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
         <div className="recipe-detail__body">
           <div className="recipe-detail__instructions">
             <h3>Instructions</h3>
-            {(recipe.instructions || recipe.steps) && (
-              <div className="recipe-detail__steps">
-                {/* Afficher les instructions en préservant les sauts de ligne */}
-                {(recipe.instructions || recipe.steps)
-                  .split('\n')
-                  .map((line, index) => line.trim() && <p key={index}>{line.trim()}</p>)}
-              </div>
-            )}
+            {(recipe.instructions || recipe.steps) && (() => {
+              const content = recipe.instructions || recipe.steps;
+              // Détecter si c'est du HTML (contient des balises HTML)
+              const isHTML = /<[^>]+>/.test(content);
+
+              if (isHTML) {
+                // Afficher comme HTML (recettes manuelles avec TinyMCE)
+                return <div className="recipe-detail__steps" dangerouslySetInnerHTML={{ __html: content }} />;
+              } else {
+                // Afficher comme texte brut avec sauts de ligne (recettes importées)
+                return (
+                  <div className="recipe-detail__steps">
+                    {content.split('\n').map((line, index) => line.trim() && <p key={index}>{line.trim()}</p>)}
+                  </div>
+                );
+              }
+            })()}
           </div>
 
           {ingredients.length > 0 && (
