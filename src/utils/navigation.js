@@ -1,5 +1,14 @@
 // Système de navigation par cookies pour éviter les problèmes d'URL sur GitHub Pages
 
+// Imports statiques des composants (en haut pour éviter les problèmes de hooks React 19)
+import HomePage from '../pages/HomePage';
+import AddRecipePage from '../pages/AddRecipePage';
+import EditRecipePage from '../pages/EditRecipePage';
+import ImportRecipePage from '../pages/ImportRecipePage';
+import IngredientManagerPage from '../pages/IngredientManagerPage';
+import MenuPlanningPage from '../pages/MenuPlanningPage';
+import ShoppingListPage from '../pages/ShoppingListPage';
+
 export const NAVIGATION_COOKIE_NAME = 'recette_last_page';
 export const NAVIGATION_COOKIE_EXPIRES = 30; // jours
 
@@ -8,19 +17,21 @@ export const PAGES = {
   HOME: 'home',
   ADD_RECIPE: 'add-recipe',
   EDIT_RECIPE: 'edit-recipe',
+  IMPORT_RECIPE: 'import-recipe',
   MANAGE_INGREDIENTS: 'manage-ingredients',
   MENU_PLANNING: 'menu-planning',
   SHOPPING_LIST: 'shopping-list'
 };
 
-// Composants correspondants (importés dynamiquement)
+// Composants correspondants (chargés statiquement pour éviter les problèmes de hooks React 19)
 export const PAGE_COMPONENTS = {
-  [PAGES.HOME]: () => import('../pages/HomePage'),
-  [PAGES.ADD_RECIPE]: () => import('../pages/AddRecipePage'),
-  [PAGES.EDIT_RECIPE]: () => import('../pages/EditRecipePage'),
-  [PAGES.MANAGE_INGREDIENTS]: () => import('../pages/IngredientManagerPage'),
-  [PAGES.MENU_PLANNING]: () => import('../pages/MenuPlanningPage'),
-  [PAGES.SHOPPING_LIST]: () => import('../pages/ShoppingListPage')
+  [PAGES.HOME]: HomePage,
+  [PAGES.ADD_RECIPE]: AddRecipePage,
+  [PAGES.EDIT_RECIPE]: EditRecipePage,
+  [PAGES.IMPORT_RECIPE]: ImportRecipePage,
+  [PAGES.MANAGE_INGREDIENTS]: IngredientManagerPage,
+  [PAGES.MENU_PLANNING]: MenuPlanningPage,
+  [PAGES.SHOPPING_LIST]: ShoppingListPage
 };
 
 // Noms d'affichage
@@ -28,6 +39,7 @@ export const PAGE_NAMES = {
   [PAGES.HOME]: 'Accueil',
   [PAGES.ADD_RECIPE]: 'Ajouter une Recette',
   [PAGES.EDIT_RECIPE]: 'Modifier une Recette',
+  [PAGES.IMPORT_RECIPE]: 'Importer une Recette',
   [PAGES.MANAGE_INGREDIENTS]: 'Gérer les Ingrédients',
   [PAGES.MENU_PLANNING]: 'Menu de la semaine',
   [PAGES.SHOPPING_LIST]: 'Liste de courses'
@@ -38,6 +50,7 @@ export const PAGE_ICONS = {
   [PAGES.HOME]: '🏠',
   [PAGES.ADD_RECIPE]: '➕',
   [PAGES.EDIT_RECIPE]: '✏️',
+  [PAGES.IMPORT_RECIPE]: '🔗',
   [PAGES.MANAGE_INGREDIENTS]: '🥄',
   [PAGES.MENU_PLANNING]: '📅',
   [PAGES.SHOPPING_LIST]: '🛒'
@@ -47,6 +60,7 @@ export const PAGE_ICONS = {
 export const VISIBLE_PAGES = {
   [PAGES.HOME]: PAGES.HOME,
   [PAGES.ADD_RECIPE]: PAGES.ADD_RECIPE,
+  [PAGES.IMPORT_RECIPE]: PAGES.IMPORT_RECIPE,
   [PAGES.MANAGE_INGREDIENTS]: PAGES.MANAGE_INGREDIENTS,
   [PAGES.MENU_PLANNING]: PAGES.MENU_PLANNING,
   [PAGES.SHOPPING_LIST]: PAGES.SHOPPING_LIST

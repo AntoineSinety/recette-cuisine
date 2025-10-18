@@ -25,25 +25,25 @@ const PageNavigator = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Charger le composant de la page courante
+  // Charger le composant de la page courante (chargement statique pour React 19)
   useEffect(() => {
-    const loadComponent = async () => {
-      setIsLoading(true);
-      try {
-        const componentModule = await PAGE_COMPONENTS[currentPage]();
-        setCurrentComponent(() => componentModule.default);
-      } catch (error) {
-        console.error('Erreur lors du chargement du composant:', error);
-        // Fallback vers la page d'accueil
-        const homeModule = await PAGE_COMPONENTS[PAGES.HOME]();
-        setCurrentComponent(() => homeModule.default);
+    setIsLoading(true);
+    try {
+      const Component = PAGE_COMPONENTS[currentPage];
+      if (Component) {
+        setCurrentComponent(() => Component);
+      } else {
+        console.error('Composant introuvable pour la page:', currentPage);
+        setCurrentComponent(() => PAGE_COMPONENTS[PAGES.HOME]);
         setCurrentPage(PAGES.HOME);
-      } finally {
-        setIsLoading(false);
       }
-    };
-
-    loadComponent();
+    } catch (error) {
+      console.error('Erreur lors du chargement du composant:', error);
+      setCurrentComponent(() => PAGE_COMPONENTS[PAGES.HOME]);
+      setCurrentPage(PAGES.HOME);
+    } finally {
+      setIsLoading(false);
+    }
   }, [currentPage]);
 
   // Changer de page

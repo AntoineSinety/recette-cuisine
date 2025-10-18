@@ -137,8 +137,13 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
         <div className="recipe-detail__body">
           <div className="recipe-detail__instructions">
             <h3>Instructions</h3>
-            {recipe.steps && (
-              <div className="recipe-detail__steps" dangerouslySetInnerHTML={{ __html: recipe.steps }} />
+            {(recipe.instructions || recipe.steps) && (
+              <div className="recipe-detail__steps">
+                {/* Afficher les instructions en préservant les sauts de ligne */}
+                {(recipe.instructions || recipe.steps)
+                  .split('\n')
+                  .map((line, index) => line.trim() && <p key={index}>{line.trim()}</p>)}
+              </div>
             )}
           </div>
 
