@@ -132,7 +132,14 @@ const ImportRecipePage = () => {
         difficulty: previewRecipe.difficulty || 'Moyen',
         category: previewRecipe.category || 'Autre',
         ingredients: ingredientsRefs,
-        instructions: previewRecipe.steps.map(step => step.description).join('\n\n'),
+        // Convertir les steps en format structuré avec association d'ingrédients
+        steps: previewRecipe.steps.map((step, index) => ({
+          number: index + 1,
+          title: step.title || `Étape ${index + 1}`,
+          ingredients: [], // Pour l'instant vide, l'utilisateur peut les ajouter en éditant
+          instructions: step.description || '',
+          duration: step.duration || ''
+        })),
         rating: previewRecipe.rating || null,
         sourceUrl: previewRecipe.sourceUrl,
         source: previewRecipe.source,

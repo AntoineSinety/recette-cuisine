@@ -64,6 +64,7 @@
     z-index: 1002;
   }
 
+  .cooking-mode-button,
   .edit-button,
   .close-button {
     display: flex;
@@ -93,6 +94,15 @@
       svg {
         transform: scale(1.1);
       }
+    }
+  }
+
+  .cooking-mode-button {
+    background: linear-gradient(135deg, #4ecdc4 0%, #556270 100%);
+
+    &:hover {
+      background: linear-gradient(135deg, #5dddd4 0%, #667381 100%);
+      box-shadow: 0 6px 20px rgba(78, 205, 196, 0.5);
     }
   }
 

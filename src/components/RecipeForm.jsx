@@ -8,7 +8,7 @@ import { useToast } from './ToastContainer';
 import IngredientAutocomplete from './IngredientAutocomplete';
 import IngredientCard from './IngredientCard';
 import ImageUpload from './ImageUpload';
-import { Editor } from '@tinymce/tinymce-react';
+import StepEditor from './StepEditor';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '../firebase';
 
@@ -21,7 +21,7 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
   const initialFormState = {
     title: '',
     ingredients: [],
-    steps: '',
+    steps: [],
     time: '',
     image: null,
     category: '',
@@ -38,9 +38,24 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
   // Effet pour charger les données initiales de la recette
   useEffect(() => {
     if (initialRecipe && Object.keys(initialRecipe).length > 0) {
+      // Convertir les anciennes recettes (steps en string) en nouveau format (tableau)
+      let steps = initialRecipe.steps || [];
+      if (typeof steps === 'string' && steps.trim()) {
+        // Convertir la chaîne en tableau d'étapes simples
+        const lines = steps.split('\n').filter(line => line.trim());
+        steps = lines.map((line, index) => ({
+          number: index + 1,
+          title: `Étape ${index + 1}`,
+          ingredients: [],
+          instructions: line.replace(/<[^>]*>/g, '').trim(),
+          duration: ''
+        }));
+      }
+
       setFormData((prevFormData) => ({
         ...prevFormData,
         ...initialRecipe,
+        steps: steps
       }));
     }
   }, [initialRecipe]);
@@ -381,49 +396,31 @@ const RecipeForm = ({ recipe = {}, onSubmit }) => {
             <span className="form__label-text">Étapes de préparation</span>
             <span className="form__required">*</span>
           </label>
-          <div className="form__editor">
-            <Editor
-              apiKey='n7ca9rt9c55rw2ov1ypquw5nbtnldtc9x7l9n57btzo3a0c2'
-              value={formData.steps}
-              onEditorChange={handleStepsChange}
-              init={{
-                height: window.innerWidth <= 768 ? 300 : 400,
-                menubar: false,
-                skin: 'oxide-dark',
-                content_css: 'dark',
-                mobile: {
-                  theme: 'mobile',
-                  toolbar: ['undo', 'redo', 'bold', 'italic', 'underline', 'bullist', 'numlist'],
-                  plugins: ['lists', 'autolink']
-                },
-                plugins: [
-                  'advlist', 'autolink', 'lists', 'link', 'charmap',
-                  'searchreplace', 'visualblocks', 'code', 'fullscreen',
-                  'insertdatetime', 'table', 'help', 'wordcount'
-                ],
-                toolbar: window.innerWidth <= 768 ? 
-                  'undo redo | bold italic | bullist numlist | removeformat' :
-                  'undo redo | blocks | bold italic forecolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help',
-                toolbar_mode: window.innerWidth <= 768 ? 'sliding' : 'floating',
-                resize: window.innerWidth <= 768 ? false : true,
-                branding: false,
-                statusbar: window.innerWidth <= 768 ? false : true,
-                content_style: `
-                  body { 
-                    font-family: Helvetica, Arial, sans-serif; 
-                    font-size: ${window.innerWidth <= 768 ? '16px' : '14px'}; 
-                    line-height: 1.6; 
-                    background-color: rgba(30, 30, 30, 0.85); 
-                    color: #fff;
-                    padding: ${window.innerWidth <= 768 ? '12px' : '16px'};
-                  }
-                  p { margin-bottom: 12px; }
-                  li { margin-bottom: 6px; }
-                `,
-                placeholder: 'Décrivez les étapes de votre recette...'
-              }}
-            />
-          </div>
+
+          {/* Anciennes instructions (temporaire pour migration) */}
+          {initialRecipe.instructions && typeof initialRecipe.instructions === 'string' && (
+            <div className="form__migration-helper">
+              <div className="form__migration-header">
+                <span className="form__migration-icon">📋</span>
+                <span className="form__migration-title">Anciennes instructions (copier-coller vers les nouvelles étapes)</span>
+              </div>
+              <textarea
+                readOnly
+                value={initialRecipe.instructions.replace(/<[^>]*>/g, '')}
+                className="form__migration-textarea"
+                rows="8"
+              />
+              <p className="form__migration-hint">
+                💡 Ces instructions proviennent de l'ancien format. Copiez le texte et collez-le dans les nouvelles étapes ci-dessous.
+              </p>
+            </div>
+          )}
+
+          <StepEditor
+            steps={Array.isArray(formData.steps) ? formData.steps : []}
+            onChange={handleStepsChange}
+            recipeIngredients={formData.ingredients}
+          />
         </div>
 
         {/* Submit Button */}
