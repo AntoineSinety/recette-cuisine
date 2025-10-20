@@ -148,6 +148,27 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
             <h3>Instructions</h3>
             {(recipe.instructions || recipe.steps) && (() => {
               const content = recipe.instructions || recipe.steps;
+
+              // Si c'est un tableau, l'afficher directement
+              if (Array.isArray(content)) {
+                return (
+                  <div className="recipe-detail__steps">
+                    {content.map((step, index) => (
+                      <p key={index}>{typeof step === 'string' ? step : step.text || ''}</p>
+                    ))}
+                  </div>
+                );
+              }
+
+              // Si ce n'est pas une chaîne, convertir en chaîne
+              if (typeof content !== 'string') {
+                return (
+                  <div className="recipe-detail__steps">
+                    <p>{JSON.stringify(content)}</p>
+                  </div>
+                );
+              }
+
               // Détecter si c'est du HTML (contient des balises HTML)
               const isHTML = /<[^>]+>/.test(content);
 
