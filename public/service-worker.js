@@ -13,9 +13,26 @@ self.addEventListener('install', (event) => {
   console.log('[Service Worker] Installation...');
 
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
+    caches.open(CACHE_NAME).then(async (cache) => {
       console.log('[Service Worker] Mise en cache des fichiers statiques');
-      return cache.addAll(STATIC_ASSETS);
+
+      // Mettre en cache chaque fichier individuellement pour gérer les erreurs
+      const promises = STATIC_ASSETS.map(async (url) => {
+        try {
+          const response = await fetch(url);
+          if (response.ok) {
+            await cache.put(url, response);
+            console.log(`[Service Worker] Mis en cache: ${url}`);
+          } else {
+            console.warn(`[Service Worker] Impossible de mettre en cache ${url}: ${response.status}`);
+          }
+        } catch (error) {
+          console.warn(`[Service Worker] Erreur lors de la mise en cache de ${url}:`, error.message);
+        }
+      });
+
+      await Promise.allSettled(promises);
+      console.log('[Service Worker] Installation terminée');
     })
   );
 

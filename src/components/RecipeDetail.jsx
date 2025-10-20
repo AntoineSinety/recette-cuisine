@@ -145,16 +145,71 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
 
         <div className="recipe-detail__body">
           <div className="recipe-detail__instructions">
-            <h3>Instructions</h3>
-            {(recipe.instructions || recipe.steps) && (() => {
-              const content = recipe.instructions || recipe.steps;
+            <h3>Étapes de préparation</h3>
+            {(recipe.etapes || recipe.steps || recipe.instructions) && (() => {
+              const content = recipe.etapes || recipe.steps || recipe.instructions;
 
-              // Si c'est un tableau, l'afficher directement
+              // Si c'est un tableau d'étapes structurées (format moderne)
+              if (Array.isArray(content) && content.length > 0 && typeof content[0] === 'object' && content[0].instructions) {
+                return (
+                  <div className="recipe-detail__steps-list">
+                    {content.map((step, index) => (
+                      <div key={index} className="recipe-detail__step">
+                        <div className="recipe-detail__step-header">
+                          <span className="recipe-detail__step-number">{step.number || index + 1}</span>
+                          <h4 className="recipe-detail__step-title">{step.title || `Étape ${step.number || index + 1}`}</h4>
+                          {step.duration && (
+                            <span className="recipe-detail__step-duration">
+                              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                              </svg>
+                              {step.duration}
+                            </span>
+                          )}
+                        </div>
+                        <div className="recipe-detail__step-content">
+                          {step.image && (
+                            <div className="recipe-detail__step-image">
+                              <img src={step.image} alt={`Étape ${step.number || index + 1}`} />
+                            </div>
+                          )}
+                          <p className="recipe-detail__step-instructions">{step.instructions}</p>
+                          {step.ingredients && step.ingredients.length > 0 && (
+                            <div className="recipe-detail__step-ingredients">
+                              <span className="step-ingredients-label">Ingrédients :</span>
+                              <span className="step-ingredients-list">
+                                {step.ingredients.map((ing, i) => (
+                                  <span key={i} className="step-ingredient-tag">
+                                    {typeof ing === 'string' ? ing : ing.name}
+                                  </span>
+                                ))}
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                );
+              }
+
+              // Si c'est un tableau simple de strings
               if (Array.isArray(content)) {
                 return (
-                  <div className="recipe-detail__steps">
+                  <div className="recipe-detail__steps-list">
                     {content.map((step, index) => (
-                      <p key={index}>{typeof step === 'string' ? step : step.text || ''}</p>
+                      <div key={index} className="recipe-detail__step">
+                        <div className="recipe-detail__step-header">
+                          <span className="recipe-detail__step-number">{index + 1}</span>
+                          <h4 className="recipe-detail__step-title">Étape {index + 1}</h4>
+                        </div>
+                        <div className="recipe-detail__step-content">
+                          <p className="recipe-detail__step-instructions">
+                            {typeof step === 'string' ? step : step.text || ''}
+                          </p>
+                        </div>
+                      </div>
                     ))}
                   </div>
                 );
@@ -178,8 +233,18 @@ const RecipeDetail = forwardRef(({ recipe, onClose }, ref) => {
               } else {
                 // Afficher comme texte brut avec sauts de ligne (recettes importées)
                 return (
-                  <div className="recipe-detail__steps">
-                    {content.split('\n').map((line, index) => line.trim() && <p key={index}>{line.trim()}</p>)}
+                  <div className="recipe-detail__steps-list">
+                    {content.split('\n').filter(line => line.trim()).map((line, index) => (
+                      <div key={index} className="recipe-detail__step">
+                        <div className="recipe-detail__step-header">
+                          <span className="recipe-detail__step-number">{index + 1}</span>
+                          <h4 className="recipe-detail__step-title">Étape {index + 1}</h4>
+                        </div>
+                        <div className="recipe-detail__step-content">
+                          <p className="recipe-detail__step-instructions">{line.trim()}</p>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 );
               }

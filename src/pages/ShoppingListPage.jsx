@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import useShoppingList from '../hooks/useShoppingList';
 import useMenuPlanning from '../hooks/useMenuPlanning';
 import { formatQuantityWithBestUnit } from '../utils/unitConverter';
@@ -90,33 +90,39 @@ const ShoppingListPage = () => {
     }
   };
 
-  // Grouper les ingrédients par catégorie
-  const groupedIngredients = shoppingList.reduce((groups, ingredient) => {
-    const category = ingredient.category || '';
-    if (!groups[category]) {
-      groups[category] = [];
-    }
-    groups[category].push(ingredient);
-    return groups;
-  }, {});
-
-  // Ajouter les articles personnalisés à leur catégorie respective
-  if (customItems.length > 0) {
-    customItems.forEach(item => {
-      const category = item.category || 'autres';
-      if (!groupedIngredients[category]) {
-        groupedIngredients[category] = [];
+  // Grouper les ingrédients par catégorie (avec useMemo pour éviter la boucle infinie)
+  const groupedIngredients = useMemo(() => {
+    const groups = shoppingList.reduce((acc, ingredient) => {
+      const category = ingredient.category || '';
+      if (!acc[category]) {
+        acc[category] = [];
       }
-      groupedIngredients[category].push(item);
-    });
-  }
+      acc[category].push(ingredient);
+      return acc;
+    }, {});
+
+    // Ajouter les articles personnalisés à leur catégorie respective
+    if (customItems.length > 0) {
+      customItems.forEach(item => {
+        const category = item.category || 'autres';
+        if (!groups[category]) {
+          groups[category] = [];
+        }
+        groups[category].push(item);
+      });
+    }
+
+    return groups;
+  }, [shoppingList, customItems]);
 
   // Trier les catégories par ordre défini
-  const sortedCategories = Object.keys(groupedIngredients).sort((a, b) => {
-    const catA = getCategoryInfo(a);
-    const catB = getCategoryInfo(b);
-    return catA.order - catB.order;
-  });
+  const sortedCategories = useMemo(() => {
+    return Object.keys(groupedIngredients).sort((a, b) => {
+      const catA = getCategoryInfo(a);
+      const catB = getCategoryInfo(b);
+      return catA.order - catB.order;
+    });
+  }, [groupedIngredients]);
 
   if (loading) {
     return (
@@ -143,7 +149,7 @@ const ShoppingListPage = () => {
 
         {/* Compteur discret en haut */}
         <div className="shopping-list__minimal-counter">
-          {getStats.checked}/{getStats.total}
+          {getStats().checked}/{getStats().total}
         </div>
 
         {/* Liste compacte */}
@@ -210,15 +216,15 @@ const ShoppingListPage = () => {
           {/* Statistiques */}
           <div className="shopping-list__stats">
             <div className="shopping-list__stat">
-              <span className="shopping-list__stat-number">{getStats.total}</span>
+              <span className="shopping-list__stat-number">{getStats().total}</span>
               <span className="shopping-list__stat-label">Ingrédients</span>
             </div>
             <div className="shopping-list__stat">
-              <span className="shopping-list__stat-number">{getStats.checked}</span>
+              <span className="shopping-list__stat-number">{getStats().checked}</span>
               <span className="shopping-list__stat-label">Cochés</span>
             </div>
             <div className="shopping-list__stat">
-              <span className="shopping-list__stat-number">{getStats.remaining}</span>
+              <span className="shopping-list__stat-number">{getStats().remaining}</span>
               <span className="shopping-list__stat-label">Restants</span>
             </div>
           </div>
@@ -290,7 +296,7 @@ const ShoppingListPage = () => {
 
           {/* Liste des ingrédients groupés par catégorie */}
           <div className="shopping-list__items">
-            {shoppingList.length === 0 ? (
+            {shoppingList.length === 0 && customItems.length === 0 ? (
               <div className="shopping-list__empty">
                 <p>Aucun ingrédient dans votre liste de courses.</p>
                 <p>Ajoutez des recettes à votre menu de la semaine pour générer automatiquement votre liste.</p>

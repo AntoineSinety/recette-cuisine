@@ -365,7 +365,7 @@ const useShoppingList = () => {
     addCustomItem,
     removeCustomItem,
     updateCustomItemCategory,
-    getStats: getStats()
+    getStats
   };
 };
 
