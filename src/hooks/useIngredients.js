@@ -16,7 +16,29 @@ export const useIngredients = () => {
           id: doc.id,
           ...doc.data()
         }));
-        setIngredients(ingredientsData);
+
+        // Récupérer les recettes pour calculer le nombre d'utilisations
+        const recipesCollection = collection(db, "recipes");
+        const recipesSnapshot = await getDocs(recipesCollection);
+        const recipes = recipesSnapshot.docs.map(doc => doc.data());
+
+        // Calculer le nombre d'utilisations pour chaque ingrédient
+        const ingredientsWithUsage = ingredientsData.map(ingredient => {
+          const usageCount = recipes.reduce((count, recipe) => {
+            const ingredientList = recipe.ingredients || [];
+            const isUsed = ingredientList.some(
+              recipeIngredient => recipeIngredient.id === ingredient.id
+            );
+            return count + (isUsed ? 1 : 0);
+          }, 0);
+
+          return {
+            ...ingredient,
+            usageCount
+          };
+        });
+
+        setIngredients(ingredientsWithUsage);
       } catch (error) {
         console.error("Error fetching ingredients:", error);
       }

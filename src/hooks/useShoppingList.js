@@ -250,8 +250,8 @@ const useShoppingList = () => {
   // Ajouter un article personnalisé
   const addCustomItem = async (itemName, category = 'autres') => {
     try {
-      const weekId = getCurrentWeekId();
-      const shoppingDocRef = doc(db, 'shoppingLists', weekId);
+      // Stocker globalement, pas par semaine
+      const shoppingDocRef = doc(db, 'shoppingLists', 'globalCustomItems');
       const docSnap = await getDoc(shoppingDocRef);
 
       const customItems = docSnap.exists() ? (docSnap.data().customItems || []) : [];
@@ -265,7 +265,6 @@ const useShoppingList = () => {
 
       await setDoc(shoppingDocRef, {
         customItems: [...customItems, newItem],
-        weekId,
         lastUpdated: new Date()
       }, { merge: true });
 
@@ -279,8 +278,8 @@ const useShoppingList = () => {
   // Supprimer un article personnalisé
   const removeCustomItem = async (itemId) => {
     try {
-      const weekId = getCurrentWeekId();
-      const shoppingDocRef = doc(db, 'shoppingLists', weekId);
+      // Stocker globalement, pas par semaine
+      const shoppingDocRef = doc(db, 'shoppingLists', 'globalCustomItems');
       const docSnap = await getDoc(shoppingDocRef);
 
       if (docSnap.exists()) {
@@ -288,7 +287,6 @@ const useShoppingList = () => {
 
         await setDoc(shoppingDocRef, {
           customItems,
-          weekId,
           lastUpdated: new Date()
         }, { merge: true });
 
@@ -306,8 +304,8 @@ const useShoppingList = () => {
   // Modifier la catégorie d'un article personnalisé
   const updateCustomItemCategory = async (itemId, newCategory) => {
     try {
-      const weekId = getCurrentWeekId();
-      const shoppingDocRef = doc(db, 'shoppingLists', weekId);
+      // Stocker globalement, pas par semaine
+      const shoppingDocRef = doc(db, 'shoppingLists', 'globalCustomItems');
       const docSnap = await getDoc(shoppingDocRef);
 
       if (docSnap.exists()) {
@@ -319,7 +317,6 @@ const useShoppingList = () => {
 
         await setDoc(shoppingDocRef, {
           customItems,
-          weekId,
           lastUpdated: new Date()
         }, { merge: true });
       }
@@ -333,8 +330,8 @@ const useShoppingList = () => {
   const [customItems, setCustomItems] = useState([]);
 
   useEffect(() => {
-    const weekId = getCurrentWeekId();
-    const shoppingDocRef = doc(db, 'shoppingLists', weekId);
+    // Charger depuis le document global
+    const shoppingDocRef = doc(db, 'shoppingLists', 'globalCustomItems');
 
     const unsubscribe = onSnapshot(shoppingDocRef, (docSnap) => {
       if (docSnap.exists()) {
@@ -345,7 +342,7 @@ const useShoppingList = () => {
     });
 
     return () => unsubscribe();
-  }, [getCurrentWeekId]);
+  }, []);
 
   // Obtenir les statistiques
   const getStats = () => {
