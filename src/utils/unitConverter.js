@@ -117,19 +117,22 @@ export const formatQuantityWithBestUnit = (quantity, unit) => {
     }
   }
   
+  // S'assurer que quantity est un nombre
+  const numQuantity = typeof quantity === 'number' ? quantity : parseFloat(quantity) || 0;
+
   // Pour les unités normales ou non convertibles
-  const displayUnit = quantity > 1 ? config.plural : config.name;
-  
+  const displayUnit = numQuantity > 1 ? config.plural : config.name;
+
   // Format de la quantité
   let formattedQuantity;
-  if (quantity % 1 === 0) {
-    formattedQuantity = quantity.toString();
-  } else if (quantity < 1) {
-    formattedQuantity = quantity.toFixed(2).replace(/\.?0+$/, '');
+  if (numQuantity % 1 === 0) {
+    formattedQuantity = numQuantity.toString();
+  } else if (numQuantity < 1) {
+    formattedQuantity = numQuantity.toFixed(2).replace(/\.?0+$/, '');
   } else {
-    formattedQuantity = quantity.toFixed(1).replace(/\.0$/, '');
+    formattedQuantity = numQuantity.toFixed(1).replace(/\.0$/, '');
   }
-  
+
   return `${formattedQuantity} ${displayUnit}`;
 };
 

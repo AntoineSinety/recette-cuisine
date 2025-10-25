@@ -187,6 +187,99 @@ const useMenuPlanning = () => {
     }
   };
 
+  // Dupliquer un repas sur un autre jour
+  const duplicateMeal = async (sourceDayKey, sourceMealType, targetDayKey, targetMealType) => {
+    try {
+      const sourceRecipe = weeklyMenu[sourceDayKey]?.[sourceMealType];
+      if (!sourceRecipe) return;
+
+      await updateMeal(targetDayKey, targetMealType, { ...sourceRecipe });
+    } catch (error) {
+      console.error('Erreur lors de la duplication de la recette:', error);
+      throw error;
+    }
+  };
+
+  // Dupliquer toute la semaine courante vers une autre semaine
+  const duplicateWeek = async (targetWeekId) => {
+    try {
+      const menuDocRef = doc(db, 'weeklyMenus', targetWeekId);
+
+      await setDoc(menuDocRef, {
+        menu: { ...weeklyMenu },
+        weekId: targetWeekId,
+        lastUpdated: new Date(),
+        duplicatedFrom: getCurrentWeekId(),
+        duplicatedAt: new Date()
+      }, { merge: true });
+    } catch (error) {
+      console.error('Erreur lors de la duplication de la semaine:', error);
+      throw error;
+    }
+  };
+
+  // Réinitialiser la semaine entière
+  const resetWeek = async () => {
+    try {
+      await saveMenu({});
+    } catch (error) {
+      console.error('Erreur lors de la réinitialisation:', error);
+      throw error;
+    }
+  };
+
+  // Obtenir les statistiques de la semaine
+  const getWeekStats = () => {
+    let totalMeals = 0;
+    let plannedMeals = 0;
+    let customMeals = 0;
+    const uniqueRecipes = new Set();
+    const categories = {};
+
+    Object.keys(weeklyMenu).forEach(dayKey => {
+      if (dayKey === 'extras') return;
+
+      ['midi', 'soir'].forEach(mealType => {
+        totalMeals++;
+        const meal = weeklyMenu[dayKey]?.[mealType];
+
+        if (meal) {
+          plannedMeals++;
+          if (meal.isCustomText) {
+            customMeals++;
+          } else if (meal.id) {
+            uniqueRecipes.add(meal.id);
+          }
+
+          if (meal.category) {
+            categories[meal.category] = (categories[meal.category] || 0) + 1;
+          }
+        }
+      });
+    });
+
+    return {
+      totalMeals,
+      plannedMeals,
+      missingMeals: totalMeals - plannedMeals,
+      customMeals,
+      uniqueRecipes: uniqueRecipes.size,
+      completionRate: totalMeals > 0 ? Math.round((plannedMeals / totalMeals) * 100) : 0,
+      categories
+    };
+  };
+
+  // Obtenir le menu d'un jour spécifique
+  const getDayMenu = (dayKey) => {
+    return weeklyMenu[dayKey] || { midi: null, soir: null, extras: [] };
+  };
+
+  // Vérifier si un jour a des repas planifiés
+  const hasMealsPlanned = (dayKey) => {
+    const day = weeklyMenu[dayKey];
+    return day && (day.midi || day.soir);
+  };
+
   return {
     weeklyMenu,
     loading,
@@ -195,8 +288,14 @@ const useMenuPlanning = () => {
     addExtraMeal,
     removeExtraMeal,
     moveMeal,
+    duplicateMeal,
+    duplicateWeek,
+    resetWeek,
     saveMenu,
-    getCurrentWeekId
+    getCurrentWeekId,
+    getWeekStats,
+    getDayMenu,
+    hasMealsPlanned
   };
 };
 

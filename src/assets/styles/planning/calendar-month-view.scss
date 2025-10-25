@@ -1,0 +1,286 @@
+.calendar-month {
+  background: var(--gradient-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+
+  // Titre du mois
+  &__month-title {
+    text-align: center;
+    padding: var(--spacing-md) 0;
+    margin-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--border-medium);
+  }
+
+  &__month-name {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: capitalize;
+  }
+
+  // Header avec noms des jours
+  &__header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: var(--spacing-sm);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  &__header-day {
+    text-align: center;
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  // Grille du calendrier
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    width: 100%;
+  }
+
+  // Case jour
+  &__day {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    min-height: 120px;
+    min-width: 0; // Empêche le contenu de forcer l'expansion de la colonne
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+    transition: all var(--transition-normal);
+    overflow: hidden; // Assure que le contenu ne déborde pas
+
+    &:hover:not(&--past) {
+      border-color: var(--accent-primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    &--other-month {
+      opacity: 0.4;
+      background: var(--bg-secondary);
+    }
+
+    &--today {
+      border-color: var(--accent-primary);
+      border-width: 2px;
+      box-shadow: 0 0 0 2px rgba(91, 141, 238, 0.1);
+    }
+
+    &--past {
+      opacity: 0.6;
+    }
+  }
+
+  &__day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  &__day-number {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
+  }
+
+  &__day-indicator {
+    font-size: 8px;
+    color: var(--accent-success);
+  }
+
+  // Section repas
+  &__meals {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__meal {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+  }
+
+  &__meal-label {
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  &__meal-slot {
+    flex: 1;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xs);
+    padding: 2px;
+    min-height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    position: relative;
+    overflow: hidden;
+
+    &--empty {
+      border-style: dashed;
+      justify-content: center;
+
+      &:hover {
+        border-color: var(--accent-primary);
+        background: rgba(91, 141, 238, 0.05);
+      }
+    }
+
+    &--filled {
+      cursor: grab;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      &:hover {
+        border-color: var(--accent-primary);
+        transform: scale(1.02);
+      }
+    }
+
+    &--dragging {
+      opacity: 0.5;
+      transform: scale(0.95);
+    }
+
+    &--drop-target {
+      border-color: var(--accent-success);
+      background: rgba(78, 205, 196, 0.1);
+      animation: pulse-drop 0.8s ease-in-out infinite;
+    }
+  }
+
+  &__meal-add {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    font-weight: 300;
+  }
+
+  &__meal-image {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: var(--radius-xs);
+    flex-shrink: 0;
+  }
+
+  &__meal-title {
+    flex: 1;
+    font-size: 10px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+  }
+
+  &__meal-remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    background: var(--accent-danger);
+    border: none;
+    border-radius: 0 var(--radius-xs) 0 var(--radius-xs);
+    color: var(--text-primary);
+    font-size: 12px;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: all var(--transition-normal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: #EE5A52;
+    }
+  }
+
+  &__meal-slot--filled:hover &__meal-remove {
+    opacity: 1;
+  }
+}
+
+@keyframes pulse-drop {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.02);
+    opacity: 0.9;
+  }
+}
+
+// Responsive
+@media (max-width: 1200px) {
+  .calendar-month {
+    &__day {
+      min-height: 100px;
+    }
+
+    &__meal-title {
+      font-size: 9px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .calendar-month {
+    padding: var(--spacing-sm);
+
+    &__grid {
+      gap: 2px;
+    }
+
+    &__day {
+      min-height: 80px;
+      padding: 2px;
+    }
+
+    &__day-number {
+      font-size: 10px;
+    }
+
+    &__meal-label {
+      display: none; // Masquer les icônes midi/soir sur mobile
+    }
+
+    &__meal-title {
+      font-size: 8px;
+    }
+
+    &__meal-image {
+      width: 20px;
+      height: 20px;
+    }
+  }
+}

@@ -6,7 +6,7 @@ import AddRecipePage from '../pages/AddRecipePage';
 import EditRecipePage from '../pages/EditRecipePage';
 import ImportRecipePage from '../pages/ImportRecipePage';
 import IngredientManagerPage from '../pages/IngredientManagerPage';
-import MenuPlanningPage from '../pages/MenuPlanningPage';
+import MenuPlanningPageNew from '../pages/MenuPlanningPageNew';
 import ShoppingListPage from '../pages/ShoppingListPage';
 
 export const NAVIGATION_COOKIE_NAME = 'recette_last_page';
@@ -30,7 +30,7 @@ export const PAGE_COMPONENTS = {
   [PAGES.EDIT_RECIPE]: EditRecipePage,
   [PAGES.IMPORT_RECIPE]: ImportRecipePage,
   [PAGES.MANAGE_INGREDIENTS]: IngredientManagerPage,
-  [PAGES.MENU_PLANNING]: MenuPlanningPage,
+  [PAGES.MENU_PLANNING]: MenuPlanningPageNew,
   [PAGES.SHOPPING_LIST]: ShoppingListPage
 };
 

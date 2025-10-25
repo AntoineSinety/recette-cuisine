@@ -7,6 +7,7 @@ import './assets/styles/components/page-navigator.scss';
 import './assets/styles/composants/import-recipe.scss';
 import './assets/styles/composants/cooking-mode.scss';
 import './assets/styles/composants/step-editor.scss';
+import './assets/styles/planning/index.scss';
 
 const App = () => {
   return (
